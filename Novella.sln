@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novella", "Novella\Novella.csproj", "{0E395CE2-18BF-409A-A2B4-14A15A9D7047}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E395CE2-18BF-409A-A2B4-14A15A9D7047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E395CE2-18BF-409A-A2B4-14A15A9D7047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E395CE2-18BF-409A-A2B4-14A15A9D7047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E395CE2-18BF-409A-A2B4-14A15A9D7047}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC5B86FF-A599-43F1-A2F4-C0259B84511B}
+	EndGlobalSection
+EndGlobal
