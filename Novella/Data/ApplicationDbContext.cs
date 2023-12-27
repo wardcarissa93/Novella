@@ -25,77 +25,77 @@ namespace Novella.Data
         {
             base.OnModelCreating(modelBuilder); // Include IdentityDbContext configurations
 
-            // Configurations for ProductCart (Many-to-Many relationship between Product and Cart)
-            modelBuilder.Entity<ProductCart>()
-                .HasKey(pc => new { pc.CartId, pc.ProductId });
-
-            modelBuilder.Entity<ProductCart>()
-                .HasOne(pc => pc.Product)
-                .WithMany(p => p.ProductCarts)
-                .HasForeignKey(pc => pc.ProductId);
-
-            modelBuilder.Entity<ProductCart>()
-                .HasOne(pc => pc.Cart)
-                .WithMany(c => c.ProductCarts)
-                .HasForeignKey(pc => pc.CartId);
-
-            // Product and Category (One-to-Many)
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId);
-
-            // Product and ProductOrder (One-to-Many)
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.ProductOrders)
-                .WithOne(po => po.Product)
-                .HasForeignKey(po => po.ProductId);
-
-            // Order and ProductOrder (One-to-Many)
-            modelBuilder.Entity<Order>()
-                .HasMany(o => o.ProductOrders)
-                .WithOne(po => po.Order)
-                .HasForeignKey(po => po.OrderId);
-
-            // UserAccount and Cart (One-to-Many)
+            // UserAccount to Address (One-to-One)
             modelBuilder.Entity<UserAccount>()
-                .HasMany(ua => ua.Carts)
-                .WithOne(c => c.UserAccount)
-                .HasForeignKey(c => c.UserId);
+                .HasOne(ua => ua.ShippingAddress)
+                .WithMany()
+                .HasForeignKey(ua => ua.ShippingId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // UserAccount and Order (One-to-Many)
+            modelBuilder.Entity<UserAccount>()
+                .HasOne(ua => ua.BillingAddress)
+                .WithMany()
+                .HasForeignKey(ua => ua.BillingId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // UserAccount to Cart (One-to-One)
+            modelBuilder.Entity<UserAccount>()
+                .HasOne(ua => ua.Cart)
+                .WithOne()
+                .HasForeignKey<Cart>(c => c.UserId);
+
+            // UserAccount to Order (One-to-Many)
             modelBuilder.Entity<UserAccount>()
                 .HasMany(ua => ua.Orders)
                 .WithOne(o => o.UserAccount)
                 .HasForeignKey(o => o.UserId);
 
-            // UserAccount and Rating (One-to-Many)
+            // UserAccount to Rating (One-to-Many)
             modelBuilder.Entity<UserAccount>()
                 .HasMany(ua => ua.Ratings)
                 .WithOne(r => r.UserAccount)
                 .HasForeignKey(r => r.UserId);
 
-            // Product and Rating (One-to-Many)
+            // Category to Product (One-to-Many)
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .HasForeignKey(p => p.CategoryId);
+
+            // Product to ProductCart (One-to-Many)
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.ProductCarts)
+                .WithOne(pc => pc.Product)
+                .HasForeignKey(pc => pc.ProductId);
+
+            // Product to ProductOrder (One-to-Many)
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.ProductOrders)
+                .WithOne(po => po.Product)
+                .HasForeignKey(po => po.ProductId);
+
+            // Product to Rating (One-to-Many)
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Ratings)
                 .WithOne(r => r.Product)
                 .HasForeignKey(r => r.ProductId);
 
-            // UserAccount, Address (One-to-Many for Shipping and Billing)
-            modelBuilder.Entity<UserAccount>()
-                .HasOne(ua => ua.ShippingAddress)
-                .WithMany(a => a.ShippingUserAccounts)
-                .HasForeignKey(ua => ua.ShippingId);
+            // Cart to ProductCart (One-to-Many)
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.ProductCarts)
+                .WithOne(pc => pc.Cart)
+                .HasForeignKey(pc => pc.CartId);
 
-            modelBuilder.Entity<UserAccount>()
-                .HasOne(ua => ua.BillingAddress)
-                .WithMany(a => a.BillingUserAccounts)
-                .HasForeignKey(ua => ua.BillingId);
-
-            // Order and OrderStatus (One-to-Many)
+            // Order to ProductOrder (One-to-Many)
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.OrderStatus)
-                .WithMany(os => os.Orders)
+                .HasMany(o => o.ProductOrders)
+                .WithOne(po => po.Order)
+                .HasForeignKey(po => po.OrderId);
+
+            // OrderStatus to Order (One-to-Many)
+            modelBuilder.Entity<OrderStatus>()
+                .HasMany(os => os.Orders)
+                .WithOne(o => o.OrderStatus)
                 .HasForeignKey(o => o.OrderStatusId);
         }
     }

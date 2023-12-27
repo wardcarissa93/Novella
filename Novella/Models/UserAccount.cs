@@ -8,11 +8,11 @@ namespace Novella.Models
     public class UserAccount
     {
         [Key]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Role { get; set; }
-        public string PhoneNumber { get; set; }
+        public int PhoneNumber { get; set; }
         public string PaypalAccount { get; set; }
         public string Password { get; set; }
 
@@ -25,7 +25,7 @@ namespace Novella.Models
         // Navigation properties
         public virtual Address ShippingAddress { get; set; }
         public virtual Address BillingAddress { get; set; }
-        public virtual ICollection<Cart> Carts { get; set; }
+        public virtual Cart Cart { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
     }

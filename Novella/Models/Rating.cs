@@ -11,13 +11,13 @@ namespace Novella.Models
         public int RatingId { get; set; }
 
         [ForeignKey("Product")]
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         [ForeignKey("UserAccount")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public string Review { get; set; }
-        public int RatingValue { get; set; }
+        public decimal RatingValue { get; set; }
         public DateTime DateRated { get; set; }
 
         // Navigation properties

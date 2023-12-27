@@ -11,9 +11,11 @@ namespace Novella.Models
         public int OrderId { get; set; }
 
         [ForeignKey("UserAccount")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime DateOrdered { get; set; }
+
+        public string PayPalTransactionId { get; set; }
 
         [ForeignKey("OrderStatus")]
         public int OrderStatusId { get; set; }
