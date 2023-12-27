@@ -9,7 +9,7 @@ namespace Novella.Models
         public int ProductCartId { get; set; }
 
         [ForeignKey("Product")]
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         [ForeignKey("Cart")]
         public int CartId { get; set; }

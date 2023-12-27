@@ -16,7 +16,7 @@ namespace Novella.Models
         public string PostalCode { get; set; }
 
         // Navigation properties
-        public virtual ICollection<UserAccount> ShippingUserAccounts { get; set; }
-        public virtual ICollection<UserAccount> BillingUserAccounts { get; set; }
+        public ICollection<Order> Orders { get; set; }
+      
     }
 }

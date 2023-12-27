@@ -11,7 +11,7 @@ namespace Novella.Models
         public int CartId { get; set; }
 
         [ForeignKey("UserAccount")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         // Navigation property
         public virtual UserAccount UserAccount { get; set; }
