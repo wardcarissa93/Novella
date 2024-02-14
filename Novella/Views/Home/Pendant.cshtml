@@ -41,24 +41,32 @@
     <div class="product-cat-flex">
         <div class="product-cat-container">
             <div class="product-card">
-                <img src="~/Images/categories/pendant/pendant1.jpeg" alt="pendant1" />
-                <p class="card-title">StyleSway</p>
-                <p class="card-price">$480</p>
+                <a href="@Url.Action("Detail", "Home", new { productName = "StyleSway" })">
+                    <img src="~/Images/categories/pendant/pendant1.jpeg" alt="pendant1" />
+                    <p class="card-title">StyleSway</p>
+                    <p class="card-price">$480</p>
+                </a>
             </div>
             <div class="product-card">
-                <img src="~/Images/categories/pendant/pendant2.jpeg" alt="pendant2" />
-                <p class="card-title">Nova Pendant</p>
-                <p class="card-price">$280</p>
+                <a href="@Url.Action("Detail", "Home", new { productName = "NovaPendant" })">
+                    <img src="~/Images/categories/pendant/pendant2.jpeg" alt="pendant2" />
+                    <p class="card-title">Nova Pendant</p>
+                    <p class="card-price">$280</p>
+                </a>
             </div>
             <div class="product-card">
-                <img src="~/Images/categories/pendant/pendant3.jpeg" alt="pendant3" />
-                <p class="card-title">Mini Pendant</p>
-                <p class="card-price">$100</p>
+                <a href="@Url.Action("Detail", "Home", new { productName = "MiniPendant" })">
+                    <img src="~/Images/categories/pendant/pendant3.jpeg" alt="pendant3" />
+                    <p class="card-title">Mini Pendant</p>
+                    <p class="card-price">$100</p>
+                </a>
             </div>
             <div class="product-card">
-                <img src="~/Images/categories/pendant/pendant4.jpeg" alt="pendant4" />
-                <p class="card-title">Premium Pendant</p>
-                <p class="card-price"> $800></p>
+                <a href="@Url.Action("Detail", "Home", new { productName = "PremiumPendant" })">
+                    <img src="~/Images/categories/pendant/pendant4.jpeg" alt="pendant4" />
+                    <p class="card-title">Premium Pendant</p>
+                    <p class="card-price"> $800</p>
+                </a>
             </div>
             <div class="product-card">
                 <img src="~/Images//categories/pendant/pendant5.jpeg" alt="pendant5" />
