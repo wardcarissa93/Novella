@@ -18,6 +18,25 @@ namespace Novella.Controllers
             return View();
         }
 
+        public IActionResult Detail()
+        {
+            return View();
+        }
+
+        public IActionResult Pendant()
+        {
+            return View();
+        }
+
+        public IActionResult Choker()
+        {
+            return View();
+        }
+        public IActionResult Chain()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

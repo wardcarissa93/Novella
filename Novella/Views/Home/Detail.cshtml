@@ -1,0 +1,59 @@
+﻿<main id="detail-main">
+    <div class="page-path">
+        <p><span id="root">Home</span><span>/</span><span id="current-path">Choker</span></p>
+    </div>
+    <div class="filter-container">
+        <p class="filter-label">Filter by:</p>
+        <div class="select-container">
+            <select id="productColor">Color</select>
+            <option value="#">Select</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+        </div>
+        <div class="select-container">
+            <select id="productMaterial">Material</select>
+            <option value="#">Select</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+        </div>
+        <div class="select-container">
+            <select id="productPrice">Price</select>
+            <option value="#">Select</option>
+            <option value="low">Under $100</option>
+            <option value="medium">Under $300</option>
+            <option value="high">Premium</option>
+        </div>
+    </div>
+    <div id="continue-shopping">
+        <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+            </svg> CONTINUE SHOPPING
+        </a>
+    </div>
+    <div class="detail-container">
+        <img id="detail-img" src="~/Images/categories/chains/chain1.jpeg" />
+        <div id="detail-text">
+            <p id="detail-title">Urban Edge Chokers</p>
+            <p id="detail-subtitle">in 4K White Gold</p>
+            <div class="detail-line"></div>
+            <div id="detail-qty">
+                <span>Quantity</span>
+                <div class="qty-container">
+                    <span>-</span>
+                    <span id="productQty">1</span>
+                    <span>+</span>
+                </div>             
+            </div>
+            <div id="detail-length">
+                <span>Length</span>
+                <span id="productLength">16 in</span>
+            </div>
+            <p id="detail-length"></p>
+            <button id="detail-add-button">
+                <span id="detail-price">CDN $500</span>
+                <span>Add to Bag</span>
+            </button>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,116 @@
+﻿<main id="pendant-main">
+    <div class="page-path">
+        <p id="current-path"></p>
+    </div>
+    <div class="filter-container">
+        <p class="filter-label">Filter by:</p>
+        <div class="select-container">
+            <select class="label-sm" id="productColor">
+                <option value="#">Color</option>
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+            </select>
+        </div>
+        <div class="select-container">
+            <select id="productMaterial">
+                <option value="#">Material</option>
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+            </select>
+        </div>
+        <div class="select-container">
+            <select class="label-sm" id="productPrice">
+                <option value="#">Price</option>
+                <option value="low"> < $100</option>
+                <option value="medium"> < $300</option>
+                <option value="high">Premium</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="slider">
+        <div class="slides">
+            <img class="slider-img" src="~/Images/novella_feature.webp" width="100%" />
+        </div>
+
+        <div class="slides">
+            <img class="slider-img" src="~/Images/categories/pendant/novella_mockfeature_img.webp" width="100%" />
+        </div>
+        <div id="dot"><span class="dot"></span><span class="dot"></span></div>
+    </div>
+    <div class="product-cat-flex">
+        <div class="product-cat-container">
+            <div class="product-card">
+                <img src="~/Images/categories/pendant/pendant1.jpeg" alt="pendant1" />
+                <p class="card-title">StyleSway</p>
+                <p class="card-price">$480</p>
+            </div>
+            <div class="product-card">
+                <img src="~/Images/categories/pendant/pendant2.jpeg" alt="pendant2" />
+                <p class="card-title">Nova Pendant</p>
+                <p class="card-price">$280</p>
+            </div>
+            <div class="product-card">
+                <img src="~/Images/categories/pendant/pendant3.jpeg" alt="pendant3" />
+                <p class="card-title">Mini Pendant</p>
+                <p class="card-price">$100</p>
+            </div>
+            <div class="product-card">
+                <img src="~/Images/categories/pendant/pendant4.jpeg" alt="pendant4" />
+                <p class="card-title">Premium Pendant</p>
+                <p class="card-price"> $800></p>
+            </div>
+            <div class="product-card">
+                <img src="~/Images//categories/pendant/pendant5.jpeg" alt="pendant5" />
+                <p class="card-title">Urban Edge</p>
+                <p class="card-price">$500</p>
+            </div>
+        </div>
+    </div>
+    
+</main>
+
+<script>
+    var index = 0;
+    var slides = document.querySelectorAll(".slides");
+    var dot = document.querySelectorAll(".dot");
+
+    function changeSlide() {
+
+        if (index < 0) {
+            index = slides.length - 1;
+        }
+
+        if (index > slides.length - 1) {
+            index = 0;
+        }
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+            dot[i].classList.remove("active");
+        }
+
+        slides[index].style.display = "block";
+        dot[index].classList.add("active");
+
+        index++;
+
+        setTimeout(changeSlide, 5000);
+
+    }
+
+    changeSlide();
+</script>
+
+<script>
+    function updatePagePath() {
+        var currentUrl = location.pathname; // Get the current URL
+        var currentPage = currentUrl.substring(1);
+        // Extract the current page name
+        document.getElementById("current-path").textContent = currentPage; // Update the current path element
+    }
+
+    window.onload = function () {
+        updatePagePath(); // Update page path on page load
+    };
+</script>
