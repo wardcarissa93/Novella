@@ -1,35 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Novella.Data;
+using Novella.Repositories;
+using Novella.ViewModels;
+using System;
+using Microsoft.Extensions.Logging;
 using Novella.EfModels;
-using Novella.Repositories;  
-using Novella.ViewModels;  
 
 namespace Novella.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ILogger<AdminController> _logger;  
+        private readonly ILogger<AdminController> _logger;
         private readonly ProductRepo _productRepo;
-        private readonly NovellaContext _db;
 
         public AdminController(ILogger<AdminController> logger, NovellaContext db)
         {
             _logger = logger;
-            _db = db;
+            _productRepo = new ProductRepo(db);
         }
 
         // Display list of products
         public IActionResult Index()
         {
-            ProductRepo _productRepo = new ProductRepo(_db);
             var products = _productRepo.GetProductsForAdmin();
             return View(products);
         }
 
         // Display product edit form
-        public IActionResult Edit(string productId)
+        public IActionResult Edit(int productId) // Assuming ProductId is int; adjust if it's a different type
         {
-            ProductRepo _productRepo = new ProductRepo(_db);
             var product = _productRepo.GetProductById(productId);
             if (product == null)
             {
@@ -43,26 +42,28 @@ namespace Novella.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ProductAdminVM productVM)
         {
-            ProductRepo _productRepo = new ProductRepo(_db);
             if (ModelState.IsValid)
             {
-                var success = _productRepo.EditProduct(productVM);
+                bool success = int.TryParse(productVM.ProductId, out int productId); // Ensure this matches your model
                 if (success)
                 {
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Product could not be updated.");
+                    success = _productRepo.EditProduct(productVM);
+                    if (success)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Product could not be updated.");
+                    }
                 }
             }
             return View(productVM);
         }
 
         // Display delete confirmation
-        public IActionResult Delete(string productId)
+        public IActionResult Delete(int productId) // Adjust if ProductId is a different type
         {
-            ProductRepo _productRepo = new ProductRepo(_db);
             var product = _productRepo.GetProductById(productId);
             if (product == null)
             {
@@ -74,9 +75,8 @@ namespace Novella.Controllers
         // Handle product deletion
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(string productId)
+        public IActionResult DeleteConfirmed(int productId) // Adjust if ProductId is a different type
         {
-            ProductRepo _productRepo = new ProductRepo(_db);
             var success = _productRepo.DeleteProduct(productId);
             if (success)
             {

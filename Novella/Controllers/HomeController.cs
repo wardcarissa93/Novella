@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Novella.EfModels;
-using Novella.Models;
 using System.Diagnostics;
+using Novella.Models;
 
 namespace Novella.Controllers
 {
