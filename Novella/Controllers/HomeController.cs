@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Novella.EfModels;
 using Novella.Models;
 using System.Diagnostics;
 
@@ -7,10 +8,13 @@ namespace Novella.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly NovellaContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                              NovellaContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
