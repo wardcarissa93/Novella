@@ -19,47 +19,47 @@ namespace Novella.Repositories
             var products = _db.Products
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.ProductId,
+                    ProductId = p.PkProductId.ToString(), // Assuming ProductId in ProductAdminVM is a string
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityInStock
+                    QuantityInStock = p.QuantityAvailable // Changed to QuantityAvailable
                 }).ToList();
 
             return products;
         }
 
-        // Fetch a single product by ID
-        public ProductAdminVM GetProductById(string productId)
+        public ProductAdminVM GetProductById(int productId) // Changed parameter type to int
         {
             var product = _db.Products
-                .Where(p => p.ProductId == productId)
+                .Where(p => p.PkProductId == productId)
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.ProductId,
+                    ProductId = p.PkProductId.ToString(), // Assuming ProductId in ProductAdminVM is a string
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityInStock
+                    QuantityInStock = p.QuantityAvailable // Changed to QuantityAvailable
                 }).FirstOrDefault();
 
             return product;
         }
 
-        // Update a product
         public bool EditProduct(ProductAdminVM productVM)
         {
-            var product = _db.Products.Find(productVM.ProductId);
-            if (product != null)
+            if (int.TryParse(productVM.ProductId, out int productId))
             {
-                product.ProductName = productVM.ProductName;
-                product.QuantityInStock = productVM.QuantityInStock;
-                // Update other fields as necessary
+                var product = _db.Products.Find(productId);
+                if (product != null)
+                {
+                    product.ProductName = productVM.ProductName;
+                    product.QuantityAvailable = productVM.QuantityInStock; // Changed to QuantityAvailable
+                    // Update other fields as necessary
 
-                _db.SaveChanges();
-                return true;
+                    _db.SaveChanges();
+                    return true;
+                }
             }
             return false;
         }
 
-        // Delete a product
-        public bool DeleteProduct(string productId)
+        public bool DeleteProduct(int productId)  
         {
             var product = _db.Products.Find(productId);
             if (product != null)

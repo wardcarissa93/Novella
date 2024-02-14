@@ -1,4 +1,4 @@
-namespace Novella.Models
+﻿namespace Novella.Models
 {
     public class ErrorViewModel
     {
