@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Novella.EfModels;
 using Novella.Models;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 
 namespace Novella.Controllers
@@ -45,6 +46,20 @@ namespace Novella.Controllers
         {
             return View();
         }
+
+
+        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+
+        {
+
+            return View(payPalConfirmationModel);
+
+        }
+
+        public IActionResult CheckOut()
+        {
+            return View();
+        }   
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
