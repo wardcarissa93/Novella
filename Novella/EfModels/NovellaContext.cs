@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Novella.ViewModels;
 
 namespace Novella.EfModels;
 
@@ -332,4 +333,6 @@ public partial class NovellaContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<Novella.ViewModels.ProductAdminVM> ProductAdminVM { get; set; } = default!;
 }

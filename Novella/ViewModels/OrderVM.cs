@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Novella.ViewModels
 {
-    public class Order
+    public class OrderVM
     {
         [Key]
         public int OrderId { get; set; }
@@ -11,7 +11,7 @@ namespace Novella.ViewModels
         public DateTime DateOrdered { get; set; }
 
         [ForeignKey("UserAccount")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("OrderStatus")]
         public int OrderStatusId { get; set; }

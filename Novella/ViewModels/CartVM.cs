@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Novella.ViewModels
 {
-    public class Cart
+    public class CartVM
     {
 
         [Key]

@@ -2,7 +2,7 @@
 
 namespace Novella.ViewModels
 {
-    public class Address
+    public class AddressVM
     {
         [Key]
         public int AddressId { get; set; }

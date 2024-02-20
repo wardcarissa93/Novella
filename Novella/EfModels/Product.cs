@@ -24,4 +24,6 @@ public partial class Product
     public virtual ICollection<ProductOrder> ProductOrders { get; set; } = new List<ProductOrder>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+    public string ProductId { get; internal set; }
+    public int QuantityInStock { get; internal set; }
 }

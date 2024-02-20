@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Novella.ViewModels
 {
-    public class UserAccount
+    public class UserAccountVM
     {
         [Key]
         public string UsertId { get; set; }
