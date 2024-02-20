@@ -27,15 +27,15 @@ namespace Novella.Controllers
         }
 
         // Display product edit form
-        public IActionResult Edit(int productId) // Assuming ProductId is int; adjust if it's a different type
-        {
-            var product = _productRepo.GetProductById(productId);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
+        //public IActionResult Edit(int productId) // Assuming ProductId is int; adjust if it's a different type
+        //{
+        //    var product = _productRepo.GetProductById(productId);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(product);
+        //}
 
         // Handle product edit form submission
         [HttpPost]
@@ -62,30 +62,30 @@ namespace Novella.Controllers
         }
 
         // Display delete confirmation
-        public IActionResult Delete(int productId) // Adjust if ProductId is a different type
-        {
-            var product = _productRepo.GetProductById(productId);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
+        //public IActionResult Delete(int productId) // Adjust if ProductId is a different type
+        //{
+        //    var product = _productRepo.GetProductById(productId);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(product);
+        //}
 
-        // Handle product deletion
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int productId) // Adjust if ProductId is a different type
-        {
-            var success = _productRepo.DeleteProduct(productId);
-            if (success)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+        //// Handle product deletion
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult DeleteConfirmed(int productId) // Adjust if ProductId is a different type
+        //{
+        //    var success = _productRepo.DeleteProduct(productId);
+        //    if (success)
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
     }
 }

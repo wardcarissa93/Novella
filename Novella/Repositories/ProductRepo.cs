@@ -14,52 +14,114 @@ namespace Novella.Repositories
             _db = db;
         }
 
+
+        public List<ProductHomeVM> GetProductsForHome()
+        {
+            var products = _db.Products.Select(p => new ProductHomeVM
+            {
+                ProductId = p.PkProductId.ToString(),
+                ProductName = p.ProductName,
+                Description = p.ProductDescription,
+            }).ToList();
+            return products;
+        }
+
+        public List<ProductCategoryVM> GetProductsForPendant()
+        {
+            int pendantCategoryId = 1; 
+
+            var products = _db.Products
+                               .Where(p => p.FkCategoryId == pendantCategoryId)
+                               .Select(p => new ProductCategoryVM
+                               {
+                                   ProductId = p.PkProductId.ToString(),
+                                   ProductName = p.ProductName,
+                                   Price = p.Price
+                               })
+                               .ToList();
+
+            return products;
+        }
+
+        public List<ProductCategoryVM> GetProductsForChoker()
+        {
+            int pendantCategoryId = 2; 
+
+            var products = _db.Products
+                               .Where(p => p.FkCategoryId == pendantCategoryId)
+                               .Select(p => new ProductCategoryVM
+                               {
+                                   ProductId = p.PkProductId.ToString(),
+                                   ProductName = p.ProductName,
+                                   Price = p.Price
+                               })
+                               .ToList();
+
+            return products;
+        }
+
+        public List<ProductCategoryVM> GetProductsForChain()
+        {
+            int pendantCategoryId = 3; 
+
+            var products = _db.Products
+                               .Where(p => p.FkCategoryId == pendantCategoryId)
+                               .Select(p => new ProductCategoryVM
+                               {
+                                   ProductId = p.PkProductId.ToString(),
+                                   ProductName = p.ProductName,
+                                   Price = p.Price
+                               })
+                               .ToList();
+
+            return products;
+        }
         public List<ProductAdminVM> GetProductsForAdmin()
         {
             var products = _db.Products
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.PkProductId.ToString(), // Assuming ProductId in ProductAdminVM is a string
+                    ProductId = p.ProductId,
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityAvailable // Changed to QuantityAvailable
+                    QuantityInStock = p.QuantityInStock
                 }).ToList();
 
             return products;
         }
 
-        public ProductAdminVM GetProductById(int productId) // Changed parameter type to int
+        // Fetch a single product by ID
+        public ProductAdminVM GetProductById(string productId)
         {
             var product = _db.Products
-                .Where(p => p.PkProductId == productId)
+                .Where(p => p.ProductId == productId)
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.PkProductId.ToString(), // Assuming ProductId in ProductAdminVM is a string
+                    ProductId = p.ProductId,
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityAvailable // Changed to QuantityAvailable
+                    QuantityInStock = p.QuantityInStock
                 }).FirstOrDefault();
 
             return product;
         }
 
+        // Update a product
         public bool EditProduct(ProductAdminVM productVM)
         {
-            if (int.TryParse(productVM.ProductId, out int productId))
+            var product = _db.Products.Find(productVM.ProductId);
+            if (product != null)
             {
-                var product = _db.Products.Find(productId);
-                if (product != null)
-                {
-                    product.ProductName = productVM.ProductName;
-                    product.QuantityAvailable = productVM.QuantityInStock; // Changed to QuantityAvailable
-                    // Update other fields as necessary
+                product.ProductName = productVM.ProductName;
+                product.QuantityInStock = productVM.QuantityInStock;
+                // Update other fields as necessary
 
-                    _db.SaveChanges();
-                    return true;
-                }
+                _db.SaveChanges();
+                return true;
             }
             return false;
         }
 
-        public bool DeleteProduct(int productId)  
+        // Delete a product
+        public bool DeleteProduct(string productId)
         {
             var product = _db.Products.Find(productId);
             if (product != null)
