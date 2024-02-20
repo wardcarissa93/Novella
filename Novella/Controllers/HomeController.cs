@@ -2,24 +2,29 @@
 using Novella.EfModels;
 using System.Diagnostics;
 using Novella.Models;
+using Novella.Repositories;
 
 namespace Novella.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly NovellaContext _db;
+        private readonly ProductRepo _productRepo;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db)
         {
             _logger = logger;
-            _db = db;
+            _productRepo = new ProductRepo(db);
+         
         }
 
         public IActionResult Index()
         {
-            return View();
+            var products = _productRepo.GetProductsForHome();
+            return View(products);
+           
+
         }
 
         public IActionResult Detail()
@@ -29,16 +34,19 @@ namespace Novella.Controllers
 
         public IActionResult Pendant()
         {
-            return View();
+            var products = _productRepo.GetProductsForPendant();
+            return View(products);
         }
 
         public IActionResult Choker()
         {
-            return View();
+            var products = _productRepo.GetProductsForChoker();
+            return View(products);
         }
         public IActionResult Chain()
         {
-            return View();
+            var products = _productRepo.GetProductsForChain();
+            return View(products);
         }
 
         public IActionResult Privacy()
