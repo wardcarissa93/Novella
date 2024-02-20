@@ -17,7 +17,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<NovellaContext>(options =>
+                                       options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(connectionString));
+
 
 var app = builder.Build();
 
