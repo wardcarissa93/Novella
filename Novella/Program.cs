@@ -5,22 +5,33 @@ using Novella.Data;
 using Novella.Data.Services;
 using Novella.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Example SQLite connection string format
+var connectionString = "Data Source=.\\wwwroot\\Novella.db;";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(connectionString)); // Use SQLite
+
+builder.Services.AddDbContext<NovellaContext>(options =>
+    options.UseSqlite(connectionString)); // Use SQLite
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString)); // Use SQL Server
+
+builder.Services.AddDbContext<NovellaContext>(options =>
+    options.UseSqlServer(connectionString)); // Use SQL Server
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddDbContext<NovellaContext>(options =>
-                                       options.UseSqlServer(connectionString));
+
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 

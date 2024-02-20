@@ -33,7 +33,7 @@ namespace Novella.Services
 
             var client = new SendGridClient(apiKey);
 
-            var from = new EmailAddress("craig_watson@bcit.ca", "Craig Watson");
+            var from = new EmailAddress("suchysilvio@gmail.com", "Silvio Suchy");
 
             var subject = payload.Subject;
 

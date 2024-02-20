@@ -123,31 +123,6 @@ namespace Novella.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            string captchaResponse = Request.Form["g-Recaptcha-Response"];
-
-            string secret = _configuration["Recaptcha:SecretKey"];
-
-            ReCaptchaValidationResult resultCaptcha =
-
-                ReCaptchaValidator.IsValid(secret, captchaResponse);
-
-
-
-            // Invalidate the form if the captcha is invalid. 
-
-            if (!resultCaptcha.Success)
-
-            {
-
-                ViewData["SiteKey"] = _configuration["Recaptcha:SiteKey"];
-
-                ModelState.AddModelError(string.Empty,
-
-                    "The ReCaptcha is invalid.");
-
-            }
-
             if (ModelState.IsValid)
             {
                 var user = CreateUser();

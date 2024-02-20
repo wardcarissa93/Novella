@@ -11,8 +11,8 @@ using Novella.Data;
 namespace Novella.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231227022935_UpdatedModels")]
-    partial class UpdatedModels
+    [Migration("20240220182450_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
