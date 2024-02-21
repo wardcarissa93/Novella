@@ -526,3 +526,92 @@ img {
 #login-page {
     justify-content: space-around;
 }
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+#dashboard-title {
+    color: #0056b3;
+    margin-bottom: 30px;
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-create {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-edit, .btn-details {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+/* Table Styles */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .styled-table thead th {
+        background-color: #0056b3;
+        color: #ffffff;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .styled-table tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+    }
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+
+    .styled-table thead th, .styled-table tbody td {
+        padding: 8px;
+    }
+}
