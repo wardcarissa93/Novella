@@ -81,9 +81,9 @@ namespace Novella.Repositories
             var products = _db.Products
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.ProductId,
+                    ProductId = p.PkProductId.ToString(),
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityInStock
+                    QuantityInStock = p.QuantityAvailable
                 }).ToList();
 
             return products;
@@ -93,12 +93,12 @@ namespace Novella.Repositories
         public ProductAdminVM GetProductById(string productId)
         {
             var product = _db.Products
-                .Where(p => p.ProductId == productId)
+                .Where(p => p.PkProductId.ToString() == productId)
                 .Select(p => new ProductAdminVM
                 {
-                    ProductId = p.ProductId,
+                    ProductId = p.PkProductId.ToString(),
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityInStock
+                    QuantityInStock = p.QuantityAvailable
                 }).FirstOrDefault();
 
             return product;
@@ -111,7 +111,7 @@ namespace Novella.Repositories
             if (product != null)
             {
                 product.ProductName = productVM.ProductName;
-                product.QuantityInStock = productVM.QuantityInStock;
+                product.QuantityAvailable = productVM.QuantityInStock;
                 // Update other fields as necessary
 
                 _db.SaveChanges();
