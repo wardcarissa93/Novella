@@ -28,7 +28,7 @@
         </div>
     </div>
     <div id="continue-shopping">
-        <a href="#">
+        <a href="@Url.Action("Index", "Home")">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
             </svg> CONTINUE SHOPPING
@@ -37,8 +37,8 @@
     <div class="detail-container">
         <img id="detail-img" src="~/Images/categories/chains/chain1.jpeg" />
         <div id="detail-text">
-            <p id="detail-title">Urban Edge Chokers</p>
-            <p id="detail-subtitle">in 4K White Gold 16-18"</p>
+            <p id="detail-title">@ViewBag.ProductName</p>
+            <p id="detail-subtitle">@ViewBag.Description</p>
             <div class="detail-line"></div>
             <div id="detail-qty">
                 <span>Quantity</span>
@@ -54,9 +54,59 @@
             </div> *@
            @*  <p id="detail-length"></p> *@
             <button id="detail-add-button">
-                <span id="detail-price">CDN $500</span>
+                <span id="detail-price">CDN $@ViewBag.Price</span>
                 <span>Add to Bag</span>
             </button>
         </div>
     </div>
 </main>
+
+<script>
+    // JavaScript for plus and minus buttons
+    document.addEventListener('DOMContentLoaded', function () {
+        var minusButton = document.getElementById('minus');
+        var plusButton = document.getElementById('plus');
+        var productQty = document.getElementById('productQty');
+        var price = document.getElementById('detail-price');
+        var cartAmount = document.getElementById('nav-cart-amount');
+
+        // Retrieve the cart amount from session storage or default to 0
+        var cartAmountValue = sessionStorage.getItem('cartAmount');
+        if (cartAmountValue) {
+            cartAmount.textContent = cartAmountValue;
+        } else {
+            cartAmount.textContent = '0';
+        }
+
+        // Parse the original price and remove "CDN $" from the text
+        var originalPrice = parseFloat(price.textContent.replace('CDN $', ''));
+
+        minusButton.addEventListener('click', function () {
+            var qty = parseInt(productQty.textContent);
+            if (qty > 1) {
+                productQty.textContent = qty - 1;
+                price.textContent = 'CDN $' + (originalPrice * (qty - 1)).toFixed(2);
+                updateCartAmount(qty - 1);
+            }
+        });
+
+        plusButton.addEventListener('click', function () {
+            var qty = parseInt(productQty.textContent);
+            productQty.textContent = qty + 1;
+            price.textContent = 'CDN $' + (originalPrice * (qty + 1)).toFixed(2);
+            updateCartAmount(qty + 1);
+        });
+
+        function updateCartAmount(quantity) {
+            cartAmount.textContent = quantity;
+            // Update session storage with the new cart amount
+            sessionStorage.setItem('cartAmount', quantity);
+        }
+    });
+</script>
+
+
+
+
+
+

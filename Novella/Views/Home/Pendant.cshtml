@@ -44,7 +44,7 @@
         <div class="product-cat-container">
             @foreach(var item in Model){
             <div class="product-card">
-                    <a href="@Url.Action("Detail", "Home", new { productName =  @Html.DisplayNameFor(model => model.ProductName)})">
+                    <a href="@Url.Action("Detail", "Home", new { productName =  item.ProductName, price = item.Price, description = item.Description})">
                     <img src="~/Images/categories/pendant/pendant1.jpeg" alt="pendant1" />
                     <p class="card-title">@item.ProductName</p>
                     </a>

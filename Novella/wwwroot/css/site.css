@@ -90,6 +90,15 @@ footer{
 .cart-icon-container {
     color: rgba(98, 174, 233, 1);
     margin: 0px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#nav-cart-amount{
+    margin: 0px 10px;
+    font-weight: bold;
 }
 
 /*footer*/
@@ -229,6 +238,10 @@ footer{
     margin-top: 15px;
 }
 
+.bestseller-title:hover {   
+    color: rgba(98, 174, 233, 1);
+}
+
 .rating-icons {
     display: flex;
     justify-content: center;
@@ -240,7 +253,7 @@ footer{
 .rating-description{
     padding: 20px;
     text-align: center;
-    margin-top: 20px;
+    
 }
 
 .home-slider{
@@ -266,8 +279,9 @@ footer{
 /*product detail*/
 #plus, #minus {
     color: rgba(98, 174, 233, 1);
-    font-weight: bold;
-    margin: 0px 5px;
+    font-weight: bolder;
+    margin: 0px 10px;
+    font-size: 16px;
 }
 
 #continue-shopping{
@@ -292,6 +306,10 @@ footer{
     font-size: 25px;
     font-weight: bold;
 
+}
+
+#detail-subtitle{
+    max-width:280px;
 }
 
 #detail-text{
@@ -396,8 +414,9 @@ select {
 
 .product-cat-container {
     display: grid;
+    display: flex;
     grid-template-columns: repeat(4, 200px);
-    gap: 50px 140px;
+    gap: 50px 110px;
     margin-top: 50px;
 }
 
@@ -424,6 +443,10 @@ select {
     font-weight: bold;
     margin-top: 10px;
 }
+
+    .card-title:hover {
+        color: rgba(98, 174, 233, 1);
+    }
 
 .card-price {
     

@@ -1,4 +1,5 @@
-﻿using Novella.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Novella.Data;
 using Novella.EfModels;
 using Novella.ViewModels;
 using System.Linq;
@@ -14,6 +15,34 @@ namespace Novella.Repositories
             _db = db;
         }
 
+        public List<ProductHomeVM> GetProductsWithReviewsForHome()
+        {
+            var productsWithReviews = new List<ProductHomeVM>();
+
+            var products = _db.Products.ToList(); // Fetch all products
+
+            foreach (var product in products)
+            {
+                var productVM = new ProductHomeVM
+                {
+                  
+                    ProductId = product.PkProductId.ToString(),
+                    ProductName = product.ProductName,
+                    Price = product.Price,
+                    Description = product.ProductDescription,
+                    Review = _db.Ratings
+                                .Where(r => r.FkProductId == product.PkProductId && r.Review != null)
+                                .Select(r => r.Review)
+                                .ToList()
+                };
+
+                productsWithReviews.Add(productVM);
+            }
+
+            return productsWithReviews;
+        }
+
+
 
         public List<ProductHomeVM> GetProductsForHome()
         {
@@ -22,6 +51,7 @@ namespace Novella.Repositories
                 ProductId = p.PkProductId.ToString(),
                 ProductName = p.ProductName,
                 Description = p.ProductDescription,
+                Price = p.Price
             }).ToList();
             return products;
         }
@@ -36,7 +66,8 @@ namespace Novella.Repositories
                                {
                                    ProductId = p.PkProductId.ToString(),
                                    ProductName = p.ProductName,
-                                   Price = p.Price
+                                   Price = p.Price,
+                                   Description = p.ProductDescription,
                                })
                                .ToList();
 
@@ -53,7 +84,8 @@ namespace Novella.Repositories
                                {
                                    ProductId = p.PkProductId.ToString(),
                                    ProductName = p.ProductName,
-                                   Price = p.Price
+                                   Price = p.Price,
+                                   Description = p.ProductDescription,
                                })
                                .ToList();
 
@@ -70,7 +102,8 @@ namespace Novella.Repositories
                                {
                                    ProductId = p.PkProductId.ToString(),
                                    ProductName = p.ProductName,
-                                   Price = p.Price
+                                   Price = p.Price,
+                                   Description = p.ProductDescription,
                                })
                                .ToList();
 
