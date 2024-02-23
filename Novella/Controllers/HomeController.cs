@@ -56,6 +56,11 @@ namespace Novella.Controllers
             return View(products);
         }
 
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
