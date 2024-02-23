@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS ImageStore;
+
+CREATE TABLE ImageStore (
+	-- pkImageId is the primary key
+	-- Values start at 1 and increment by 1
+	pkImageId					INTEGER IDENTITY(1,1),
+	-- Each entry in ImageStore has a unique fileName
+	[fileName]					VARCHAR(50)				NOT NULL UNIQUE,
+	-- Each entry in ImageStore has an associated image
+	[image]						VARBINARY(MAX)			NOT NULL,
+	-- fkProductId is a foreign key that references the Product table and is required
+	fkProductId					INTEGER					FOREIGN KEY REFERENCES Product(pkProductId) NOT NULL,
+
+	CONSTRAINT PK_ImageStore PRIMARY KEY CLUSTERED ( pkImageId ASC )
+);
