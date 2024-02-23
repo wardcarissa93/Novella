@@ -21,19 +21,26 @@ namespace Novella.Controllers
 
         public IActionResult Index()
         {
-            var products = _productRepo.GetProductsForHome();
+            var products = _productRepo.GetProductsWithReviewsForHome();
             return View(products);
-           
-
+          
         }
 
-        public IActionResult Detail()
+        public IActionResult Detail(string productName, decimal price, string description)
         {
+            ViewBag.ProductName = productName;
+            ViewBag.Price = price;
+            ViewBag.Description = description;
+            
             return View();
         }
 
-        public IActionResult Pendant()
+        public IActionResult Pendant(string productName, decimal price, string description)
         {
+            ViewBag.ProductName = productName;
+            ViewBag.Price = price;
+            ViewBag.Description = description;
+
             var products = _productRepo.GetProductsForPendant();
             return View(products);
         }
