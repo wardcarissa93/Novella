@@ -5,6 +5,7 @@ using Novella.ViewModels;
 using System;
 using Microsoft.Extensions.Logging;
 using Novella.EfModels;
+using Novella.Models;
 
 namespace Novella.Controllers
 {
@@ -26,18 +27,18 @@ namespace Novella.Controllers
             return View(products);
         }
 
-        // Display product edit form
-        //public IActionResult Edit(int productId) // Assuming ProductId is int; adjust if it's a different type
-        //{
-        //    var product = _productRepo.GetProductById(productId);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(product);
-        //}
+        public IActionResult Edit(int id)
+        {
+            var productVM = _productRepo.GetProductById(id.ToString());
+            if (productVM == null)
+            {
+                return NotFound();
+            }
 
-        // Handle product edit form submission
+            return View(productVM);
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ProductAdminVM productVM)
@@ -61,31 +62,58 @@ namespace Novella.Controllers
             return View(productVM);
         }
 
-        // Display delete confirmation
-        //public IActionResult Delete(int productId) // Adjust if ProductId is a different type
-        //{
-        //    var product = _productRepo.GetProductById(productId);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(product);
-        //}
+        public IActionResult Create()
+        {
+            return View(new ProductVM()); // Initialize your ViewModel if needed
+        }
 
-        //// Handle product deletion
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult DeleteConfirmed(int productId) // Adjust if ProductId is a different type
-        //{
-        //    var success = _productRepo.DeleteProduct(productId);
-        //    if (success)
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(ProductVM productVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = new Product
+                {
+                    // Assuming your Product entity matches these properties
+                    ProductName = productVM.ProductName,
+                    Price = productVM.Price,
+                    ProductDescription = productVM.ProductDescription,
+                    QuantityAvailable = productVM.QuantityAvailable,
+                    FkCategoryId = productVM.CategoryId
+                };
+
+                bool success = _productRepo.AddProduct(product);
+                if (success)
+                {
+                    // Redirect to a confirmation page, product list, or another appropriate action
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "There was a problem saving the product. Please try again.");
+                }
+            }
+
+            // If we got this far, something failed; redisplay form
+            return View(productVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            bool success = _productRepo.DeleteProduct(id);
+            if (success)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // Optionally, add a model error or a flash message indicating failure
+                return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" }); // Ensure you have an ErrorViewModel and view
+            }
+        }
+
     }
 }

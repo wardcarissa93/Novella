@@ -123,15 +123,16 @@ namespace Novella.Repositories
         }
 
         // Fetch a single product by ID
-        public ProductAdminVM GetProductById(string productId)
+        public ProductVM GetProductById(string productId)
         {
             var product = _db.Products
                 .Where(p => p.PkProductId.ToString() == productId)
-                .Select(p => new ProductAdminVM
+                .Select(p => new ProductVM
                 {
-                    ProductId = p.PkProductId.ToString(),
+                    ProductId = p.PkProductId,
                     ProductName = p.ProductName,
-                    QuantityInStock = p.QuantityAvailable
+                    QuantityAvailable = p.QuantityAvailable,
+                    ProductDescription = p.ProductDescription
                 }).FirstOrDefault();
 
             return product;
@@ -153,17 +154,37 @@ namespace Novella.Repositories
             return false;
         }
 
-        // Delete a product
-        public bool DeleteProduct(string productId)
+        public bool AddProduct(Product product)
         {
-            var product = _db.Products.Find(productId);
-            if (product != null)
+            try
             {
+                _db.Products.Add(product);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log the error or handle it as needed
+                return false;
+            }
+        }
+
+        // Delete a product
+        public bool DeleteProduct(int productId)
+        {
+            try
+            {
+                var product = _db.Products.Find(productId);
+                if (product == null) return false;
+
                 _db.Products.Remove(product);
                 _db.SaveChanges();
                 return true;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
         }
     }
 }
