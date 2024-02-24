@@ -2,6 +2,8 @@ using Novella.EfModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Novella.Data;
+using Novella.Data.Services;
+using Novella.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +17,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // Use NovellaContext for the Entity Framework stores
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 
 var app = builder.Build();
