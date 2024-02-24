@@ -12,10 +12,10 @@ namespace Novella.Data
         }
 
         // If UserAccount, Address, Order, OrderStatus are related to Identity and not duplicated in NovellaContext, keep them
-        public DbSet<UserAccount> UserAccounts { get; set; } // Keep if UserAccount extends IdentityUser
-        public DbSet<Address> Addresses { get; set; } // Keep if needed for user addresses
-        public DbSet<Order> Orders { get; set; } // Keep if these orders are related to the authentication/identity context
-        public DbSet<OrderStatus> OrderStatuses { get; set; } // Keep if necessary for order processing in the identity context
+        //public DbSet<UserAccount> UserAccounts { get; set; } // Keep if UserAccount extends IdentityUser
+        //public DbSet<Address> Addresses { get; set; } // Keep if needed for user addresses
+        //public DbSet<Order> Orders { get; set; } // Keep if these orders are related to the authentication/identity context
+        //public DbSet<OrderStatus> OrderStatuses { get; set; } // Keep if necessary for order processing in the identity context
 
         // Remove DbSet properties that are being managed by NovellaContext to avoid duplication
         // Example of removed DbSets:
