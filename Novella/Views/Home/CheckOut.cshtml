@@ -1,0 +1,63 @@
+﻿@model Novella.Models.PayPalConfirmationModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Checkout</h2>
+
+<div class="checkout-form">
+    <!-- Replace the action URL with the URL of your payment processing endpoint -->
+    <form asp-controller="Home" asp-action="PayPalConfirmation" method="post">
+        <div class="form-group">
+            <label asp-for="TransactionId">Transaction ID</label>
+            <input type="text" asp-for="TransactionId" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Amount">Amount</label>
+            <input type="text" asp-for="Amount" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="PayerName">Payer Name</label>
+            <input type="text" asp-for="PayerName" class="form-control" />
+        </div>
+
+        <!-- PayPal button code -->
+        <div id="paypal-button-container"></div>
+            
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PayPalClientID"></script>
+    <script>
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                // Calculate total amount from cart
+                var totalPrice = 1.00; // Implement this function based on your cart management
+
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: totalPrice.toString()
+                        }
+                    }]
+                });
+            },
+
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    // Redirect to a confirmation page with the order details
+                    window.location.href = '/Home/PayPalConfirmation?TransactionId=' +
+                        encodeURIComponent(details.id) + '&Amount=' +
+                        encodeURIComponent(details.purchase_units[0].amount.value) + '&PayerName=' +
+                        encodeURIComponent(details.payer.name.given_name);
+                });
+            },
+            // Include onCancel and onError functions as previously defined
+        }).render('#paypal-button-container');
+    </script>
+
+}
+@{
+}

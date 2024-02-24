@@ -10,13 +10,15 @@ namespace Novella.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ProductRepo _productRepo;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
         public HomeController(ILogger<HomeController> logger,
-                              NovellaContext db)
+                              NovellaContext db,
+                              IConfiguration configuration)
         {
             _logger = logger;
             _productRepo = new ProductRepo(db);
-         
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -54,6 +56,25 @@ namespace Novella.Controllers
         {
             var products = _productRepo.GetProductsForChain();
             return View(products);
+        }
+
+
+
+        public IActionResult CheckOut()
+        {
+
+            ViewBag.PayPalClientID = _configuration["PayPal:ClientID"];
+            return View();
+        }
+
+
+
+        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+
+        {
+
+            return View(payPalConfirmationModel);
+
         }
 
         public IActionResult Privacy()
