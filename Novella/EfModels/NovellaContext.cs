@@ -335,4 +335,6 @@ public partial class NovellaContext : DbContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
     public DbSet<Novella.ViewModels.ProductAdminVM> ProductAdminVM { get; set; } = default!;
+
+    public DbSet<Novella.ViewModels.ProductVM> ProductVM { get; set; } = default!;
 }
