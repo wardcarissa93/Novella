@@ -6,6 +6,10 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<!-- A reference is required to the Google API -->
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -27,7 +31,12 @@
                 <label asp-for="Input.ConfirmPassword" hidden>Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="custom-button">Register</button>
+
+                <!-- This must be placed inside the form. -->
+
+                <div class="g-recaptcha" data-sitekey='@ViewData["SiteKey"]'></div><br />
+
+                <button id="registerSubmit" type="submit" class="custom-button">Register</button>
         </form>
     </div>
 </div>
