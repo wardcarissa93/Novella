@@ -16,6 +16,8 @@ namespace Novella.ViewModels
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
+        [Required(ErrorMessage = "Please select a file.")]
+        public IFormFile ImageFile { get; set; }
 
     }
 }
