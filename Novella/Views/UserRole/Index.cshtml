@@ -4,12 +4,14 @@
     ViewData["Title"] = "User Roles";
 }
 
+<link href="~/css/user-roles.css" rel="stylesheet" />
+
 <h1>User Roles</h1>
 <p>
-    <a asp-action="Create">Create New User Role</a>
+    <a href="@Url.Action("Create")" class="btn user-roles-create-btn"><i class="fas fa-plus-circle"></i> Create New User Role</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table user-roles-table">
+    <thead class="user-roles-header">
         <tr>
             <th>Email</th>
             <th>Actions</th>
@@ -21,11 +23,11 @@
             <tr>
                 <td>@item.Email</td>
                 <td>
-                    @Html.ActionLink( "View Roles"
-                , "Detail"
-                , new { userName = item.Email })
+                    <a href="@Url.Action("Detail", new { userName = item.Email })" class="btn btn-sm user-roles-view-btn"><i class="fas fa-eye"></i> View Roles</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>

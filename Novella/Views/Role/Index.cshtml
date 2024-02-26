@@ -9,21 +9,22 @@
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-info">
+    <div class="alert alert-info custom-alert">
         @TempData["Message"]
     </div>
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p class="create-new-link">
+    <a asp-action="Create" class="create-link">Create New</a> 
 </p>
-<table class="table">
+
+<table class="table role-table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.RoleName)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +36,7 @@
                 </td>
                 <td>
                     <a asp-controller="Role" asp-action="Delete" asp-route-roleName="@item.RoleName"
-                       class="text-danger" onclick="return confirm('Are you sure you want to delete this role?');">
+                       class=" delete-role-link" onclick="return confirm('Are you sure you want to delete this role?');">
                         Delete
                     </a>
                 </td>

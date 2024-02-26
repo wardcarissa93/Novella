@@ -2,12 +2,12 @@
 
 <h4>Assign User Role</h4>
 <hr />
-<div class="row">
+<div class="row user-role-assignment">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" class="user-role-form">
             <input type="hidden" asp-antiforgery="true" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group user-email-select">
                 <label asp-for="Email" class="control-label"></label>
                 @Html.DropDownList("Email",
                 new SelectList(ViewBag.UserSelectList, "Value", "Text",
@@ -15,7 +15,7 @@
                 "Select User", new { @id = "userDD", @class = "form-control" })
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group user-role-select">
                 <label asp-for="Role" class="control-label"></label>
                 @Html.DropDownList("Role",
                 new SelectList(ViewBag.RoleSelectList, "Value", "Text"),
@@ -23,8 +23,7 @@
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button id="assignUserRole" type="submit"
-                        class="w-100 btn btn-sm btn-primary">
+                <button id="assignUserRole" type="submit" class="w-100 btn btn-sm btn-primary user-role-assign-btn">
                     Assign
                 </button>
             </div>
