@@ -12,4 +12,6 @@ public partial class ImageStore
     public byte[] Image { get; set; } = null!;
 
     public int FkProductId { get; set; }
+
+    public virtual Product FkProduct { get; set; } = null!;
 }
