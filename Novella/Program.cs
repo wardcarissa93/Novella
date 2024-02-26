@@ -1,8 +1,13 @@
-using Novella.EfModels;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Novella.Data;
 using Novella.Data.Services;
+using Novella.EfModels;
 using Novella.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,20 +15,33 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+// Register the DbContexts with SQL Server
 builder.Services.AddDbContext<NovellaContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Use NovellaContext for the Entity Framework stores
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Set up Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
+// Additional services
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+// Register the authorization services
+builder.Services.AddAuthorization();
+
+// Register MVC services for controllers and views
+builder.Services.AddControllersWithViews(); // For MVC applications
+
+// Add Razor Pages services
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -35,7 +53,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -44,12 +61,16 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Ensure you call this if you're using Identity
+// Setup authentication and authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Map controller routes
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Map Razor Pages
 app.MapRazorPages();
 
 app.Run();
