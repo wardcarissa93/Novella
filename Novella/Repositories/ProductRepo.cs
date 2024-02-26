@@ -88,6 +88,7 @@ namespace Novella.Repositories
                                    ProductName = p.ProductName,
                                    Price = p.Price,
                                    Description = p.ProductDescription,
+                                   Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
                                })
                                .ToList();
 
@@ -106,6 +107,7 @@ namespace Novella.Repositories
                                    ProductName = p.ProductName,
                                    Price = p.Price,
                                    Description = p.ProductDescription,
+                                   Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
                                })
                                .ToList();
 
@@ -134,7 +136,8 @@ namespace Novella.Repositories
                     ProductId = p.PkProductId,
                     ProductName = p.ProductName,
                     QuantityAvailable = p.QuantityAvailable,
-                    ProductDescription = p.ProductDescription
+                    ProductDescription = p.ProductDescription,
+                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
                 }).FirstOrDefault();
 
             return product;

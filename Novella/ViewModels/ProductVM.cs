@@ -13,6 +13,9 @@ namespace Novella.ViewModels
         public string ProductDescription { get; set; }
 
         public int QuantityAvailable { get; set; }
+
+        public decimal Rating { get; set; }
+
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
