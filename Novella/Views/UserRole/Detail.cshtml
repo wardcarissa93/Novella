@@ -4,18 +4,17 @@
     ViewData["Title"] = "User Roles Detail";
 }
 
-<h3>User: @ViewBag.UserName</h3>
+ <h3 class="user-detail-header">User: @ViewBag.UserName</h3>
 
-<p>
-    @Html.ActionLink( "Assign Roles"
-    , "Create"
-    , new { userName = @ViewBag.UserName })
+ <p class="assign-roles-link">
+    @Html.ActionLink("Assign Roles", "Create", new { userName = @ViewBag.UserName }, new { @class = "btn btn-primary" })
 </p>
 
-<table class="table">
+ <table class="table user-roles-table">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.RoleName)</th>
+            <th>Actions</th>  
         </tr>
     </thead>
     <tbody>
@@ -23,10 +22,10 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRoleFromUser", new { userName = @ViewBag.UserName, roleName = item.RoleName }, new { @class = "btn btn-danger btn-sm role-delete-btn", onclick = "return confirm('Are you sure you want to delete this role?');" })
+                </td>
             </tr>
-        <td>
-                @Html.ActionLink("Delete", "DeleteRoleFromUser", new { userName = @ViewBag.UserName, roleName = item.RoleName }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('Are you sure you want to delete this role?');" })
-        </td>
         }
     </tbody>
 </table>

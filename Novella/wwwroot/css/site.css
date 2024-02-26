@@ -19,8 +19,6 @@ html {
 
 body {
   box-sizing: border-box;
-  min-height: 100vh;
-  min-width: 100vw;
   margin: 0;
   padding: 0;
 }
@@ -101,8 +99,11 @@ footer{
     font-weight: bold;
 }
 
+.content-container{
+    min-height:60vh;
+}
 /*footer*/
-#logo-footer{
+#logo-footer {
     width: 50px;
     height: auto;
 }
@@ -638,5 +639,221 @@ img {
         padding: 8px;
     }
 
- 
 }
+
+/* General Styles for User Role Assignment Form */
+.user-role-assignment h4 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.user-role-assignment hr {
+    border-top: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+/* Form Specific Styles */
+.user-role-assignment .user-role-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-role-assignment .form-group {
+    margin-bottom: 15px;
+}
+
+.user-role-assignment .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+}
+
+    .user-role-assignment .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+.user-role-assignment .btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .user-role-assignment .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+.user-role-assignment .text-danger {
+    color: #dc3545;
+}
+
+/* User Detail Header Styles */
+.user-detail-header {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Assign Roles Link Button Styles */
+.assign-roles-link .btn-primary {
+    padding: 0.375rem 0.75rem;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    text-decoration: none;
+    border-radius: 0.25rem;
+}
+
+    .assign-roles-link .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+/* User Roles Table Styles */
+.user-roles-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+    .user-roles-table th,
+    .user-roles-table td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+/* Role Delete Button Styles */
+.role-delete-btn {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+    .role-delete-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+/* user-roles.css */
+.user-roles-header {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.user-roles-table {
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.user-roles-create-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+    .user-roles-create-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+.user-roles-action-link {
+    margin-right: 10px;
+}
+
+.user-roles-view-btn {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+    .user-roles-view-btn:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+/* "Create New" Link Styles */
+.create-new-link .create-link {
+    display: inline-block;
+    padding: 8px 15px;
+    color: #ffffff;
+    background-color: #007bff; /* Adjusted to a more standard blue */
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+    .create-new-link .create-link:hover {
+        background-color: #0056b3;
+    }
+
+/* Custom Alert Box Styles */
+.custom-alert {
+    padding: 10px;
+    border: 1px solid #bee5eb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* "Delete" Link Styles to Mimic Button Appearance */
+.delete-role-link {
+    padding: 5px 10px;
+    color: #f8f9fa !important;
+    background-color: #dc3545; /* Red for a cautionary action */
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+    .delete-role-link:hover {
+        background-color: #c82333;
+    }
+
+/* Form Header Styles */
+.form-header {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Role Creation Form Styles */
+.role-creation-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.role-creation-form .role-name-input {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.role-creation-form .submit-role-btn {
+    width: 100%;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .role-creation-form .submit-role-btn:hover {
+        background-color: #0056b3;
+        border-color: #004095;
+    }
+
+/* Back to List Link Styles */
+.back-to-list-link a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+    .back-to-list-link a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+

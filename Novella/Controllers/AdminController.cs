@@ -64,7 +64,7 @@ namespace Novella.Controllers
 
         public IActionResult Create()
         {
-            return View(new ProductVM()); // Initialize your ViewModel if needed
+            return View(new ProductVM());  
         }
 
         [HttpPost]
