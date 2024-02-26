@@ -51,35 +51,37 @@ namespace Novella.Repositories
                 ProductId = p.PkProductId.ToString(),
                 ProductName = p.ProductName,
                 Description = p.ProductDescription,
-                Price = p.Price
-            }).ToList();
+                Price = p.Price,
+                Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
+            })
+            .ToList();
             return products;
         }
 
         public List<ProductCategoryVM> GetProductsForPendant()
         {
-            int pendantCategoryId = 1; 
+            int pendantCategoryId = 1;
 
             var products = _db.Products
-                               .Where(p => p.FkCategoryId == pendantCategoryId)
-                               .Select(p => new ProductCategoryVM
-                               {
-                                   ProductId = p.PkProductId.ToString(),
-                                   ProductName = p.ProductName,
-                                   Price = p.Price,
-                                   Description = p.ProductDescription,
-                               })
-                               .ToList();
-
+                                .Where(p => p.FkCategoryId == pendantCategoryId)
+                                .Select(p => new ProductCategoryVM
+                                {
+                                    ProductId = p.PkProductId.ToString(),
+                                    ProductName = p.ProductName,
+                                    Price = p.Price,
+                                    Description = p.ProductDescription,
+                                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
+                                })
+                                .ToList();
             return products;
         }
 
         public List<ProductCategoryVM> GetProductsForChoker()
         {
-            int pendantCategoryId = 2; 
+            int chokerCategoryId = 2; 
 
             var products = _db.Products
-                               .Where(p => p.FkCategoryId == pendantCategoryId)
+                               .Where(p => p.FkCategoryId == chokerCategoryId)
                                .Select(p => new ProductCategoryVM
                                {
                                    ProductId = p.PkProductId.ToString(),
@@ -94,10 +96,10 @@ namespace Novella.Repositories
 
         public List<ProductCategoryVM> GetProductsForChain()
         {
-            int pendantCategoryId = 3; 
+            int chainCategoryId = 3; 
 
             var products = _db.Products
-                               .Where(p => p.FkCategoryId == pendantCategoryId)
+                               .Where(p => p.FkCategoryId == chainCategoryId)
                                .Select(p => new ProductCategoryVM
                                {
                                    ProductId = p.PkProductId.ToString(),

@@ -278,7 +278,7 @@ public partial class NovellaContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("fkUserId");
-            entity.Property(e => e.Rating1)
+            entity.Property(e => e.RatingValue)
                 .HasColumnType("decimal(2, 1)")
                 .HasColumnName("rating");
             entity.Property(e => e.Review)
