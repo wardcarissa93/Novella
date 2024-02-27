@@ -323,7 +323,7 @@ namespace Novella.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("fkUserId");
 
-                    b.Property<decimal?>("Rating1")
+                    b.Property<decimal?>("Rating")
                         .HasColumnType("decimal(2, 1)")
                         .HasColumnName("rating");
 
