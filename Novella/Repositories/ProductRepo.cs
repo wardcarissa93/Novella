@@ -186,5 +186,22 @@ namespace Novella.Repositories
                 return false;
             }
         }
+
+        //Add Product Image
+        public bool AddImage(ImageStore imageStore)
+        {
+            try
+            {
+                _db.ImageStores.Add(imageStore);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+      
+                return false;
+            }
+        }
+
     }
 }
