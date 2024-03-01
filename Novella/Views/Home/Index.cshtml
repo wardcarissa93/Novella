@@ -35,6 +35,20 @@
                             <p class="bestseller-title">@item.ProductName</p>
                         </a>
                         <div class="rating-container">
+
+
+                            <div class="rating-icons">
+                                <!-- Your rating icons -->
+                            </div>
+
+                            @if (item.Review != null && item.Review.Count > 0)
+                            {
+                                <p class="rating-description">@item.Review[0]</p>
+                            }
+                            else
+                            {
+                                <p class="rating-description">No reviews available</p>
+=======
                             @if (item.Rating == 0)
                             {
                                 <p class="no-rating">No ratings yet</p>
@@ -78,6 +92,7 @@
                                         </svg>
                                     }
                                 </p>
+
                             }
                         </div>
                     </div>
@@ -88,6 +103,7 @@
                     break; // Exit the loop once three products are displayed
                 }
             }
+
         </div>
     </section>
 </main>

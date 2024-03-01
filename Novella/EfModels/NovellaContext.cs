@@ -210,12 +210,10 @@ public partial class NovellaContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.PkProductId).HasName("PK__Product__4492A4B549F021F0");
-
             entity.ToTable("Product");
-
             entity.Property(e => e.PkProductId)
-                .ValueGeneratedNever()
-                .HasColumnName("pkProductId");
+                .HasColumnName("pkProductId")
+                .UseIdentityColumn(); // Enable auto-increment
             entity.Property(e => e.FkCategoryId).HasColumnName("fkCategoryId");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(6, 2)")
@@ -229,12 +227,14 @@ public partial class NovellaContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("productName");
             entity.Property(e => e.QuantityAvailable).HasColumnName("quantityAvailable");
-
             entity.HasOne(d => d.FkCategory).WithMany(p => p.Products)
                 .HasForeignKey(d => d.FkCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Product__fkCateg__6FE99F9F");
         });
+
+
+
 
         modelBuilder.Entity<ProductCart>(entity =>
         {

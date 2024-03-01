@@ -133,7 +133,7 @@ namespace Novella.Repositories
                 .Where(p => p.PkProductId.ToString() == productId)
                 .Select(p => new ProductVM
                 {
-                    ProductId = p.PkProductId,
+                    ProductId = p.PkProductId.Value,
                     ProductName = p.ProductName,
                     QuantityAvailable = p.QuantityAvailable,
                     ProductDescription = p.ProductDescription,
@@ -159,18 +159,18 @@ namespace Novella.Repositories
             return false;
         }
 
-        public bool AddProduct(Product product)
+        public Product AddProduct(Product product)
         {
             try
             {
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                return true;
+                return product;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Log the error or handle it as needed
-                return false;
+                
+                return new Product(); ;
             }
         }
 
@@ -191,5 +191,22 @@ namespace Novella.Repositories
                 return false;
             }
         }
+
+        //Add Product Image
+        public bool AddImage(ImageStore imageStore)
+        {
+            try
+            {
+                _db.ImageStores.Add(imageStore);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+      
+                return false;
+            }
+        }
+
     }
 }
