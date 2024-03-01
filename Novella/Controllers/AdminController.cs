@@ -223,8 +223,7 @@ namespace Novella.Controllers
             }
             else
             {
-                // Optionally, add a model error or a flash message indicating failure
-                return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" }); // Ensure you have an ErrorViewModel and view
+                return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" }); 
             }
         }
     }
