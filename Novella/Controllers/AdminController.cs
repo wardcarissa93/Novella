@@ -69,81 +69,136 @@ namespace Novella.Controllers
             return View(new ProductVM());  
         }
 
+
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public IActionResult Create(ProductVM productVM)
         //{
         //    if (ModelState.IsValid)
         //    {
-        //        var product = new Product
+        //        try
         //        {
-        //            // Assuming your Product entity matches these properties
-        //            ProductName = productVM.ProductName,
-        //            Price = productVM.Price,
-        //            ProductDescription = productVM.ProductDescription,
-        //            QuantityAvailable = productVM.QuantityAvailable,
-        //            FkCategoryId = productVM.CategoryId
-        //        };
+        //            // Create a new Product entity
+        //            var product = new Product
+        //            {
+        //                Price = productVM.Price,
+        //                ProductName = productVM.ProductName,
+        //                ProductDescription = productVM.ProductDescription,
+        //                QuantityAvailable = productVM.QuantityAvailable,
+        //                FkCategoryId = productVM.CategoryId
+        //            };
 
-        //        bool success = _productRepo.AddProduct(product);
-        //        if (success)
-        //        {
-        //            // Redirect to a confirmation page, product list, or another appropriate action
-        //            return RedirectToAction("Index");
+        //            // Add the product to the repository
+        //            Product newProduct = _productRepo.AddProduct(product);
+
+        //            // Check if an image file was provided
+        //            if (productVM.ImageFile != null && productVM.ImageFile.Length > 0)
+        //            {
+        //                // Read the file contents into a byte array
+        //                byte[] imageData;
+        //                using (var ms = new MemoryStream())
+        //                {
+        //                    productVM.ImageFile.CopyTo(ms);
+        //                    imageData = ms.ToArray();
+        //                }
+
+        //                // Create a new ImageStore entity for the uploaded image
+        //                var imageStore = new ImageStore
+        //                {
+        //                    FileName = productVM.ImageFile.FileName,
+        //                    Image = imageData,
+        //                    FkProductId = newProduct.PkProductId.Value
+
+        //                };
+
+        //                // Add the image store to the repository
+        //                bool success = _productRepo.AddImage(imageStore);
+        //                if (success)
+        //                {
+        //                    // Redirect to a confirmation page
+        //                    return RedirectToAction("Index");
+        //                }
+        //                else
+        //                {
+        //                    ModelState.AddModelError("", "There was a problem saving the product image. Please try again.");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", "Please select an image file.");
+        //            }
         //        }
-        //        else
+        //        catch (Exception ex)
         //        {
-        //            ModelState.AddModelError("", "There was a problem saving the product. Please try again.");
+        //            // Log the exception message
+        //            Console.WriteLine("Error adding product: " + ex.Message);
+        //            ModelState.AddModelError("", "There was an unexpected error adding the product. Please try again later.");
         //        }
         //    }
 
-        //    // If we got this far, something failed; redisplay form
+        //    // failed, redisplay form
         //    return View(productVM);
         //}
+
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProductVM productVM)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // Check if an image file was provided
-                if (productVM.ImageFile != null && productVM.ImageFile.Length > 0)
+                if (ModelState.IsValid)
                 {
-                    // Read the file contents into a byte array
-                    byte[] imageData;
-                    using (var ms = new MemoryStream())
+                    var product = new Product
                     {
-                        productVM.ImageFile.CopyTo(ms);
-                        imageData = ms.ToArray();
-                    }
-
-                    // Create a new ImageStore entity for the uploaded image
-                    var imageStore = new ImageStore
-                    {
-                        FileName = productVM.ImageFile.FileName, // Assuming you want to store the file name
-                        Image = imageData, // Set image data property
-                                           // Assuming you have a way to determine the product ID
-                        FkProductId = productVM.ProductId // You may need to adjust this depending on how you retrieve or determine the product ID
+                        ProductName = productVM.ProductName,
+                        Price = productVM.Price,
+                        ProductDescription = productVM.ProductDescription,
+                        QuantityAvailable = productVM.QuantityAvailable,
+                        FkCategoryId = productVM.CategoryId
                     };
-
-                    // Attempt to add the image store to the repository
-                    bool success = _productRepo.AddImage(imageStore); // Adjust this based on your repository method
+                    bool success = _productRepo.AddProduct(product);
                     if (success)
                     {
-                        // Redirect to a confirmation page, product list, or another appropriate action
-                        return RedirectToAction("Index");
+                        // If product added successfully, proceed to image handling
+                        if (productVM.ImageFile != null && productVM.ImageFile.Length > 0)
+                        {
+                            byte[] imageData;
+                            using (var ms = new MemoryStream())
+                            {
+                                productVM.ImageFile.CopyTo(ms);
+                                imageData = ms.ToArray();
+                            }
+
+                            var imageStore = new ImageStore
+                            {
+                                FileName = productVM.ImageFile.FileName,
+                                Image = imageData,
+                                FkProductId = product.PkProductId // Assuming PkProductId is the primary key of the Product entity
+                            };
+
+                            bool imageSaveSuccess = _productRepo.AddImage(imageStore);
+                            if (!imageSaveSuccess)
+                            {
+                                return RedirectToAction("Index"); // Redirect to product list after successful creation
+                            }
+                        }
+
+                       
                     }
                     else
                     {
-                        ModelState.AddModelError("", "There was a problem saving the product image. Please try again.");
+                        ModelState.AddModelError("", "There was a problem saving the product. Please try again.");
                     }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Please select an image file.");
-                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception message
+                Console.WriteLine("Error adding product: " + ex.Message);
+                ModelState.AddModelError("", "There was an unexpected error adding the product. Please try again later.");
             }
 
             // If we got this far, something failed; redisplay form
@@ -152,9 +207,17 @@ namespace Novella.Controllers
 
 
 
+        [HttpGet, ActionName("Details")]
+        public IActionResult Details(int id)
+        {
+            // first get product
+            int productId = id;
+            var product = _productRepo.GetProductById(productId.ToString());
+            return View(product);
+        }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult Delete(int id)
         {
             bool success = _productRepo.DeleteProduct(id);
             if (success)
@@ -167,8 +230,5 @@ namespace Novella.Controllers
                 return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" }); // Ensure you have an ErrorViewModel and view
             }
         }
-
-
-
     }
 }

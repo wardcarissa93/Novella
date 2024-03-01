@@ -162,9 +162,9 @@ namespace Novella.Repositories
                 _db.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Log the error or handle it as needed
+
                 return false;
             }
         }
@@ -196,7 +196,7 @@ namespace Novella.Repositories
                 _db.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
       
                 return false;
