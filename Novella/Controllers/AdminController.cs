@@ -184,9 +184,7 @@ namespace Novella.Controllers
                                 return RedirectToAction("Index"); // Redirect to product list after successful creation
                             }
                         }
-
-                       
-                    
+  
                     else
                     {
                         ModelState.AddModelError("", "There was a problem saving the product. Please try again.");
@@ -200,7 +198,7 @@ namespace Novella.Controllers
                 ModelState.AddModelError("", "There was an unexpected error adding the product. Please try again later.");
             }
 
-            // If we got this far, something failed; redisplay form
+            // failed; redisplay form
             return View(productVM);
         }
 
