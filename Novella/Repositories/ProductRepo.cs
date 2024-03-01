@@ -179,21 +179,31 @@ namespace Novella.Repositories
         {
             try
             {
+                var imageStores = _db.ImageStores.Where(image => image.FkProductId == productId).ToList();
+                if (imageStores.Any())
+                {
+                    _db.ImageStores.RemoveRange(imageStores); // Correctly remove dependent records
+                }
                 var product = _db.Products.Find(productId);
                 if (product == null) return false;
-
                 _db.Products.Remove(product);
                 _db.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return false;
             }
         }
-
-        //Add Product Image
-        public bool AddImage(ImageStore imageStore)
+   
+    //Add Product Image
+    public bool AddImage(ImageStore imageStore)
         {
             try
             {
