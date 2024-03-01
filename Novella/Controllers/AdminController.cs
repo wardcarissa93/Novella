@@ -159,9 +159,8 @@ namespace Novella.Controllers
                         QuantityAvailable = productVM.QuantityAvailable,
                         FkCategoryId = productVM.CategoryId
                     };
-                    bool success = _productRepo.AddProduct(product);
-                    if (success)
-                    {
+                    Product newProduct = _productRepo.AddProduct(product);
+           
                         // If product added successfully, proceed to image handling
                         if (productVM.ImageFile != null && productVM.ImageFile.Length > 0)
                         {
@@ -176,7 +175,7 @@ namespace Novella.Controllers
                             {
                                 FileName = productVM.ImageFile.FileName,
                                 Image = imageData,
-                                FkProductId = product.PkProductId // Assuming PkProductId is the primary key of the Product entity
+                                FkProductId = newProduct.PkProductId.Value 
                             };
 
                             bool imageSaveSuccess = _productRepo.AddImage(imageStore);
@@ -187,7 +186,7 @@ namespace Novella.Controllers
                         }
 
                        
-                    }
+                    
                     else
                     {
                         ModelState.AddModelError("", "There was a problem saving the product. Please try again.");

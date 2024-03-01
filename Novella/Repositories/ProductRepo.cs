@@ -129,7 +129,7 @@ namespace Novella.Repositories
                 .Where(p => p.PkProductId.ToString() == productId)
                 .Select(p => new ProductVM
                 {
-                    ProductId = p.PkProductId,
+                    ProductId = p.PkProductId.Value,
                     ProductName = p.ProductName,
                     QuantityAvailable = p.QuantityAvailable,
                     ProductDescription = p.ProductDescription
@@ -154,18 +154,18 @@ namespace Novella.Repositories
             return false;
         }
 
-        public bool AddProduct(Product product)
+        public Product AddProduct(Product product)
         {
             try
             {
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                return true;
+                return product;
             }
             catch (Exception e)
             {
-
-                return false;
+                
+                return new Product(); ;
             }
         }
 
