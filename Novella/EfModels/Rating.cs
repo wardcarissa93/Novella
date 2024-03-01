@@ -13,7 +13,7 @@ public partial class Rating
 
     public string? Review { get; set; }
 
-    public decimal? Rating1 { get; set; }
+    public decimal RatingValue { get; set; }
 
     public DateTime DateRated { get; set; }
 
