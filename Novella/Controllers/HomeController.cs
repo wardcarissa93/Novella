@@ -30,28 +30,41 @@ namespace Novella.Controllers
           
         }
 
-        public IActionResult Detail(int productId)
+        public IActionResult Detail(int productId, int page = 1)
         {
             // Get the product details by ID
             var product = _productRepo.GetProductById(productId.ToString());
 
-            // Get the reviews for the product along with user information
-            var reviews = _db.Ratings
-                            .Where(r => r.FkProductId == productId && !string.IsNullOrEmpty(r.Review))
-                            .Select(r => new
-                            {
-                                Review = r.Review,
-                                FirstName = r.FkUser.FirstName,
-                                LastName = r.FkUser.LastName,
-                                Timestamp = r.DateRated
-                            })
-                            .ToList();
-
             // Pass the product details to the view
             ViewBag.ProductName = product.ProductName;
             ViewBag.Price = product.Price;
-            ViewBag.Description = product.ProductDescription;
+            ViewBag.ProductId = productId;
+            ViewBag.ProductDescription = product.ProductDescription;
+            ViewBag.Rating = product.Rating;
+
+            // Pagination
+            int pageSize = 1;
+            int skip = (page - 1) * pageSize;
+
+            // Get the reviews for the product along with user information
+            var reviews = _db.Ratings
+                            .Where(r => r.FkProductId == productId && !string.IsNullOrEmpty(r.Review))
+                            .OrderByDescending(r => r.DateRated)
+                            .Skip(skip)
+                            .Take(pageSize)
+                            .Select(r => new
+                            {
+                                r.Review,
+                                r.FkUser.FirstName,
+                                r.FkUser.LastName,
+                                r.DateRated,
+                            })
+                            .ToList();
+
             ViewBag.Reviews = reviews;
+            ViewBag.PageCount = (int)Math.Ceiling((double)_db.Ratings.Count(r => r.FkProductId == productId) / pageSize);
+            ViewBag.CurrentPage = page;
+
 
             return View(product);
         }

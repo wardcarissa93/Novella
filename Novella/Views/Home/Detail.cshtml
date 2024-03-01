@@ -115,11 +115,24 @@
                     @foreach (var review in ViewBag.Reviews)
                     {
                         <li>
-                            <p><strong>@review.FirstName @review.LastName</strong> - @review.Timestamp.ToString("MMMM dd, yyyy")</p>
+                            <p><strong>@review.FirstName @review.LastName</strong> - @review.DateRated.ToString("MMMM dd, yyyy")</p>
                             <p>@review.Review</p>
                         </li>
                     }
                 </ul>
+
+                <!-- Pagination -->
+                @if (ViewBag.PageCount > 1)
+                {
+                    <nav aria-label="Page Navigation">
+                        <ul class="pagination">
+                            @for (int i = 1; i <= ViewBag.PageCount; i++)
+                            {
+                                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")"><a class="page-link" href="@Url.Action("Detail", new { productId = Model.ProductId, page = i })">@i</a></li>
+                            }
+                        </ul>
+                    </nav>
+                }
             </div>
         </div>
     </div>
