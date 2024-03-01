@@ -136,6 +136,7 @@ namespace Novella.Repositories
                     ProductId = p.PkProductId,
                     ProductName = p.ProductName,
                     QuantityAvailable = p.QuantityAvailable,
+                    Price = p.Price,
                     ProductDescription = p.ProductDescription,
                     Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
                 }).FirstOrDefault();

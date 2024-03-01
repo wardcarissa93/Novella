@@ -107,6 +107,20 @@
                     }
                 </div>
             </div>
+
+            <!-- New section for reviews -->
+            <div id="detail-reviews">
+                <h3>Written Reviews</h3>
+                <ul>
+                    @foreach (var review in ViewBag.Reviews)
+                    {
+                        <li>
+                            <p><strong>@review.FirstName @review.LastName</strong> - @review.Timestamp.ToString("MMMM dd, yyyy")</p>
+                            <p>@review.Review</p>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 </main>
