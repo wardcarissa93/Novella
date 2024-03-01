@@ -1,0 +1,45 @@
+﻿@model Novella.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1>Product Details</h1>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Product Name</dt>
+        <dd>@Model.ProductName</dd>
+
+        <dt>Price</dt>
+        <dd>@Model.Price.ToString("C")</dd>
+
+        <dt>Description</dt>
+        <dd>@Model.ProductDescription</dd>
+
+        <dt>Quantity Available</dt>
+        <dd>@Model.QuantityAvailable</dd>
+
+        <dt>Average Rating</dt>
+        <dd>@Model.Rating</dd>
+
+        <dt>Category</dt>
+        <dd>@Model.CategoryId</dd>
+    </dl>
+</div>
+
+@if (Model.ImageFilenames.Any())
+{
+    <div>
+        <h3>Images</h3>
+        @foreach (var filename in Model.ImageFilenames)
+        {
+            <img src="@Url.Content($"~/path/to/images/{filename}")" alt="Product Image" style="max-width: 100px; max-height: 100px; margin: 5px;">
+        }
+    </div>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
