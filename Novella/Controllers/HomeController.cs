@@ -46,25 +46,12 @@ namespace Novella.Controllers
             int pageSize = 1;
             int skip = (page - 1) * pageSize;
 
-            // Get the reviews for the product along with user information
-            var reviews = _db.Ratings
-                            .Where(r => r.FkProductId == productId && !string.IsNullOrEmpty(r.Review))
-                            .OrderByDescending(r => r.DateRated)
-                            .Skip(skip)
-                            .Take(pageSize)
-                            .Select(r => new
-                            {
-                                r.Review,
-                                r.FkUser.FirstName,
-                                r.FkUser.LastName,
-                                r.DateRated,
-                            })
-                            .ToList();
-
-            ViewBag.Reviews = reviews;
-            ViewBag.PageCount = (int)Math.Ceiling((double)_db.Ratings.Count(r => r.FkProductId == productId) / pageSize);
+            ViewBag.Reviews = product.Reviews
+                                    .Skip(skip)
+                                    .Take(pageSize)
+                                    .ToList();
+            ViewBag.PageCount = (int)Math.Ceiling((double)product.Reviews.Count / pageSize);
             ViewBag.CurrentPage = page;
-
 
             return View(product);
         }

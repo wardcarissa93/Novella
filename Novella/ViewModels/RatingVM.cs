@@ -11,6 +11,8 @@ namespace Novella.ViewModels
         public int ProductId { get; set; }
         public string Review { get; set; }
         [ForeignKey("UserAccount")]
-        public string UserId {  get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime DateRated { get; set; }
     }
 }

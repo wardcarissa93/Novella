@@ -138,8 +138,27 @@ namespace Novella.Repositories
                     QuantityAvailable = p.QuantityAvailable,
                     Price = p.Price,
                     ProductDescription = p.ProductDescription,
-                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
+                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
+                    Reviews = p.Ratings.Where(r => !string.IsNullOrEmpty(r.Review))
+                                       .Select(r => new RatingVM
+                                       {
+                                           RatingId = r.PkRatingId,
+                                           ProductId = r.FkProductId,
+                                           Review = r.Review,
+                                           FirstName = r.FkUser.FirstName,
+                                           LastName = r.FkUser.LastName,
+                                           DateRated = r.DateRated
+                                       })
+                                       .ToList()
                 }).FirstOrDefault();
+
+            // Order reviews by DateRated after fetching from the database
+            if (product != null)
+            {
+                product.Reviews = product.Reviews
+                                    .OrderByDescending(r => r.DateRated)
+                                    .ToList();
+            }
 
             return product;
         }

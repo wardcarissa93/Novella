@@ -363,6 +363,26 @@ footer{
     margin-top: 30px;
 }
 
+.page-item.active .page-link {
+    background-color: rgba(98, 174, 233, 1);
+    border-color: rgba(98, 174, 233, 1);
+    color: white;
+}
+
+.page-item.active:first-child {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.page-item.active:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.page-link {
+    color: rgba(98, 174, 233, 1);
+}
+
 /*pendant - product card*/
 #pendant-main {
 
@@ -471,7 +491,7 @@ select {
 }
 
 body {
-    background: #eeeee;
+    background: #eeeeee;
 }
 
 #slider {
