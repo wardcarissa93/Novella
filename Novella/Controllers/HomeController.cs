@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Novella.EfModels;
 using System.Diagnostics;
 using Novella.Models;
 using Novella.Repositories;
+using System.Security.Claims;
 
 namespace Novella.Controllers
 {
@@ -11,14 +13,15 @@ namespace Novella.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ProductRepo _productRepo;
         private readonly NovellaContext _db;
-        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
-                              IConfiguration configuration)
+                              IConfiguration configuration,
+                              ProductRepo productRepo)
         {
             _logger = logger;
-            _productRepo = new ProductRepo(db);
+            _productRepo = productRepo;
             _configuration = configuration;
             _db = db;
         }
@@ -54,6 +57,30 @@ namespace Novella.Controllers
             ViewBag.CurrentPage = page;
 
             return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult SubmitRating(int productId, decimal rating, string review)
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                // Redirect unauthenticated users to the login page
+                return Redirect("/Identity/Account/Login");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var success = _productRepo.SubmitRating(userId, productId, rating, review);
+
+            if (success)
+            {
+                // Rating submitted successfully
+                return RedirectToAction("Detail", new { productId });
+            }
+            else
+            {
+                // Handle rating submission failure
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         public IActionResult Pendant(string productName, decimal price, string description)

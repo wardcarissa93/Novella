@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Novella.Data;
 using Novella.EfModels;
 using Novella.ViewModels;
@@ -9,10 +10,13 @@ namespace Novella.Repositories
     public class ProductRepo
     {
         private readonly NovellaContext _db;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProductRepo(NovellaContext db)
+        public ProductRepo(NovellaContext db,
+                           UserManager<IdentityUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         public List<ProductHomeVM> GetProductsWithReviewsForHome()
@@ -207,6 +211,30 @@ namespace Novella.Repositories
                 return true;
             }
             catch
+            {
+                return false;
+            }
+        }
+
+        // Submit a rating for an individual product
+        public bool SubmitRating(string userId, int productId, decimal ratingValue, string review)
+        {
+            try
+            {
+                var rating = new Rating
+                {
+                    FkUserId = userId,
+                    FkProductId = productId,
+                    RatingValue = ratingValue,
+                    Review = review,
+                    DateRated = DateTime.Now
+                };
+
+                _db.Ratings.Add(rating);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
             {
                 return false;
             }

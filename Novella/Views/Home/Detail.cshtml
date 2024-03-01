@@ -108,7 +108,23 @@
                 </div>
             </div>
 
-            <!-- New section for reviews -->
+            <!-- New section for submitting ratings -->
+            <div id="submit-rating">
+                <h3>Submit Your Rating</h3>
+                <form method="post" action="@Url.Action("SubmitRating", "Home")">
+                    <div class="form-group">
+                        <label for="rating">Rating (1.0 - 5.0):</label>
+                        <input type="number" step="0.1" min="1.0" max="5.0" name="rating" id="rating" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Review (optional):</label>
+                        <textarea name="review" id="review" rows="4" cols="50"></textarea>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <!-- Reviews section -->
             <div id="detail-reviews">
                 <h3>Written Reviews</h3>
                 <ul>

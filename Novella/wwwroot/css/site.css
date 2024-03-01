@@ -549,6 +549,7 @@ img {
     padding: 1rem 0.75rem;
     width: 100%;
     border-bottom: 2px solid rgba(98, 174, 233, 1);
+    background-color: #eeeeee;
 }
 
 .custom-button {
