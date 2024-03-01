@@ -3,6 +3,7 @@ using Novella.EfModels;
 using System.Diagnostics;
 using Novella.Models;
 using Novella.Repositories;
+using Novella.Services;
 
 namespace Novella.Controllers
 {
@@ -161,6 +162,25 @@ namespace Novella.Controllers
 
             return View(uploadModel);
         }
+
+        [HttpPost]
+        public IActionResult AddToCart([FromBody] CartItem cartItem)
+        {
+            // Assuming you're using Session to store the cart
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            cart.Add(cartItem);
+            HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+            return Json(new { success = true, message = "Product added to cart successfully." });
+        }
+
+        public IActionResult Cart()
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            return View(cart);
+        }
+
+
 
     }
 }

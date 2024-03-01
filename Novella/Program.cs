@@ -38,8 +38,23 @@ builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 // Register the authorization services
 builder.Services.AddAuthorization();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // Register MVC services for controllers and views
 builder.Services.AddControllersWithViews(); // For MVC applications
+
+builder.Services.AddSession(options =>
+{
+    // Set session options here (optional)
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Example: set session timeout to 30 minutes
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // Add Razor Pages services
 builder.Services.AddRazorPages();
@@ -65,6 +80,9 @@ app.UseRouting();
 // Setup authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession(); // Add this before UseMvc, UseEndpoints, or similar middleware
+
 
 // Map controller routes
 app.MapControllerRoute(

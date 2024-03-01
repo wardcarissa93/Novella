@@ -53,10 +53,8 @@
                 <span id="productLength">16 in</span>
             </div> *@
            @*  <p id="detail-length"></p> *@
-            <button id="detail-add-button">
-                <span id="detail-price">CDN $@ViewBag.Price</span>
-                <span>Add to Bag</span>
-            </button>
+            <button id="detail-add-button" data-product-name="@ViewBag.ProductName" data-price="@ViewBag.Price">Add to Bag</button>
+
         </div>
     </div>
 </main>
@@ -70,39 +68,45 @@
         var price = document.getElementById('detail-price');
         var cartAmount = document.getElementById('nav-cart-amount');
 
-        // Retrieve the cart amount from session storage or default to 0
-        var cartAmountValue = sessionStorage.getItem('cartAmount');
-        if (cartAmountValue) {
-            cartAmount.textContent = cartAmountValue;
-        } else {
-            cartAmount.textContent = '0';
+
+        function addToCart(productName, price, quantity) {
+            var cartItem = {
+                ProductName: productName,
+                Price: price,
+                Quantity: quantity
+            };
+
+            fetch('/Home/AddToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cartItem),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Redirect to the cart page after adding item to cart
+                    window.location.href = '/Home/Cart'; // Adjust the URL as needed
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         }
 
-        // Parse the original price and remove "CDN $" from the text
-        var originalPrice = parseFloat(price.textContent.replace('CDN $', ''));
 
-        minusButton.addEventListener('click', function () {
-            var qty = parseInt(productQty.textContent);
-            if (qty > 1) {
-                productQty.textContent = qty - 1;
-                price.textContent = 'CDN $' + (originalPrice * (qty - 1)).toFixed(2);
-                updateCartAmount(qty - 1);
-            }
-        });
-
-        plusButton.addEventListener('click', function () {
-            var qty = parseInt(productQty.textContent);
-            productQty.textContent = qty + 1;
-            price.textContent = 'CDN $' + (originalPrice * (qty + 1)).toFixed(2);
-            updateCartAmount(qty + 1);
-        });
-
-        function updateCartAmount(quantity) {
-            cartAmount.textContent = quantity;
-            // Update session storage with the new cart amount
-            sessionStorage.setItem('cartAmount', quantity);
+        var addButton = document.getElementById('detail-add-button');
+        if (addButton) {
+            addButton.addEventListener('click', function () {
+                var productName = this.getAttribute('data-product-name');
+                var price = this.getAttribute('data-price');
+                var quantity = parseInt(document.getElementById('productQty').textContent);
+                addToCart(productName, price, quantity);
+            });
         }
     });
+
+
 </script>
 
 
