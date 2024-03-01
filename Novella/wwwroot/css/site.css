@@ -326,7 +326,7 @@ footer{
     align-items: center;
 }
 
-#detail-length, #detail-qty {
+#detail-length, #detail-qty, #detail-rating {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -341,7 +341,7 @@ footer{
     border: none;
     color: white;
     padding: 10px 20px;
-    margin-top: 65px;
+    margin: 2rem 0;
     
 }
 

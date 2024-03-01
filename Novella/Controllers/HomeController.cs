@@ -30,13 +30,13 @@ namespace Novella.Controllers
           
         }
 
-        public IActionResult Detail(string productName, decimal price, string description)
+        public IActionResult Detail(int productId)
         {
-            ViewBag.ProductName = productName;
-            ViewBag.Price = price;
-            ViewBag.Description = description;
-            
-            return View();
+            // Get the product details by ID
+            var product = _productRepo.GetProductById(productId.ToString());
+
+            // Pass the product details to the view
+            return View(product);
         }
 
         public IActionResult Pendant(string productName, decimal price, string description)
