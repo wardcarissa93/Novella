@@ -5,7 +5,7 @@ namespace Novella.EfModels;
 
 public partial class Product
 {
-    public int? PkProductId { get; set; }
+    public int PkProductId { get; set; }
 
     public string ProductName { get; set; } = null!;
 

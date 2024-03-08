@@ -14,9 +14,9 @@ namespace Novella.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly ProductRepo _productRepo;
-      
 
-        public AdminController(ILogger<AdminController> logger, 
+
+        public AdminController(ILogger<AdminController> logger,
                                ProductRepo productRepo)
         {
             _logger = logger;
@@ -27,18 +27,18 @@ namespace Novella.Controllers
         public IActionResult Index()
         {
             var products = _productRepo.GetProductsForAdmin();
-            return View("ProductIndex",products);
+            return View("ProductIndex", products);
         }
 
         public IActionResult Edit(int id)
         {
-            var productVM = _productRepo.GetProductVMById(id.ToString());
+            var productVM = _productRepo.GetProductById(id.ToString());
             if (productVM == null)
             {
                 return NotFound();
             }
 
-            return View("ProductEdit",productVM);
+            return View("ProductEdit", productVM);
         }
 
 
@@ -88,7 +88,7 @@ namespace Novella.Controllers
 
         public IActionResult Create()
         {
-            return View("ProductCreate",new ProductVM());  
+            return View("ProductCreate", new ProductVM());
         }
 
 
@@ -197,7 +197,7 @@ namespace Novella.Controllers
                         {
                             FileName = productVM.ImageFile.FileName,
                             Image = imageData,
-                            FkProductId = newProduct.PkProductId.Value
+                            FkProductId = newProduct.PkProductId
                         };
 
                         bool imageSaveSuccess = _productRepo.AddImage(imageStore);
@@ -230,8 +230,8 @@ namespace Novella.Controllers
         {
             // first get product
             int productId = id;
-            var product = _productRepo.GetProductVMById(productId.ToString());
-            return View("ProductDetails",product);
+            var product = _productRepo.GetProductById(productId.ToString());
+            return View("ProductDetails", product);
         }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -244,7 +244,7 @@ namespace Novella.Controllers
             }
             else
             {
-                return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" }); 
+                return View("Error", new ErrorViewModel { RequestId = "DeleteFailed" });
             }
         }
     }
