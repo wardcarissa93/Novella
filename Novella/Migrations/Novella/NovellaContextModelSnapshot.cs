@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Novella.EfModels;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.Novella
 {
     [DbContext(typeof(NovellaContext))]
-    [Migration("20240224041417_reCreate")]
-    partial class reCreate
+    partial class NovellaContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,6 +121,42 @@ namespace Novella.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
+            modelBuilder.Entity("Novella.EfModels.ImageStore", b =>
+                {
+                    b.Property<int?>("PkImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("pkImageId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("PkImageId"));
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("fileName");
+
+                    b.Property<int?>("FkProductId")
+                        .IsRequired()
+                        .HasColumnType("int")
+                        .HasColumnName("fkProductId");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("image");
+
+                    b.HasKey("PkImageId");
+
+                    b.HasIndex("FkProductId");
+
+                    b.HasIndex(new[] { "FileName" }, "UQ__ImageSto__431DED434E59CA40")
+                        .IsUnique();
+
+                    b.ToTable("ImageStore", (string)null);
+                });
+
             modelBuilder.Entity("Novella.EfModels.Order", b =>
                 {
                     b.Property<int>("PkOrderId")
@@ -208,9 +241,12 @@ namespace Novella.Migrations
 
             modelBuilder.Entity("Novella.EfModels.Product", b =>
                 {
-                    b.Property<int>("PkProductId")
+                    b.Property<int?>("PkProductId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkProductId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("PkProductId"));
 
                     b.Property<int>("FkCategoryId")
                         .HasColumnType("int")
@@ -323,7 +359,7 @@ namespace Novella.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("fkUserId");
 
-                    b.Property<decimal?>("Rating")
+                    b.Property<decimal>("RatingValue")
                         .HasColumnType("decimal(2, 1)")
                         .HasColumnName("rating");
 
@@ -391,52 +427,6 @@ namespace Novella.Migrations
                     b.ToTable("UserAccount", (string)null);
                 });
 
-            modelBuilder.Entity("Novella.ViewModels.ProductAdminVM", b =>
-                {
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuantityInStock")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("ProductAdminVM");
-                });
-
-            modelBuilder.Entity("Novella.ViewModels.ProductVM", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProductDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuantityAvailable")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("ProductVM");
-                });
-
             modelBuilder.Entity("Novella.EfModels.Cart", b =>
                 {
                     b.HasOne("Novella.EfModels.UserAccount", "FkUser")
@@ -446,6 +436,17 @@ namespace Novella.Migrations
                         .HasConstraintName("FK__Cart__fkUserId__6C190EBB");
 
                     b.Navigation("FkUser");
+                });
+
+            modelBuilder.Entity("Novella.EfModels.ImageStore", b =>
+                {
+                    b.HasOne("Novella.EfModels.Product", "FkProduct")
+                        .WithMany("ImageStores")
+                        .HasForeignKey("FkProductId")
+                        .IsRequired()
+                        .HasConstraintName("FK__ImageStor__fkPro__09746778");
+
+                    b.Navigation("FkProduct");
                 });
 
             modelBuilder.Entity("Novella.EfModels.Order", b =>
@@ -580,6 +581,8 @@ namespace Novella.Migrations
 
             modelBuilder.Entity("Novella.EfModels.Product", b =>
                 {
+                    b.Navigation("ImageStores");
+
                     b.Navigation("ProductCarts");
 
                     b.Navigation("ProductOrders");
