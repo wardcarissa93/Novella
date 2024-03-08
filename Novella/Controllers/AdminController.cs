@@ -16,11 +16,11 @@ namespace Novella.Controllers
         private readonly ProductRepo _productRepo;
       
 
-        public AdminController(ILogger<AdminController> logger, NovellaContext db)
+        public AdminController(ILogger<AdminController> logger, 
+                               ProductRepo productRepo)
         {
             _logger = logger;
-            _productRepo = new ProductRepo(db);
-         
+            _productRepo = productRepo;
         }
 
         // Display list of products

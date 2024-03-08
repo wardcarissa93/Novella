@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using EllipticCurve.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Novella.Data.Services;
+using Novella.EfModels;
 using static Novella.Services.ReCAPTCHA;
 
 namespace Novella.Areas.Identity.Pages.Account
@@ -33,6 +35,7 @@ namespace Novella.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
         private readonly IEmailService _emailService;
+        private readonly NovellaContext _db;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -41,7 +44,8 @@ namespace Novella.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IConfiguration configuration,
-            IEmailService emailService
+            IEmailService emailService,
+            NovellaContext db
             )
         {
             _userManager = userManager;
@@ -52,6 +56,7 @@ namespace Novella.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _configuration = configuration;
             _emailService = emailService;
+            _db = db;
         }
 
         /// <summary>
@@ -106,6 +111,24 @@ namespace Novella.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "First Name")]
+            [Required]
+            [StringLength(20, ErrorMessage = "20 character limit reached.")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            [Required]
+            [StringLength(20, ErrorMessage = "20 character limit reached.")]
+            public string LastName { get; set; }
+
+            [Display(Name = "Phone Number")]
+            [RegularExpression(@"^\d{10}$", ErrorMessage = "The {0} must be 10 digits.")]
+            [Required]
+            public int PhoneNumber { get; set; }
+            [Display(Name = "PayPal account (if different from Novella account)")]
+            [EmailAddress]
+            public string PaypalAccount { get; set; }
         }
 
 
@@ -125,78 +148,56 @@ namespace Novella.Areas.Identity.Pages.Account
 
             string secret = _configuration["Recaptcha:SecretKey"];
 
-            ReCaptchaValidationResult resultCaptcha =
-
-                ReCaptchaValidator.IsValid(secret, captchaResponse);
+            ReCaptchaValidationResult resultCaptcha = ReCaptchaValidator.IsValid(secret, captchaResponse);
 
             // Invalidate the form if the captcha is invalid. 
-
             if (!resultCaptcha.Success)
-
             {
-
                 ViewData["SiteKey"] = _configuration["Recaptcha:SiteKey"];
-
-                ModelState.AddModelError(string.Empty,
-
-                    "The ReCaptcha is invalid.");
-
+                ModelState.AddModelError(string.Empty, "The ReCaptcha is invalid.");
             }
-
 
             if (ModelState.IsValid)
             {
-
-                var user = CreateUser();
-
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
+                    // Assign the role "Customer" to the new user
+                    await _userManager.AddToRoleAsync(user, "Customer");
+
+                    // Create a new UserAccount entry
+                    var userAccount = new UserAccount
+                    {
+                        PkUserId = Input.Email,
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Role = "Customer",
+                        PhoneNumber = Input.PhoneNumber.ToString(),
+                        PaypalAccount = Input.PaypalAccount
+                    };
+
+                    // Add the UserAccount entry to the database
+                    _db.UserAccounts.Add(userAccount);
+                    await _db.SaveChangesAsync();
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    var response = await _emailService.SendSingleEmail(new Models.ComposeEmailModel
-
-                    {
-
-                        FirstName = "Silvio",
-
-                        LastName = "Suchy",
-
-                        Subject = "Confirm your email",
-
-                        Email = Input.Email,
-
-                        Body = $"Please confirm your account by " +
-
-            $"<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
-
-                    });
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new
-
-                        {
-
-                            email = Input.Email,
-
-                            returnUrl = returnUrl,
-
-                            DisplayConfirmAccountLink = false
-
-                        });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {

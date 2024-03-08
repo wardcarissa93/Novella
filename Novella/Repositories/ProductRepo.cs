@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Novella.Data;
 using Novella.EfModels;
@@ -10,10 +10,13 @@ namespace Novella.Repositories
     public class ProductRepo
     {
         private readonly NovellaContext _db;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProductRepo(NovellaContext db)
+        public ProductRepo(NovellaContext db,
+                           UserManager<IdentityUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         public List<ProductHomeVM> GetProductsWithReviewsForHome()
@@ -128,81 +131,70 @@ namespace Novella.Repositories
         }
 
         // Fetch a single product by ID
-        public Product GetProductById(string productId)
+        public ProductVM GetProductById(string productId)
         {
             var product = _db.Products
                 .Where(p => p.PkProductId.ToString() == productId)
-                .Select(p => p).FirstOrDefault();
+                .Select(p => new ProductVM
+                {
+                    ProductId = p.PkProductId,
+                    ProductName = p.ProductName,
+                    QuantityAvailable = p.QuantityAvailable,
+                    Price = p.Price,
+                    ProductDescription = p.ProductDescription,
+                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
+                    Reviews = p.Ratings.Where(r => !string.IsNullOrEmpty(r.Review))
+                                       .Select(r => new RatingVM
+                                       {
+                                           RatingId = r.PkRatingId,
+                                           ProductId = r.FkProductId,
+                                           Review = r.Review,
+                                           FirstName = r.FkUser.FirstName,
+                                           LastName = r.FkUser.LastName,
+                                           DateRated = r.DateRated
+                                       })
+                                       .ToList()
+                }).FirstOrDefault();
+
+            // Order reviews by DateRated after fetching from the database
+            if (product != null)
+            {
+                product.Reviews = product.Reviews
+                                    .OrderByDescending(r => r.DateRated)
+                                    .ToList();
+            }
 
             return product;
         }
 
-        public ProductVM GetProductVMById(string productId)
+        // Update a product
+        public bool EditProduct(ProductAdminVM productVM)
         {
-            var productVM = _db.Products
-                .Where(p => p.PkProductId.ToString() == productId)
-                .Select(p => new ProductVM
-                {
-                    ProductId = (int)p.PkProductId,
-                    ProductName = p.ProductName,
-                    Price = p.Price,
-                    ProductDescription = p.ProductDescription,
-                    QuantityAvailable = p.QuantityAvailable,
-                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
-                    CategoryId = p.FkCategoryId,
-                    ImageFilenames = p.ImageStores.Select(i => i.FileName).ToList(),
-                }).FirstOrDefault();
+            var product = _db.Products.Find(productVM.ProductId);
+            if (product != null)
+            {
+                product.ProductName = productVM.ProductName;
+                product.QuantityAvailable = productVM.QuantityInStock;
+                // Update other fields as necessary
 
-            return productVM;
+                _db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
-        // Update a product
-        //public bool EditProduct(ProductAdminVM productVM)
-        //{
-        //    var product = _db.Products.Include(p => p.ImageStores).FirstOrDefault(p => p.PkProductId.ToString() == productVM.ProductId);
-        //    if (product != null)
-        //    {
-        //        product.ProductName = productVM.ProductName;
-        //        product.QuantityAvailable = productVM.QuantityInStock;
-
-        //        // Handle new images
-        //        foreach (var filename in productVM.NewImageFilenames)
-        //        {
-        //            var newImage = new ImageStore { FileName = (string)filename, FkProductId = product.PkProductId };
-        //            _db.ImageStores.Add(newImage);
-        //        }
-
-        //        // Handle image deletions
-        //        foreach (var imageId in productVM.ImageIdsToDelete)
-        //        {
-        //            if (imageId!=null) 
-        //            {
-        //                var imageToDelete = _db.ImageStores.FirstOrDefault(i => i.PkImageId == imageId.Value && i.FkProductId == product.PkProductId);
-        //                if (imageToDelete != null)
-        //                {
-        //                    _db.ImageStores.Remove(imageToDelete);
-        //                }
-        //            }
-        //        }
-
-        //        _db.SaveChanges();
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        public Product AddProduct(Product product)
+        public bool AddProduct(Product product)
         {
             try
             {
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                return product;
+                return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                
-                return new Product(); ;
+                // Log the error or handle it as needed
+                return false;
             }
         }
 
@@ -211,44 +203,41 @@ namespace Novella.Repositories
         {
             try
             {
-                var imageStores = _db.ImageStores.Where(image => image.FkProductId == productId).ToList();
-                if (imageStores.Any())
-                {
-                    _db.ImageStores.RemoveRange(imageStores); // Correctly remove dependent records
-                }
                 var product = _db.Products.Find(productId);
                 if (product == null) return false;
+
                 _db.Products.Remove(product);
                 _db.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                return false;
-            }
-        }
-   
-    //Add Product Image
-    public bool AddImage(ImageStore imageStore)
-        {
-            try
-            {
-                _db.ImageStores.Add(imageStore);
-                _db.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-      
                 return false;
             }
         }
 
+        // Submit a rating for an individual product
+        public bool SubmitRating(string userId, int productId, decimal ratingValue, string review)
+        {
+            try
+            {
+                var rating = new Rating
+                {
+                    FkUserId = userId,
+                    FkProductId = productId,
+                    RatingValue = ratingValue,
+                    Review = review,
+                    DateRated = DateTime.Now
+                };
+
+                _db.Ratings.Add(rating);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

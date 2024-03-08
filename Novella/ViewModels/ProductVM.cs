@@ -14,17 +14,22 @@ namespace Novella.ViewModels
         [Display(Name = "Name")]
         public string ProductName { get; set; }
 
+        public int QuantityAvailable { get; set; }
+
         [Display(Name = "Unit Cost")]
         public decimal Price { get; set; }
 
         [Display(Name = "Description")]
         public string ProductDescription { get; set; }
 
+
         [Display(Name = "Stock")]
         public int QuantityAvailable { get; set; }
 
         [Display(Name = "Rating")]
         public decimal Rating { get; set; }
+      
+        public List<RatingVM> Reviews { get; set; }
 
         [ForeignKey("Category Id")]
         public int CategoryId { get; set; }

@@ -326,7 +326,7 @@ footer{
     align-items: center;
 }
 
-#detail-length, #detail-qty {
+#detail-length, #detail-qty, #detail-rating {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -341,7 +341,7 @@ footer{
     border: none;
     color: white;
     padding: 10px 20px;
-    margin-top: 65px;
+    margin: 2rem 0;
     
 }
 
@@ -361,6 +361,26 @@ footer{
 
 #detail-qty{
     margin-top: 30px;
+}
+
+.page-item.active .page-link {
+    background-color: rgba(98, 174, 233, 1);
+    border-color: rgba(98, 174, 233, 1);
+    color: white;
+}
+
+.page-item.active:first-child {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.page-item.active:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.page-link {
+    color: rgba(98, 174, 233, 1);
 }
 
 /*pendant - product card*/
@@ -471,7 +491,7 @@ select {
 }
 
 body {
-    background: #eeeee;
+    background: #eeeeee;
 }
 
 #slider {
@@ -529,6 +549,7 @@ img {
     padding: 1rem 0.75rem;
     width: 100%;
     border-bottom: 2px solid rgba(98, 174, 233, 1);
+    background-color: #eeeeee;
 }
 
 .custom-button {
