@@ -45,8 +45,8 @@
             @foreach (var item in Model)
             {
                 <div class="product-card">
-                    <a href="@Url.Action("Detail", "Home", new { productName =  item.ProductName, price = item.Price, description = item.Description})">
-                        <img src="~/Images/categories/pendant/pendant1.jpeg" alt="pendant1" />
+                    <a href="@Url.Action("Detail", "Home", new { productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
                         <p class="card-title">@item.ProductName</p>
                     </a>
                     <div class="rating-container">
