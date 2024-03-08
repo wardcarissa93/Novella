@@ -29,7 +29,7 @@ namespace Novella.Repositories
             {
                 var productVM = new ProductHomeVM
                 {
-                  
+
                     ProductId = product.PkProductId.ToString(),
                     ProductName = product.ProductName,
                     Price = product.Price,
@@ -82,7 +82,7 @@ namespace Novella.Repositories
 
         public List<ProductCategoryVM> GetProductsForChoker()
         {
-            int chokerCategoryId = 2; 
+            int chokerCategoryId = 2;
 
             var products = _db.Products
                                .Where(p => p.FkCategoryId == chokerCategoryId)
@@ -101,7 +101,7 @@ namespace Novella.Repositories
 
         public List<ProductCategoryVM> GetProductsForChain()
         {
-            int chainCategoryId = 3; 
+            int chainCategoryId = 3;
 
             var products = _db.Products
                                .Where(p => p.FkCategoryId == chainCategoryId)
@@ -162,9 +162,10 @@ namespace Novella.Repositories
                 product.Reviews = product.Reviews
                                     .OrderByDescending(r => r.DateRated)
                                     .ToList();
+                return product;
             }
 
-            return product;
+            return null;
         }
 
         // Update a product
@@ -183,18 +184,18 @@ namespace Novella.Repositories
             return false;
         }
 
-        public bool AddProduct(Product product)
+        public Product AddProduct(Product product)
         {
             try
             {
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                return true;
+                return product;
             }
             catch (Exception)
             {
                 // Log the error or handle it as needed
-                return false;
+                return null;
             }
         }
 
@@ -235,6 +236,21 @@ namespace Novella.Repositories
                 return true;
             }
             catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        // Add Product Image
+        public bool AddImage(ImageStore imageStore)
+        {
+            try
+            {
+                _db.ImageStores.Add(imageStore);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
             {
                 return false;
             }
