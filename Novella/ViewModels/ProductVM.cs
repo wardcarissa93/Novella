@@ -14,8 +14,6 @@ namespace Novella.ViewModels
         [Display(Name = "Name")]
         public string ProductName { get; set; }
 
-        public int QuantityAvailable { get; set; }
-
         [Display(Name = "Unit Cost")]
         public decimal Price { get; set; }
 
