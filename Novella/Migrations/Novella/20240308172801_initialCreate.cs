@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.Novella
 {
     /// <inheritdoc />
-    public partial class initialcreate : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,19 +54,6 @@ namespace Novella.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductAdminVM",
-                columns: table => new
-                {
-                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QuantityInStock = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductAdminVM", x => x.ProductId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserAccount",
                 columns: table => new
                 {
@@ -86,14 +73,13 @@ namespace Novella.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    pkProductId = table.Column<int>(type: "int", nullable: false),
+                    pkProductId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     productName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     price = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
                     productDescription = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     quantityAvailable = table.Column<int>(type: "int", nullable: false),
-                    fkCategoryId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QuantityInStock = table.Column<int>(type: "int", nullable: false)
+                    fkCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,6 +146,26 @@ namespace Novella.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ImageStore",
+                columns: table => new
+                {
+                    pkImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    fileName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    image = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    fkProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageStore", x => x.pkImageId);
+                    table.ForeignKey(
+                        name: "FK__ImageStor__fkPro__09746778",
+                        column: x => x.fkProductId,
+                        principalTable: "Product",
+                        principalColumn: "pkProductId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rating",
                 columns: table => new
                 {
@@ -167,7 +173,7 @@ namespace Novella.Migrations
                     fkProductId = table.Column<int>(type: "int", nullable: false),
                     fkUserId = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     review = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: true),
-                    rating = table.Column<decimal>(type: "decimal(2,1)", nullable: true),
+                    rating = table.Column<decimal>(type: "decimal(2,1)", nullable: false),
                     dateRated = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
@@ -251,6 +257,17 @@ namespace Novella.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ImageStore_fkProductId",
+                table: "ImageStore",
+                column: "fkProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ__ImageSto__431DED434E59CA40",
+                table: "ImageStore",
+                column: "fileName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Order_fkBillingAddressId",
                 table: "Order",
                 column: "fkBillingAddressId");
@@ -322,7 +339,7 @@ namespace Novella.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProductAdminVM");
+                name: "ImageStore");
 
             migrationBuilder.DropTable(
                 name: "ProductCart");
