@@ -176,8 +176,6 @@ namespace Novella.Repositories
             {
                 product.ProductName = productVM.ProductName;
                 product.QuantityAvailable = productVM.QuantityInStock;
-                // Update other fields as necessary
-
                 _db.SaveChanges();
                 return true;
             }
