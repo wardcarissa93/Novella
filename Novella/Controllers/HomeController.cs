@@ -141,6 +141,12 @@ namespace Novella.Controllers
             }
         }
 
+        public IActionResult Search(string query)
+        {
+            var searchResults = _productRepo.SearchProducts(query);
+            return View("Search", searchResults);
+        }
+
 
 
         public IActionResult CheckOut()
