@@ -46,8 +46,6 @@ namespace Novella.Repositories
             return productsWithReviews;
         }
 
-
-
         public List<ProductHomeVM> GetProductsForHome()
         {
             var products = _db.Products.Select(p => new ProductHomeVM
@@ -175,13 +173,13 @@ namespace Novella.Repositories
         }
 
         // Update a product
-        public bool EditProduct(ProductAdminVM productVM)
+        public bool EditProduct(ProductVM productVM)
         {
             var product = _db.Products.Find(productVM.ProductId);
             if (product != null)
             {
                 product.ProductName = productVM.ProductName;
-                product.QuantityAvailable = productVM.QuantityInStock;
+                product.QuantityAvailable = productVM.QuantityAvailable;
                 _db.SaveChanges();
                 return true;
             }
@@ -203,7 +201,6 @@ namespace Novella.Repositories
             }
         }
 
-        // Delete a product
         public bool DeleteProduct(int productId)
         {
             try
@@ -211,12 +208,22 @@ namespace Novella.Repositories
                 var product = _db.Products.Find(productId);
                 if (product == null) return false;
 
+                // Find all images associated with the product
+                var images = _db.ImageStores.Where(i => i.FkProductId == productId).ToList();
+
+                // Delete all found images
+                _db.ImageStores.RemoveRange(images);
+
+                // Now, delete the product
                 _db.Products.Remove(product);
+
+                // Save changes to the database
                 _db.SaveChanges();
                 return true;
             }
             catch
             {
+                // Log the error or handle it as needed
                 return false;
             }
         }
