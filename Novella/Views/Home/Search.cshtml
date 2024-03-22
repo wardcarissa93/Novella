@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Novella.ViewModels.ProductHomeVM>
+
+<main id="search-results-main">
+    <div class="page-path">
+        <p id="current-path">Search Results</p>
+    </div>
+
+    <div class="product-cat-flex">
+        <div class="product-cat-container">
+            @foreach (var item in Model)
+            {
+                <div class="product-card">
+                    @* <a href="@Url.Action("Detail", "Home", new { productId = item.ProductId, imageUrl = item.ImageUrl })">
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                        <p class="card-title">@item.ProductName</p>
+                    </a> *@
+                   
+                    <p class="card-price">$@item.Price</p>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+
+
