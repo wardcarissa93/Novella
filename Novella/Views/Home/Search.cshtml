@@ -5,17 +5,28 @@
         <p id="current-path">Search Results</p>
     </div>
 
-    <div class="product-cat-flex">
-        <div class="product-cat-container">
+    <div class="product-search-flex">
+        <div class="product-search-container">
             @foreach (var item in Model)
             {
-                <div class="product-card">
+                <div class="search-product-card">
                     @* <a href="@Url.Action("Detail", "Home", new { productId = item.ProductId, imageUrl = item.ImageUrl })">
                         <img src="@item.ImageUrl" alt="@item.ProductName" />
                         <p class="card-title">@item.ProductName</p>
                     </a> *@
+                    <div class="card-image-container">
+                        <img class="card-image">
+                        </img>
+                    </div>
+                    <div class="search-card-content">
+                        <p class="search-card-title">@item.ProductName</p>
+                        <p class="search-card-description">@item.Description</p>
+                        <p class="search-card-price">$@item.Price</p>
+                    </div>
+                  
+                       
+                
                    
-                    <p class="card-price">$@item.Price</p>
                 </div>
             }
         </div>
