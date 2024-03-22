@@ -9,11 +9,11 @@ using Novella.EfModels;
 
 #nullable disable
 
-namespace Novella.Migrations.Novella
+namespace Novella.Migrations
 {
     [DbContext(typeof(NovellaContext))]
-    [Migration("20240308172801_initialCreate")]
-    partial class initialCreate
+    [Migration("20240322163331_initalCreate")]
+    partial class initalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,12 +244,12 @@ namespace Novella.Migrations.Novella
 
             modelBuilder.Entity("Novella.EfModels.Product", b =>
                 {
-                    b.Property<int?>("PkProductId")
+                    b.Property<int>("PkProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkProductId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("PkProductId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PkProductId"));
 
                     b.Property<int>("FkCategoryId")
                         .HasColumnType("int")

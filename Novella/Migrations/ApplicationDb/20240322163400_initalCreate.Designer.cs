@@ -9,11 +9,11 @@ using Novella.Data;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240308172737_initialCreate")]
-    partial class initialCreate
+    [Migration("20240322163400_initalCreate")]
+    partial class initalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

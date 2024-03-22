@@ -41,31 +41,31 @@ namespace Novella.Controllers
             return View("ProductEdit", productVM);
         }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]  
-    public IActionResult Edit(ProductVM productVM)
-    {
-        if (ModelState.IsValid)
-        {
-            var result = _productRepo.EditProduct(productVM);
-            if (result)
-            {
-                return RedirectToAction("ProductIndex"); 
-            }
-            else
-            {
-                ModelState.AddModelError("", "An error occurred while updating the product. Please try again.");
-            }
-        }
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]  
+    //public IActionResult Edit(ProductVM productVM)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        var result = _productRepo.EditProduct(productVM);
+    //        if (result)
+    //        {
+    //            return RedirectToAction("ProductIndex"); 
+    //        }
+    //        else
+    //        {
+    //            ModelState.AddModelError("", "An error occurred while updating the product. Please try again.");
+    //        }
+    //    }
 
-        // If we got this far, something failed, redisplay form
-        return View("ProductEdit", productVM);
-    }
+    //    // If we got this far, something failed, redisplay form
+    //    return View("ProductEdit", productVM);
+    //}
 
-        public IActionResult Create()
-        {
-            return View("ProductCreate", new ProductVM());
-        }
+    //    public IActionResult Create()
+    //    {
+    //        return View("ProductCreate", new ProductVM());
+    //    }
 
 
         [HttpPost]

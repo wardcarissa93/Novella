@@ -6,6 +6,7 @@ using Novella.Models;
 using Novella.Repositories;
 using System.Security.Claims;
 using Novella.Services;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace Novella.Controllers
@@ -16,16 +17,18 @@ namespace Novella.Controllers
         private readonly ProductRepo _productRepo;
         private readonly NovellaContext _db;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
                               IConfiguration configuration,
-                              ProductRepo productRepo)
+                              ProductRepo productRepo, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _productRepo = productRepo;
             _configuration = configuration;
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -35,7 +38,7 @@ namespace Novella.Controllers
           
         }
 
-        public IActionResult Detail(int productId, int page = 1)
+        public IActionResult Detail(int productId, string imageUrl, int page = 1)
         {
             // Get the product details by ID
             var product = _productRepo.GetProductById(productId.ToString());
@@ -46,7 +49,7 @@ namespace Novella.Controllers
             ViewBag.ProductId = productId;
             ViewBag.ProductDescription = product.ProductDescription;
             ViewBag.Rating = product.Rating;
-
+            ViewBag.ImageUrl = imageUrl;
             // Pagination
             int pageSize = 1;
             int skip = (page - 1) * pageSize;
@@ -92,18 +95,50 @@ namespace Novella.Controllers
             ViewBag.Description = description;
 
             var products = _productRepo.GetProductsForPendant();
+
+            // Fetch images for the products
+            foreach (var product in products)
+            {
+                product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
+            }
+
             return View(products);
         }
-
         public IActionResult Choker()
         {
             var products = _productRepo.GetProductsForChoker();
+            // Fetch images for the products
+            foreach (var product in products)
+            {
+                product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
+            }
             return View(products);
         }
         public IActionResult Chain()
         {
             var products = _productRepo.GetProductsForChain();
+            // Fetch images for the products
+            foreach (var product in products)
+            {
+                product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
+            }
             return View(products);
+        }
+
+        public FileResult GetImage(int productId)
+        {
+            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
+            if (image != null)
+            {
+                return File(image.Image, "image/jpeg");
+            }
+            else
+            {
+                // Return a default image or handle the case where the image is not found
+
+                var defaultImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "404_img.jpeg");
+                return File(defaultImagePath, "image/jpeg");
+            }
         }
 
 

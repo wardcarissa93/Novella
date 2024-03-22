@@ -66,19 +66,25 @@ namespace Novella.Repositories
         {
             int pendantCategoryId = 1;
 
-            var products = _db.Products
-                                .Where(p => p.FkCategoryId == pendantCategoryId)
-                                .Select(p => new ProductCategoryVM
-                                {
-                                    ProductId = p.PkProductId.ToString(),
-                                    ProductName = p.ProductName,
-                                    Price = p.Price,
-                                    Description = p.ProductDescription,
-                                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
-                                })
-                                .ToList();
-            return products;
+            var productsWithImages = _db.Products
+                .Where(p => p.FkCategoryId == pendantCategoryId)
+                .Join(_db.ImageStores,
+                    product => product.PkProductId,
+                    image => image.FkProductId,
+                    (product, image) => new ProductCategoryVM
+                    {
+                        ProductId = product.PkProductId.ToString(),
+                        ProductName = product.ProductName,
+                        Price = product.Price,
+                        Description = product.ProductDescription,
+                        Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        ImageUrl = image.FileName
+                    })
+                .ToList();
+
+            return productsWithImages;
         }
+
 
         public List<ProductCategoryVM> GetProductsForChoker()
         {
