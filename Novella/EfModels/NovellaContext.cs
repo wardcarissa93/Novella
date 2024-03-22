@@ -135,7 +135,7 @@ public partial class NovellaContext : DbContext
 
             entity.HasOne(d => d.FkProduct).WithMany(p => p.ImageStores)
                 .HasForeignKey(d => d.FkProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ImageStor__fkPro__09746778");
         });
 

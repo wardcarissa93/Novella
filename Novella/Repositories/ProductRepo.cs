@@ -208,11 +208,17 @@ namespace Novella.Repositories
                 var product = _db.Products.Find(productId);
                 if (product == null) return false;
 
-                // Find all images associated with the product
-                var images = _db.ImageStores.Where(i => i.FkProductId == productId).ToList();
+                // Find and delete all ratings associated with the product
+                var ratings = _db.Ratings.Where(r => r.FkProductId == productId).ToList();
+                _db.Ratings.RemoveRange(ratings);
 
-                // Delete all found images
+                // Find and delete all images associated with the product
+                var images = _db.ImageStores.Where(i => i.FkProductId == productId).ToList();
                 _db.ImageStores.RemoveRange(images);
+
+                // Additionally, find and delete all product orders associated with the product
+                var productOrders = _db.ProductOrders.Where(po => po.FkProductId == productId).ToList();
+                _db.ProductOrders.RemoveRange(productOrders);
 
                 // Now, delete the product
                 _db.Products.Remove(product);
@@ -221,12 +227,13 @@ namespace Novella.Repositories
                 _db.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 // Log the error or handle it as needed
                 return false;
             }
         }
+
 
         // Submit a rating for an individual product
         public bool SubmitRating(string userId, int productId, decimal ratingValue, string review)
