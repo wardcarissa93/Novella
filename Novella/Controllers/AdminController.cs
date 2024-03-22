@@ -41,31 +41,37 @@ namespace Novella.Controllers
             return View("ProductEdit", productVM);
         }
 
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]  
-    //public IActionResult Edit(ProductVM productVM)
-    //{
-    //    if (ModelState.IsValid)
-    //    {
-    //        var result = _productRepo.EditProduct(productVM);
-    //        if (result)
-    //        {
-    //            return RedirectToAction("ProductIndex"); 
-    //        }
-    //        else
-    //        {
-    //            ModelState.AddModelError("", "An error occurred while updating the product. Please try again.");
-    //        }
-    //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ProductVM productVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _productRepo.EditProduct(productVM);
+                if (result)
+                {
+                    // Redirect to the index view or display a success message
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    // Log error, and let the user know the update didn't work
+                    ModelState.AddModelError("", "An error occurred while updating the product. Please try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine(ModelState);
+            }
 
-    //    // If we got this far, something failed, redisplay form
-    //    return View("ProductEdit", productVM);
-    //}
+            // If we got this far, something failed, redisplay the form
+            return View("ProductEdit", productVM);
+        }
 
-    //    public IActionResult Create()
-    //    {
-    //        return View("ProductCreate", new ProductVM());
-    //    }
+        public IActionResult Create()
+        {
+            return View("ProductCreate", new ProductVM());
+        }
 
 
         [HttpPost]
@@ -112,12 +118,20 @@ namespace Novella.Controllers
                         }
                     }
 
-                    // Redirect to "Index" after successful product and optional image addition
-                    return RedirectToAction("Index");
+                    var products = _productRepo.GetProductsForAdmin();
+                    return View("ProductIndex", products);
                 }
             }
             catch (Exception ex)
             {
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        // Log or inspect the error message
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
                 // Log the exception message
                 Console.WriteLine($"Error adding product: {ex.Message}");
                 ModelState.AddModelError("", "There was an unexpected error adding the product. Please try again later.");

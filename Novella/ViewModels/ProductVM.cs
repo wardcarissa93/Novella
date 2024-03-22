@@ -27,7 +27,7 @@ namespace Novella.ViewModels
         [Display(Name = "Rating")]
         public decimal Rating { get; set; }
       
-        public List<RatingVM> Reviews { get; set; }
+        public List<RatingVM>? Reviews { get; set; }
 
         [ForeignKey("Category Id")]
         public int CategoryId { get; set; }
@@ -35,8 +35,7 @@ namespace Novella.ViewModels
         // Support for multiple new image file uploads
         [Display(Name = "Upload Images")]
         public List<IFormFile> NewImageFiles { get; set; } = new List<IFormFile>();
-        [Required(ErrorMessage = "Please select a file.")]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
         // Existing image filenames for display purposes
         public List<string> ImageFilenames { get; set; } = new List<string>();
 
