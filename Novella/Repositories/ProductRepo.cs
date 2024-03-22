@@ -266,5 +266,30 @@ namespace Novella.Repositories
                 return false;
             }
         }
+
+        //Search
+        public List<ProductHomeVM> SearchProducts(string query)
+        {
+            query = query.ToLower(); // Convert query to lowercase for case-insensitive search
+
+            var productsWithReviews = _db.Products
+                .Where(p => p.ProductName.ToLower().Contains(query))
+                .Select(product => new ProductHomeVM
+                {
+                    ProductId = product.PkProductId.ToString(),
+                    ProductName = product.ProductName,
+                    Price = product.Price,
+                    Description = product.ProductDescription,
+                    Review = _db.Ratings
+                        .Where(r => r.FkProductId == product.PkProductId && r.Review != null)
+                        .Select(r => r.Review)
+                        .ToList()
+                })
+                .ToList();
+
+            return productsWithReviews;
+        }
+
+
     }
 }
