@@ -145,12 +145,10 @@ namespace Novella.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             string captchaResponse = Request.Form["g-Recaptcha-Response"];
-
             string secret = _configuration["Recaptcha:SecretKey"];
-
             ReCaptchaValidationResult resultCaptcha = ReCaptchaValidator.IsValid(secret, captchaResponse);
 
-            // Invalidate the form if the captcha is invalid. 
+            // Invalidate the form if the captcha is invalid.
             if (!resultCaptcha.Success)
             {
                 ViewData["SiteKey"] = _configuration["Recaptcha:SiteKey"];
@@ -159,6 +157,14 @@ namespace Novella.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                // Check if the user already exists
+                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "An account with this email already exists.");
+                    return Page();
+                }
+
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -169,20 +175,25 @@ namespace Novella.Areas.Identity.Pages.Account
                     // Assign the role "Customer" to the new user
                     await _userManager.AddToRoleAsync(user, "Customer");
 
-                    // Create a new UserAccount entry
-                    var userAccount = new UserAccount
+                    // Check if UserAccount already exists
+                    var existingUserAccount = _db.UserAccounts.FirstOrDefault(u => u.PkUserId == Input.Email);
+                    if (existingUserAccount == null)
                     {
-                        PkUserId = Input.Email,
-                        FirstName = Input.FirstName,
-                        LastName = Input.LastName,
-                        Role = "Customer",
-                        PhoneNumber = Input.PhoneNumber.ToString(),
-                        PaypalAccount = Input.PaypalAccount
-                    };
+                        // Create a new UserAccount entry
+                        var userAccount = new UserAccount
+                        {
+                            PkUserId = Input.Email,
+                            FirstName = Input.FirstName,
+                            LastName = Input.LastName,
+                            Role = "Customer",
+                            PhoneNumber = Input.PhoneNumber.ToString(),
+                            PaypalAccount = Input.PaypalAccount
+                        };
 
-                    // Add the UserAccount entry to the database
-                    _db.UserAccounts.Add(userAccount);
-                    await _db.SaveChangesAsync();
+                        // Add the UserAccount entry to the database
+                        _db.UserAccounts.Add(userAccount);
+                        await _db.SaveChangesAsync();
+                    }
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -192,12 +203,23 @@ namespace Novella.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailService.SendSingleEmail(new Models.ComposeEmailModel
+                    {
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Subject = "Confirm your email",
+                        Email = Input.Email,
+                        Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
+                    });
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new
+                        {
+                            email = Input.Email,
+                            returnUrl = returnUrl,
+                            DisplayConfirmAccountLink = false
+                        });
                     }
                     else
                     {
@@ -205,15 +227,19 @@ namespace Novella.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
 
         private IdentityUser CreateUser()
         {
