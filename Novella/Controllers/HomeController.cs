@@ -71,7 +71,7 @@ namespace Novella.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var success = _productRepo.SubmitRating(userId, productId, rating, review);
+            var success = _productRepo.SubmitRating("test", productId, rating, review);
 
             if (success)
             {

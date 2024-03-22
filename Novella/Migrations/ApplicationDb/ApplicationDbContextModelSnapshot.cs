@@ -8,7 +8,7 @@ using Novella.Data;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

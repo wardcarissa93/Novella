@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Novella.Migrations.Novella
+namespace Novella.Migrations
 {
     /// <inheritdoc />
     public partial class initialCreate : Migration

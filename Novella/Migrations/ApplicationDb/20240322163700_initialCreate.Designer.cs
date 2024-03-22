@@ -9,10 +9,10 @@ using Novella.Data;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240308172737_initialCreate")]
+    [Migration("20240322163700_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />

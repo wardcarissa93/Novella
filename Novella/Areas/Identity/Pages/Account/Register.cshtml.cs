@@ -125,7 +125,7 @@ namespace Novella.Areas.Identity.Pages.Account
             [Display(Name = "Phone Number")]
             [RegularExpression(@"^\d{10}$", ErrorMessage = "The {0} must be 10 digits.")]
             [Required]
-            public int PhoneNumber { get; set; }
+            public string PhoneNumber { get; set; }
             [Display(Name = "PayPal account (if different from Novella account)")]
             [EmailAddress]
             public string PaypalAccount { get; set; }
