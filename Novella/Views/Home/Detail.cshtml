@@ -1,4 +1,7 @@
 @model Novella.ViewModels.ProductVM
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Product Detail";
@@ -120,6 +123,9 @@
                         <label for="review">Review (optional):</label>
                         <textarea name="review" id="review" rows="4" cols="50"></textarea>
                     </div>
+                    <!-- Hidden inputs for FkProductId and FkUserId -->
+                    <input type="hidden" name="productId" value="@Model.ProductId" />
+                    <input type="hidden" name="userId" value="@User.Identity.ToString()" />
                     <button type="submit">Submit</button>
                 </form>
             </div>

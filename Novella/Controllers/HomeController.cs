@@ -4,9 +4,8 @@ using Novella.EfModels;
 using System.Diagnostics;
 using Novella.Models;
 using Novella.Repositories;
-using System.Security.Claims;
-using Novella.Services;
-
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Novella.Controllers
 {
@@ -16,16 +15,19 @@ namespace Novella.Controllers
         private readonly ProductRepo _productRepo;
         private readonly NovellaContext _db;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
                               IConfiguration configuration,
-                              ProductRepo productRepo)
+                              ProductRepo productRepo,
+                              UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _productRepo = productRepo;
             _configuration = configuration;
             _db = db;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -62,25 +64,36 @@ namespace Novella.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitRating(int productId, decimal rating, string review)
+        public async Task<IActionResult> SubmitRating(int productId, decimal rating, string review)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 // Redirect unauthenticated users to the login page
                 return Redirect("/Identity/Account/Login");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var success = _productRepo.SubmitRating("test", productId, rating, review);
+            var user = await _userManager.GetUserAsync(User);
 
-            if (success)
+            var userId = user?.UserName;
+
+            if (userId != null)
             {
-                // Rating submitted successfully
-                return RedirectToAction("Detail", new { productId });
+                var success = _productRepo.SubmitRating(userId, productId, rating, review);
+
+                if (success)
+                {
+                    // Rating submitted successfully
+                    return RedirectToAction("Detail", new { productId });
+                }
+                else
+                {
+                    // Handle rating submission failure
+                    return RedirectToAction("Error", "Home");
+                }
             }
             else
             {
-                // Handle rating submission failure
+                // Unable to get userId
                 return RedirectToAction("Error", "Home");
             }
         }

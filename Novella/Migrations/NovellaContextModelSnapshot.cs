@@ -340,8 +340,8 @@ namespace Novella.Migrations
 
             modelBuilder.Entity("Novella.EfModels.Rating", b =>
                 {
-                    b.Property<int>("PkRatingId")
-                        .HasColumnType("int")
+                    b.Property<int?>("PkRatingId")
+                        .HasColumnType("int?")
                         .HasColumnName("pkRatingId");
 
                     b.Property<DateTime>("DateRated")

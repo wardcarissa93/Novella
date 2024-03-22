@@ -169,7 +169,7 @@ namespace Novella.Migrations
                 name: "Rating",
                 columns: table => new
                 {
-                    pkRatingId = table.Column<int>(type: "int", nullable: false),
+                    pkRatingId = table.Column<int?>(type: "int", nullable: false),
                     fkProductId = table.Column<int>(type: "int", nullable: false),
                     fkUserId = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     review = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: true),

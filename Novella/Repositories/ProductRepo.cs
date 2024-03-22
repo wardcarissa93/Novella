@@ -130,14 +130,58 @@ namespace Novella.Repositories
             return products;
         }
 
-        // Fetch a single product by ID
+        //// Fetch a single product by ID
+        //public ProductVM GetProductById(string productId)
+        //{
+        //    var product = _db.Products
+        //        .Where(p => p.PkProductId.ToString() == productId)
+        //        .Select(p => new ProductVM
+        //        {
+        //            ProductId = p.PkProductId,
+        //            ProductName = p.ProductName,
+        //            QuantityAvailable = p.QuantityAvailable,
+        //            Price = p.Price,
+        //            ProductDescription = p.ProductDescription,
+        //            Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
+        //            Reviews = p.Ratings.Where(r => !string.IsNullOrEmpty(r.Review))
+        //                               .Select(r => new RatingVM
+        //                               {
+        //                                   RatingId = r.PkRatingId,
+        //                                   ProductId = r.FkProductId,
+        //                                   Review = r.Review,
+        //                                   FirstName = r.FkUser.FirstName,
+        //                                   LastName = r.FkUser.LastName,
+        //                                   DateRated = r.DateRated
+        //                               })
+        //                               .ToList()
+        //        }).FirstOrDefault();
+
+        //    // Order reviews by DateRated after fetching from the database
+        //    if (product != null)
+        //    {
+        //        product.Reviews = product.Reviews
+        //                            .OrderByDescending(r => r.DateRated)
+        //                            .ToList();
+        //        return product;
+        //    }
+
+        //    return null;
+        //}
+
         public ProductVM GetProductById(string productId)
         {
+            int parsedProductId;
+            if (!int.TryParse(productId, out parsedProductId))
+            {
+                // Handle invalid productId here, such as returning null or throwing an exception
+                return null;
+            }
+
             var product = _db.Products
-                .Where(p => p.PkProductId.ToString() == productId)
+                .Where(p => p.PkProductId == parsedProductId)
                 .Select(p => new ProductVM
                 {
-                    ProductId = p.PkProductId,
+                    ProductId = p.PkProductId, // No need for ToString() if ProductId is int
                     ProductName = p.ProductName,
                     QuantityAvailable = p.QuantityAvailable,
                     Price = p.Price,
@@ -146,7 +190,7 @@ namespace Novella.Repositories
                     Reviews = p.Ratings.Where(r => !string.IsNullOrEmpty(r.Review))
                                        .Select(r => new RatingVM
                                        {
-                                           RatingId = r.PkRatingId,
+                                           RatingId = r.PkRatingId.Value,
                                            ProductId = r.FkProductId,
                                            Review = r.Review,
                                            FirstName = r.FkUser.FirstName,
@@ -156,7 +200,6 @@ namespace Novella.Repositories
                                        .ToList()
                 }).FirstOrDefault();
 
-            // Order reviews by DateRated after fetching from the database
             if (product != null)
             {
                 product.Reviews = product.Reviews
@@ -167,6 +210,7 @@ namespace Novella.Repositories
 
             return null;
         }
+
 
         // Update a product
         public bool EditProduct(ProductAdminVM productVM)
@@ -224,8 +268,8 @@ namespace Novella.Repositories
             {
                 var rating = new Rating
                 {
-                    FkUserId = userId,
                     FkProductId = productId,
+                    FkUserId = userId,
                     RatingValue = ratingValue,
                     Review = review,
                     DateRated = DateTime.Now

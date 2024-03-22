@@ -5,7 +5,7 @@ namespace Novella.EfModels;
 
 public partial class Rating
 {
-    public int PkRatingId { get; set; }
+    public int? PkRatingId { get; set; }
 
     public int FkProductId { get; set; }
 
