@@ -4,6 +4,7 @@ using Novella.Data;
 using Novella.EfModels;
 using Novella.ViewModels;
 using System.Linq;
+using System.Security.Policy;
 
 namespace Novella.Repositories
 {
@@ -75,7 +76,7 @@ namespace Novella.Repositories
                         ProductName = product.ProductName,
                         Price = product.Price,
                         Description = product.ProductDescription,
-                        Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
                         ImageUrl = image.FileName
                     })
                 .ToList();
@@ -86,40 +87,48 @@ namespace Novella.Repositories
 
         public List<ProductCategoryVM> GetProductsForChoker()
         {
-            int chokerCategoryId = 2;
+            int pendantCategoryId = 2;
 
-            var products = _db.Products
-                               .Where(p => p.FkCategoryId == chokerCategoryId)
-                               .Select(p => new ProductCategoryVM
-                               {
-                                   ProductId = p.PkProductId.ToString(),
-                                   ProductName = p.ProductName,
-                                   Price = p.Price,
-                                   Description = p.ProductDescription,
-                                   Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
-                               })
-                               .ToList();
+            var productsWithImages = _db.Products
+                .Where(p => p.FkCategoryId == pendantCategoryId)
+                .Join(_db.ImageStores,
+                    product => product.PkProductId,
+                    image => image.FkProductId,
+                    (product, image) => new ProductCategoryVM
+                    {
+                        ProductId = product.PkProductId.ToString(),
+                        ProductName = product.ProductName,
+                        Price = product.Price,
+                        Description = product.ProductDescription,
+                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        ImageUrl = image.FileName
+                    })
+                .ToList();
 
-            return products;
+            return productsWithImages;
         }
 
         public List<ProductCategoryVM> GetProductsForChain()
         {
-            int chainCategoryId = 3;
+            int pendantCategoryId = 3;
 
-            var products = _db.Products
-                               .Where(p => p.FkCategoryId == chainCategoryId)
-                               .Select(p => new ProductCategoryVM
-                               {
-                                   ProductId = p.PkProductId.ToString(),
-                                   ProductName = p.ProductName,
-                                   Price = p.Price,
-                                   Description = p.ProductDescription,
-                                   Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
-                               })
-                               .ToList();
+            var productsWithImages = _db.Products
+                .Where(p => p.FkCategoryId == pendantCategoryId)
+                .Join(_db.ImageStores,
+                    product => product.PkProductId,
+                    image => image.FkProductId,
+                    (product, image) => new ProductCategoryVM
+                    {
+                        ProductId = product.PkProductId.ToString(),
+                        ProductName = product.ProductName,
+                        Price = product.Price,
+                        Description = product.ProductDescription,
+                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        ImageUrl = image.FileName
+                    })
+                .ToList();
 
-            return products;
+            return productsWithImages;
         }
         public List<ProductAdminVM> GetProductsForAdmin()
         {
@@ -146,7 +155,7 @@ namespace Novella.Repositories
                     QuantityAvailable = p.QuantityAvailable,
                     Price = p.Price,
                     ProductDescription = p.ProductDescription,
-                    Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
+                    //Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0,
                     Reviews = p.Ratings.Where(r => !string.IsNullOrEmpty(r.Review))
                                        .Select(r => new RatingVM
                                        {
@@ -275,27 +284,35 @@ namespace Novella.Repositories
         }
 
         //Search
-        public List<ProductHomeVM> SearchProducts(string query)
+        public List<ProductHomeVM> SearchProducts(string query, Func<string, string> urlGenerator)
         {
             query = query.ToLower(); // Convert query to lowercase for case-insensitive search
 
-            var productsWithReviews = _db.Products
+            var productsWithImages = _db.Products
                 .Where(p => p.ProductName.ToLower().Contains(query))
-                .Select(product => new ProductHomeVM
-                {
-                    ProductId = product.PkProductId.ToString(),
-                    ProductName = product.ProductName,
-                    Price = product.Price,
-                    Description = product.ProductDescription,
-                    Review = _db.Ratings
-                        .Where(r => r.FkProductId == product.PkProductId && r.Review != null)
-                        .Select(r => r.Review)
-                        .ToList()
-                })
+                .Join(_db.ImageStores,
+                    product => product.PkProductId,
+                    image => image.FkProductId,
+                    (product, image) => new ProductHomeVM
+                    {
+                        ProductId = product.PkProductId.ToString(),
+                        ProductName = product.ProductName,
+                        Price = product.Price,
+                        Description = product.ProductDescription,
+                        ImageUrl = image != null ? urlGenerator(product.PkProductId.ToString()) : null // Generate dynamic image URLs
+                    })
                 .ToList();
 
-            return productsWithReviews;
+            return productsWithImages;
         }
+
+
+
+
+
+
+
+
 
 
     }
