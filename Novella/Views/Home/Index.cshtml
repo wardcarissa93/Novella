@@ -22,7 +22,7 @@
                 if (counter < 3)
                 {
                     <div class="bestseller-item">
-                        <a href="@Url.Action("Detail", "Home", new { productName = item.ProductName, price = item.Price, item.Description })">
+                        <a href="@Url.Action("Detail", "Home", new { productName = item.ProductName, price = item.Price, item.Description, image = item.ImageUrl })">
                             <img src="~/Images/categories/pendant/novella_bestseller1.jpeg" height="50%" alt="@item.ProductName" />
                             <p class="bestseller-title">@item.ProductName</p>
                         </a>

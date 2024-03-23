@@ -143,9 +143,15 @@ namespace Novella.Controllers
 
         public IActionResult Search(string query)
         {
-            var searchResults = _productRepo.SearchProducts(query);
+            var searchResults = _productRepo.SearchProducts(query, productId =>
+                Url.Action("GetImage", "Home", new { productId = productId }));
+
             return View("Search", searchResults);
         }
+
+
+
+
 
 
 
@@ -172,7 +178,7 @@ namespace Novella.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-     
+
 
         [HttpPost]
         public IActionResult AddToCart([FromBody] CartItem cartItem)
