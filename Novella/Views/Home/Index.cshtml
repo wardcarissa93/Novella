@@ -22,7 +22,7 @@
                 if (counter < 3)
                 {
                     <div class="bestseller-item">
-                        <a href="@Url.Action("Detail", "Home", new { productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
+                        <a href="@Url.Action("Detail", "Home", new {productId = item.ProductId, productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
                             <img src="@item.ImageUrl" alt="@item.ProductName" />
                             <p class="card-title">@item.ProductName</p>
                         </a>

@@ -43,6 +43,13 @@ namespace Novella.Controllers
             // Get the product details by ID
             var product = _productRepo.GetProductById(productId.ToString());
 
+            if (product == null)
+            {
+                // Handle the null case, e.g., return a not found view or set an error message
+                return NotFound();
+            }
+
+
             // Pass the product details to the view
             ViewBag.ProductName = product.ProductName;
             ViewBag.Price = product.Price;
@@ -157,10 +164,18 @@ namespace Novella.Controllers
 
         public IActionResult CheckOut()
         {
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var totalPrice = cart.Sum(item => item.Price * item.Quantity);
+
+            var model = new PayPalConfirmationModel
+            {
+                TotalPrice = totalPrice
+            };
 
             ViewBag.PayPalClientID = _configuration["PayPal:ClientID"];
-            return View();
+            return View(model);
         }
+
 
 
 
@@ -181,15 +196,44 @@ namespace Novella.Controllers
 
 
         [HttpPost]
-        public IActionResult AddToCart([FromBody] CartItem cartItem)
+public IActionResult AddToCart(int ProductId, int Quantity)
+{
+    // Your logic to handle adding the product to the cart goes here
+    // Assuming you're using Session to store the cart
+    var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+    
+    // Find the product by ProductId
+    var product = _productRepo.GetProductById(ProductId.ToString()); // Adjust based on your method's requirements
+    
+    if(product != null)
+    {
+        // Check if the product already exists in the cart
+        var cartItem = cart.Find(c => c.ProductId == ProductId.ToString());
+        if(cartItem != null)
         {
-            // Assuming you're using Session to store the cart
-            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
-            cart.Add(cartItem);
-            HttpContext.Session.SetObjectAsJson("Cart", cart);
-
-            return Json(new { success = true, message = "Product added to cart successfully." });
+            // If exists, just update the quantity
+            cartItem.Quantity += Quantity;
         }
+        else
+        {
+            // Add new item to the cart
+            cart.Add(new CartItem 
+            { 
+                ProductId = ProductId.ToString(), 
+                ProductName = product.ProductName, 
+                Price = product.Price, 
+                Quantity = Quantity 
+            });
+        }
+        
+        // Save the updated cart back to the session
+        HttpContext.Session.SetObjectAsJson("Cart", cart);
+    }
+
+    // Redirect to the Cart view
+    return RedirectToAction("Cart");
+}
+
 
         public IActionResult Cart()
         {

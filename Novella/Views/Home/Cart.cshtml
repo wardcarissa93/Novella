@@ -18,15 +18,27 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.Price</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.Price * item.Quantity)</td>
-                </tr>
-            }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Price * item.Quantity)</td>
+            </tr>
+        }
         </tbody>
     </table>
+
+    
+     var totalPrice = Model.Sum(item => item.Price * item.Quantity); // This line should not be inside @{}
+     <h3>Total Price: @totalPrice</h3>
+
+
+
+    <div>
+        <form asp-controller="Home" asp-action="CheckOut">
+            <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+        </form>
+    </div>
 }

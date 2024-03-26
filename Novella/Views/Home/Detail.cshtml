@@ -54,10 +54,11 @@
                     <span id="plus">+</span>
                 </div>
             </div>
-            <button id="detail-add-button">
-                <span id="detail-price">CDN $@Model.Price</span>
-                <span>Add to Bag</span>
-            </button>
+            <form asp-controller="Home" asp-action="AddToCart" method="post">
+                <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                <input type="number" name="Quantity" value="1" min="1" max="100" />
+                <button type="submit">Add to Bag</button>
+            </form>
             <div id="detail-rating">
                 <span>Average Rating</span>
                 <div class="rating-container">
