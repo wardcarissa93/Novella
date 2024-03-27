@@ -99,7 +99,10 @@ namespace Novella.Controllers
                 if (success)
                 {
                     // Rating submitted successfully
-                    return RedirectToAction("Detail", new { productId });
+                    // Fetch the image URL using the GetImage method
+                    var imageUrl = GetImageUrl(productId);
+
+                    return RedirectToAction("Detail", new { productId, imageUrl });
                 }
             }
 
@@ -159,6 +162,22 @@ namespace Novella.Controllers
                 return File(defaultImagePath, "image/jpeg");
             }
         }
+
+        public string GetImageUrl(int productId)
+        {
+            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
+            if (image != null)
+            {
+                // Assuming you have a property in ImageStore table to store the image URL
+                return Url.Action("GetImage", "Home", new { productId = productId });
+            }
+            else
+            {
+                // Return the URL for the default image
+                return Url.Content("~/Images/404_img.jpeg"); // Adjust this URL based on your project structure
+            }
+        }
+
 
         public IActionResult Search(string query)
         {
