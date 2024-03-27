@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<Novella.ViewModels.ProductCategoryVM>
 
 <main id="pendant-main">
-    <div class="page-path">
-        <p id="current-path"></p>
-    </div>
-    <div class="filter-container">
+    <div class="page-path" id="current-path"></div>
+  @*   <div class="filter-container">
         <p class="filter-label">Filter by:</p>
         <div class="select-container">
             <select class="label-sm" id="productColor">
@@ -28,9 +26,9 @@
                 <option value="high">Premium</option>
             </select>
         </div>
-    </div>
+    </div> *@
 
-    <div id="slider">
+    @* <div id="slider">
         <div class="slides">
             <img class="slider-img" src="~/Images/novella_feature.webp" width="100%" />
         </div>
@@ -39,15 +37,16 @@
             <img class="slider-img" src="~/Images/categories/pendant/novella_mockfeature_img.webp" width="100%" />
         </div>
         <div id="dot"><span class="dot"></span><span class="dot"></span></div>
-    </div>
-    <div class="product-cat-flex">
-        <div class="product-cat-container">
+    </div> *@
+    <div class="product-search-flex">
+        <div class="product-search-container">
             @foreach (var item in Model)
             {
-                <div class="product-card">
+                <div class="search-product-card">
                     <a href="@Url.Action("Detail", "Home", new {productId = item.ProductId, productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" />
-                        <p class="card-title">@item.ProductName</p>
+                        <div class="card-image-container"><img src="@item.ImageUrl" alt="@item.ProductName" /></div>
+
+                        <p class="search-card-title">@item.ProductName</p>                      
                     </a>
                     <div class="rating-container">
                         @if (item.Rating == 0)
@@ -102,7 +101,7 @@
     </div>
 </main>
 
-<script>
+@* <script>
     var index = 0;
     var slides = document.querySelectorAll(".slides");
     var dot = document.querySelectorAll(".dot");
@@ -132,15 +131,36 @@
     }
 
     changeSlide();
-</script>
+</script> *@
 
 <script>
-    function updatePagePath() {
-        var currentUrl = location.pathname; // Get the current URL
-        var currentPage = currentUrl.substring(1);
-        // Extract the current page name
-        document.getElementById("current-path").textContent = currentPage; // Update the current path element
-    }
+        function updatePagePath() {
+            var currentUrl = location.pathname; // Get the current URL
+            var segments = currentUrl.split('/'); // Split the URL into segments
+            var pagePath = document.getElementById("current-path");
+
+            // Remove empty segments and the last segment (current page)
+            var pageSegments = segments.filter(segment => segment !== "");
+
+            // Clear the page path element
+            pagePath.innerHTML = "";
+
+            // Iterate over each segment and create links
+            for (var i = 0; i < pageSegments.length; i++) {
+                var link = document.createElement("a");
+                link.href = "/" + pageSegments.slice(0, i + 1).join("/");
+                link.textContent = pageSegments[i];
+                link.classList.add("page-segment");
+
+                // Add a slash between segments (except for the last one)
+                if (i < pageSegments.length - 1) {
+                    pagePath.appendChild(link);
+                    pagePath.appendChild(document.createTextNode("/"));
+                } else {
+                    pagePath.appendChild(link);
+                }
+            }
+        }
 
     window.onload = function () {
         updatePagePath(); // Update page path on page load
