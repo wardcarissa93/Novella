@@ -62,6 +62,7 @@ builder.Services.AddRazorPages();
 
 // Register ProductRepo as a scoped service
 builder.Services.AddScoped<ProductRepo>();
+builder.Services.AddScoped<OtherUserRepo>();
 
 var app = builder.Build();
 

@@ -1,0 +1,139 @@
+﻿.header-text {
+    margin: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.boxes {
+    height: 50vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 100px;
+}
+
+    .boxes .box {
+        border-radius: 20px;
+        box-shadow: 0px 2px 5px grey;
+    }
+
+.user-info {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+}
+
+.user-detail {
+    margin: 20px;
+    padding-bottom: 100px;
+    display: grid;
+    grid-template-rows: 2fr 1fr 1fr 1fr 1fr;
+}
+
+    .user-detail input {
+        border: none;
+        outline: none;
+        color: deepskyblue;
+    }
+
+.save-div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end
+}
+
+    .save-div svg {
+        color: deepskyblue;
+    }
+
+    .save-div p {
+        padding: 0;
+        margin: 0;
+        margin-left: 20px;
+    }
+
+.save {
+    display: grid;
+    grid-template-rows: 3fr 14fr;
+}
+
+.user-billing-info {
+    height: 80%;
+    margin: 20px;
+    display: grid;
+    grid-template-rows: 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.billing-save {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: baseline;
+}
+
+.user-billing-info input {
+    border: none;
+    outline: none;
+    color: deepskyblue;
+}
+
+.city-province {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 100px;
+}
+
+.delete-account {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .delete-account button {
+        background-color: #B22B27;
+        padding: 8px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 10px;
+        border: 0px;
+        color: white;
+        font-size: bold;
+    }
+
+.billing-save .save-div {
+    margin-left: 20px;
+}
+.user-detail input::placeholder {
+    color: deepskyblue;
+}
+
+.user-billing-info input::placeholder {
+    color: deepskyblue;
+}
+.save-div-btn {
+    background-color: #eeeeee;
+    border: 0.1px solid #cccccc;
+    margin-left:20px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+    .save-div-btn:hover {
+        box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.2);
+    }
+    .user-detail input {
+    height: 30px;
+    border-bottom: 1px solid grey;
+    background-color: #eeeeee;
+}
+.user-billing-info input {
+    height: 30px;
+    border-bottom: 1px solid grey;
+    background-color: #eeeeee;
+}
+.save-div svg, .save-div p
+{
+    cursor:pointer;
+}
+.save .save-div {
+    margin-right:20px;
+}
