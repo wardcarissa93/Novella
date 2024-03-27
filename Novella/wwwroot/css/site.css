@@ -365,6 +365,14 @@ a .navbar-brand{
 }
 
 /*product detail*/
+#addToCartButton {
+    background-color: rgba(98, 174, 233, 1);
+    color: white;
+    border: none;
+    padding: 7px 25px;
+    border-radius: 5px;
+}
+
 #plus, #minus {
     color: rgba(98, 174, 233, 1);
     font-weight: bolder;
@@ -373,8 +381,9 @@ a .navbar-brand{
 }
 
 #continue-shopping{
-    font-size: 12px;
+    font-size: 14px;
     margin: 10px;
+    font-weight: bold;
 }
 
 #detail-main{
@@ -419,18 +428,7 @@ a .navbar-brand{
     justify-content: space-between;
 }
 
-#detail-add-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    color: white;
-    background-color: rgba(98, 174, 233, 1);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    margin: 2rem 0;
-    
-}
+
 
 .detail-line{
     height: 1px;
