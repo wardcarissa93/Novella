@@ -62,7 +62,7 @@ namespace Novella.Controllers
             ViewBag.Price = product.Price;
             ViewBag.ProductId = productId;
             ViewBag.ProductDescription = product.ProductDescription;
-            ViewBag.Rating = product.Rating;
+            ViewBag.Rating = _productRepo.GetAverageRating(productId);
             ViewBag.ImageUrl = imageUrl;
             // Pagination
             int pageSize = 1;

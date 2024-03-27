@@ -63,14 +63,14 @@
             <div id="detail-rating">
                 <span>Average Rating</span>
                 <div class="rating-container">
-                    @if (Model.Rating == 0)
+                    @if (ViewBag.Rating == 0)
                     {
                         <p class="no-rating">No ratings yet</p>
                     }
                     else
                     {
                         // Round the rating value to the nearest 0.5
-                        double roundedRating = Math.Round((double)Model.Rating * 2) / 2;
+                        double roundedRating = Math.Round((double)ViewBag.Rating * 2) / 2;
 
                         // Calculate the number of filled stars
                         int filledStars = (int)Math.Floor(roundedRating);
