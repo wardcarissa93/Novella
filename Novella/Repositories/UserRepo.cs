@@ -6,6 +6,7 @@ using Novella.Data;
 using Novella.EfModels;
 using Novella.ViewModels;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Novella.Repositories
@@ -13,15 +14,30 @@ namespace Novella.Repositories
     public class UserRepo
     {
         private readonly ApplicationDbContext _context;
-        public UserRepo(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+        public UserRepo(ApplicationDbContext context,
+                        UserManager<IdentityUser> userManager)
         {
             this._context = context;
+            this._userManager = userManager;
         }
 
         public List<UserVM> GetAllUsers()
         {
             var users = _context.Users.Select(u => new UserVM { Email = u.Email }).ToList();
             return users;
+        }
+
+        public async Task<string> GetUserNameByUserIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                return user.UserName;
+            }
+
+            return null; // Handle the case where user is not found
         }
     }
     public class OtherUserRepo
@@ -37,15 +53,13 @@ namespace Novella.Repositories
 
             if (user == null)
             {
-                // Handle the case where user is not found in the database
-                // For example, return null or throw an exception
                 return null;
             }
 
             // Map UserAccount to UserAccountVM
             var userAccountVM = new UserAccountVM
             {
-                UsertId = user.PkUserId,
+                UserId = user.PkUserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
@@ -65,8 +79,6 @@ namespace Novella.Repositories
                 user.PhoneNumber = newPhoneNumber;
                 _db.SaveChanges();
             }
-            // Handle the case where user is not found if needed
         }
-
     }
 }

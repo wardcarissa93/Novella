@@ -7,6 +7,7 @@ using Novella.Repositories;
 using System.Security.Claims;
 using Novella.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Novella.Controllers
@@ -18,17 +19,24 @@ namespace Novella.Controllers
         private readonly NovellaContext _db;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserRepo _userRepo;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
                               IConfiguration configuration,
-                              ProductRepo productRepo, IWebHostEnvironment webHostEnvironment)
+                              ProductRepo productRepo, 
+                              IWebHostEnvironment webHostEnvironment,
+                              UserManager<IdentityUser> userManager,
+                              UserRepo userRepo)
         {
             _logger = logger;
             _productRepo = productRepo;
             _configuration = configuration;
             _db = db;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
+            _userRepo = userRepo;
         }
 
         public IActionResult Index()
@@ -71,7 +79,7 @@ namespace Novella.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitRating(int productId, decimal rating, string review)
+        public async Task<IActionResult> SubmitRating(int productId, decimal rating, string review)
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
@@ -80,18 +88,23 @@ namespace Novella.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var success = _productRepo.SubmitRating(userId, productId, rating, review);
 
-            if (success)
+            // Retrieve the UserName using UserRepo and UserManager
+            var userName = await _userRepo.GetUserNameByUserIdAsync(userId);
+
+            if (userName != null)
             {
-                // Rating submitted successfully
-                return RedirectToAction("Detail", new { productId });
+                var success = _productRepo.SubmitRating(userName, productId, rating, review);
+
+                if (success)
+                {
+                    // Rating submitted successfully
+                    return RedirectToAction("Detail", new { productId });
+                }
             }
-            else
-            {
-                // Handle rating submission failure
-                return RedirectToAction("Error", "Home");
-            }
+
+            // Handle rating submission failure
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult Pendant(string productName, decimal price, string description)
@@ -195,43 +208,43 @@ namespace Novella.Controllers
 
 
         [HttpPost]
-public IActionResult AddToCart(int ProductId, int Quantity)
-{
-    // Your logic to handle adding the product to the cart goes here
-    // Assuming you're using Session to store the cart
-    var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
-    
-    // Find the product by ProductId
-    var product = _productRepo.GetProductById(ProductId.ToString()); // Adjust based on your method's requirements
-    
-    if(product != null)
-    {
-        // Check if the product already exists in the cart
-        var cartItem = cart.Find(c => c.ProductId == ProductId.ToString());
-        if(cartItem != null)
+        public IActionResult AddToCart(int ProductId, int Quantity)
         {
-            // If exists, just update the quantity
-            cartItem.Quantity += Quantity;
-        }
-        else
-        {
-            // Add new item to the cart
-            cart.Add(new CartItem 
-            { 
-                ProductId = ProductId.ToString(), 
-                ProductName = product.ProductName, 
-                Price = product.Price, 
-                Quantity = Quantity 
-            });
-        }
+            // Your logic to handle adding the product to the cart goes here
+            // Assuming you're using Session to store the cart
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+    
+            // Find the product by ProductId
+            var product = _productRepo.GetProductById(ProductId.ToString()); // Adjust based on your method's requirements
+    
+            if(product != null)
+            {
+                // Check if the product already exists in the cart
+                var cartItem = cart.Find(c => c.ProductId == ProductId.ToString());
+                if(cartItem != null)
+                {
+                    // If exists, just update the quantity
+                    cartItem.Quantity += Quantity;
+                }
+                else
+                {
+                    // Add new item to the cart
+                    cart.Add(new CartItem 
+                    { 
+                        ProductId = ProductId.ToString(), 
+                        ProductName = product.ProductName, 
+                        Price = product.Price, 
+                        Quantity = Quantity 
+                    });
+                }
         
-        // Save the updated cart back to the session
-        HttpContext.Session.SetObjectAsJson("Cart", cart);
-    }
+                // Save the updated cart back to the session
+                HttpContext.Session.SetObjectAsJson("Cart", cart);
+            }
 
-    // Redirect to the Cart view
-    return RedirectToAction("Cart");
-}
+            // Redirect to the Cart view
+            return RedirectToAction("Cart");
+        }
 
 
         public IActionResult Cart()
@@ -261,6 +274,5 @@ public IActionResult AddToCart(int ProductId, int Quantity)
             int totalQuantity = cart.Sum(item => item.Quantity);
             return totalQuantity;
         }
-
     }
 }
