@@ -43,7 +43,7 @@
             @foreach (var item in Model)
             {
                 <div class="search-product-card">
-                    <a href="@Url.Action("Detail", "Home", new {productId = item.ProductId, productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
+                    <a href="@Url.Action("Detail", "Home", new {productId = item.ProductId, productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl, rating = item.Rating})">
                         <div class="card-image-container"><img src="@item.ImageUrl" alt="@item.ProductName" /></div>
 
                         <p class="search-card-title">@item.ProductName</p>                      

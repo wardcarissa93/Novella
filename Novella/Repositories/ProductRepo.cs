@@ -96,7 +96,7 @@ namespace Novella.Repositories
                         ProductName = product.ProductName,
                         Price = product.Price,
                         Description = product.ProductDescription,
-                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
                         ImageUrl = image.FileName
                     })
                 .ToList();
@@ -120,7 +120,7 @@ namespace Novella.Repositories
                         ProductName = product.ProductName,
                         Price = product.Price,
                         Description = product.ProductDescription,
-                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
                         ImageUrl = image.FileName
                     })
                 .ToList();
@@ -143,7 +143,7 @@ namespace Novella.Repositories
                         ProductName = product.ProductName,
                         Price = product.Price,
                         Description = product.ProductDescription,
-                        //Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
+                        Rating = product.Ratings.Any() ? product.Ratings.Average(r => r.RatingValue) : 0,
                         ImageUrl = image.FileName
                     })
                 .ToList();
@@ -287,6 +287,23 @@ namespace Novella.Repositories
             {
                 return false;
             }
+        }
+
+        // Get average rating for a specific product
+        public decimal GetAverageRating(int productId)
+        {
+            var product = _db.Products
+                 .Include(p => p.Ratings)
+                 .FirstOrDefault(p => p.PkProductId == productId);
+
+            if (product != null && product.Ratings.Any())
+            {
+                // Calculate the average rating
+                decimal averageRating = product.Ratings.Average(r => r.RatingValue);
+                return Math.Round(averageRating, 1);
+            }
+
+            return 0;
         }
 
         // Add Product Image
