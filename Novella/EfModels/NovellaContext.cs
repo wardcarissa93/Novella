@@ -303,7 +303,7 @@ public partial class NovellaContext : DbContext
                 .HasColumnName("fkUserId");
             entity.Property(e => e.RatingValue)
                 .HasColumnType("decimal(2, 1)")
-                .HasColumnName("rating");
+                .HasColumnName("ratingValue");
             entity.Property(e => e.Review)
                 .HasMaxLength(255)
                 .IsUnicode(false)
