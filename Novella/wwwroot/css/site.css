@@ -557,17 +557,17 @@ body {
     animation-name: fade;
     animation-duration: 1s;
     display: none;
-    width: 300px;
-    height: 250px;
+    width: 100%;
+    height: auto;
     margin: 0 auto;
 }
-
+/*
 @media (min-width: 575px) {
     .slides {
         width: 550px;
         height: 550px;
     }
-}
+}*/
 
 img {
     width: 100%;
