@@ -52,10 +52,13 @@
                     <span id="plus">+</span>
                 </div>
             </div>
-            <form asp-controller="Home" asp-action="AddToCart" method="post">
+
+            <form id="addToCartForm" asp-controller="Home" asp-action="AddToCart" method="post">
                 <input type="hidden" name="ProductId" value="@Model.ProductId" />
-                <input type="number" name="Quantity" value="1" min="1" max="100" />
-                <button type="submit">Add to Bag</button>
+                <!-- Display the current quantity -->
+                <input id="quantityInput" type="number" name="Quantity" value="0" min="0" max="100" />
+                <!-- Button to add the product to cart -->
+                <button id="addToCartButton" type="submit">Add to Bag</button>
             </form>
             <div id="detail-rating">
                 <span>Average Rating</span>
@@ -155,45 +158,20 @@
 </main>
 
 <script>
-    // JavaScript for plus and minus buttons
     document.addEventListener('DOMContentLoaded', function () {
-        var minusButton = document.getElementById('minus');
-        var plusButton = document.getElementById('plus');
-        var productQty = document.getElementById('productQty');
-        var price = document.getElementById('detail-price');
-        var cartAmount = document.getElementById('nav-cart-amount');
+        // Get the elements
+        var quantityInput = document.getElementById('quantityInput');
+        var addToCartButton = document.getElementById('addToCartButton');
 
-        // Retrieve the cart amount from session storage or default to 0
-        var cartAmountValue = sessionStorage.getItem('cartAmount');
-        if (cartAmountValue) {
-            cartAmount.textContent = cartAmountValue;
-        } else {
-            cartAmount.textContent = '0';
-        }
-
-        // Parse the original price and remove "CDN $" from the text
-        var originalPrice = parseFloat(price.textContent.replace('CDN $', ''));
-
-        minusButton.addEventListener('click', function () {
-            var qty = parseInt(productQty.textContent);
-            if (qty > 1) {
-                productQty.textContent = qty - 1;
-                price.textContent = 'CDN $' + (originalPrice * (qty - 1)).toFixed(2);
-                updateCartAmount(qty - 1);
-            }
+        // Add event listener to the input field for quantity
+        quantityInput.addEventListener('input', function () {
+            updateCartAmount(parseInt(quantityInput.value));
         });
 
-        plusButton.addEventListener('click', function () {
-            var qty = parseInt(productQty.textContent);
-            productQty.textContent = qty + 1;
-            price.textContent = 'CDN $' + (originalPrice * (qty + 1)).toFixed(2);
-            updateCartAmount(qty + 1);
-        });
-
+        // Function to update the cart amount in the layout
         function updateCartAmount(quantity) {
-            cartAmount.textContent = quantity;
-            // Update session storage with the new cart amount
-            sessionStorage.setItem('cartAmount', quantity);
+            // Update the cart amount in the layout
+            document.getElementById('nav-cart-amount').textContent = quantity;
         }
     });
 </script>

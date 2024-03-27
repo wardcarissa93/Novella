@@ -32,7 +32,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
                                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z" />
                                 </svg>
-                                <div id="nav-cart-amount"></div>
+                                <div id="nav-cart-amount">0</div>
                             </div>
                         </a>
                     </div>
@@ -125,17 +125,31 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 
     <script>
-        // Retrieve the cart amount from session storage
-        var cartAmount = sessionStorage.getItem('cartAmount');
-        // Update the cart amount display
-        if (cartAmount) {
-            document.getElementById('nav-cart-amount').textContent = cartAmount;
-        } else {
-            document.getElementById('nav-cart-amount').textContent = '0';
+        // Function to update the cart amount in the layout
+        function updateCartAmount() {
+            $.ajax({
+                url: '@Url.Action("GetTotalQuantityInCart", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    document.getElementById('nav-cart-amount').textContent = data;
+                    sessionStorage.setItem('cartAmount', data);
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
+
+        // Call the function to update cart amount on page load
+        $(document).ready(function () {
+            updateCartAmount();
+        });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

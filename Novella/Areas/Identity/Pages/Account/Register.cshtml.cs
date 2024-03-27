@@ -123,9 +123,9 @@ namespace Novella.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Display(Name = "Phone Number")]
-            [RegularExpression(@"^\d{10}$", ErrorMessage = "The {0} must be 10 digits.")]
+            [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The {0} must be a valid international phone number without spaces or dashes.")]
             [Required]
-            public int PhoneNumber { get; set; }
+            public string PhoneNumber { get; set; }
             [Display(Name = "PayPal account (if different from Novella account)")]
             [EmailAddress]
             public string PaypalAccount { get; set; }
