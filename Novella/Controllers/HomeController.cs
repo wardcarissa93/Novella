@@ -155,12 +155,6 @@ namespace Novella.Controllers
             return View("Search", searchResults);
         }
 
-
-
-
-
-
-
         public IActionResult CheckOut()
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
@@ -170,7 +164,7 @@ namespace Novella.Controllers
             {
                 TotalPrice = totalPrice
             };
-
+            ViewBag.Cart = cart;
             ViewBag.PayPalClientID = _configuration["PayPal:ClientID"];
             return View(model);
         }
@@ -197,12 +191,10 @@ namespace Novella.Controllers
         [HttpPost]
 public IActionResult AddToCart(int ProductId, int Quantity)
 {
-    // Your logic to handle adding the product to the cart goes here
-    // Assuming you're using Session to store the cart
     var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
     
     // Find the product by ProductId
-    var product = _productRepo.GetProductById(ProductId.ToString()); // Adjust based on your method's requirements
+    var product = _productRepo.GetProductById(ProductId.ToString());  
     
     if(product != null)
     {

@@ -9,7 +9,7 @@ public partial class Order
 
     public string FkUserId { get; set; } = null!;
 
-    public int FkOrderStatusId { get; set; }
+    public int? FkOrderStatusId { get; set; }
 
     public int FkShippingAddressId { get; set; }
 

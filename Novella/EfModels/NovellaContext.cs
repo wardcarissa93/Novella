@@ -50,8 +50,9 @@ public partial class NovellaContext : DbContext
             entity.ToTable("Address");
 
             entity.Property(e => e.PkAddressId)
-                .ValueGeneratedNever()
-                .HasColumnName("pkAddressId");
+                  .ValueGeneratedOnAdd()
+                  .HasColumnName("pkAddressId");  
+
             entity.Property(e => e.AddressLineOne)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -146,8 +147,8 @@ public partial class NovellaContext : DbContext
             entity.ToTable("Order");
 
             entity.Property(e => e.PkOrderId)
-                .ValueGeneratedNever()
-                .HasColumnName("pkOrderId");
+                  .ValueGeneratedOnAdd()
+                  .HasColumnName("pkOrderId");
             entity.Property(e => e.DateOrdered)
                 .HasColumnType("datetime")
                 .HasColumnName("dateOrdered");
@@ -267,7 +268,7 @@ public partial class NovellaContext : DbContext
             entity.ToTable("ProductOrder");
 
             entity.Property(e => e.PkProductOrderId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("pkProductOrderId");
             entity.Property(e => e.FkOrderId).HasColumnName("fkOrderId");
             entity.Property(e => e.FkProductId).HasColumnName("fkProductId");

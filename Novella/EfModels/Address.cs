@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Novella.EfModels;
 
 public partial class Address
 {
+    [Key]
     public int PkAddressId { get; set; }
 
     public string AddressLineOne { get; set; } = null!;

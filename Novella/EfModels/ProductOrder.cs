@@ -13,7 +13,7 @@ public partial class ProductOrder
 
     public int QuantityInOrder { get; set; }
 
-    public virtual Order FkOrder { get; set; } = null!;
+    public virtual Order? FkOrder { get; set; } = null!;
 
-    public virtual Product FkProduct { get; set; } = null!;
+    public virtual Product? FkProduct { get; set; } = null!;
 }
