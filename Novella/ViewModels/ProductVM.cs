@@ -32,6 +32,8 @@ namespace Novella.ViewModels
         [ForeignKey("Category Id")]
         public int CategoryId { get; set; }
 
+        public string ImageUrl { get; set; }
+
         // Support for multiple new image file uploads
         [Display(Name = "Upload Images")]
         public List<IFormFile> NewImageFiles { get; set; } = new List<IFormFile>();
