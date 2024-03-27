@@ -361,7 +361,7 @@ namespace Novella.Migrations
 
                     b.Property<decimal>("RatingValue")
                         .HasColumnType("decimal(2, 1)")
-                        .HasColumnName("rating");
+                        .HasColumnName("ratingValue");
 
                     b.Property<string>("Review")
                         .HasMaxLength(255)
