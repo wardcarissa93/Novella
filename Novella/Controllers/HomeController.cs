@@ -33,9 +33,8 @@ namespace Novella.Controllers
 
         public IActionResult Index()
         {
-            var products = _productRepo.GetProductsWithReviewsForHome();
-            return View(products);
-          
+            var top3Products = _productRepo.GetTop3ProductsWithHighestRatings();
+            return View(top3Products);
         }
 
         public IActionResult Detail(int productId, string imageUrl, int page = 1)

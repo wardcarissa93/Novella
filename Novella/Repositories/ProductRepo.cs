@@ -61,6 +61,26 @@ namespace Novella.Repositories
             return products;
         }
 
+        public List<ProductHomeVM> GetTop3ProductsWithHighestRatings()
+        {
+            var top3Products = _db.Products
+            .OrderByDescending(p => p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0)
+
+            .Select(p => new ProductHomeVM
+            {
+                ProductId = p.PkProductId.ToString(),
+                ProductName = p.ProductName,
+                Price = p.Price,
+                Description = p.ProductDescription,
+                //ImageUrl = p.ImageStores.FirstOrDefault()?.FileName,
+                Rating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0
+            })
+                .ToList();
+
+
+            return top3Products;
+        }
+
         public List<ProductCategoryVM> GetProductsForPendant()
         {
             int pendantCategoryId = 1;

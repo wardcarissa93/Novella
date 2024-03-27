@@ -272,6 +272,11 @@ a .navbar-brand{
     margin-top: 30px;
 }
 
+.rating-description > svg {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
 #best-seller-1,
 #best-seller-2,
 #best-seller-3{
