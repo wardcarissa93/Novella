@@ -15,7 +15,7 @@
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.ProductName)</th>
                     <th>@Html.DisplayNameFor(model => model.QuantityInStock)</th>
-                    <th>Actions</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -24,7 +24,7 @@
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                         <td>@Html.DisplayFor(modelItem => item.QuantityInStock)</td>
-                        <td>
+                        <td class="product-actions-row">
                             <a class="btn btn-edit" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
                             <a class="btn btn-details" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
                             @using (Html.BeginForm("Delete", "Admin", new { id = item.ProductId }, FormMethod.Post, true,new { @class = "inline" }))
