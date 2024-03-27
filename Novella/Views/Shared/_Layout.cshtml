@@ -126,17 +126,36 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+
+    
     <script>
-        // Retrieve the cart amount from session storage
-        var cartAmount = sessionStorage.getItem('cartAmount');
-        // Update the cart amount display
-        if (cartAmount) {
-            document.getElementById('nav-cart-amount').textContent = cartAmount;
-        } else {
-            document.getElementById('nav-cart-amount').textContent = '0';
+        // Function to update the cart amount in the layout
+        function updateCartAmount() {
+            $.ajax({
+                url: '@Url.Action("GetTotalQuantityInCart", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    document.getElementById('nav-cart-amount').textContent = data;
+                    sessionStorage.setItem('cartAmount', data);
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
+
+        // Call the function to update cart amount on page load
+        $(document).ready(function () {
+            updateCartAmount();
+        });
     </script>
+
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

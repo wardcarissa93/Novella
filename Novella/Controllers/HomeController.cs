@@ -7,7 +7,8 @@ using Novella.Repositories;
 using System.Security.Claims;
 using Novella.Services;
 using Microsoft.AspNetCore.Hosting;
-
+using Novella.ViewModels;
+using Newtonsoft.Json;
 
 namespace Novella.Controllers
 {
@@ -231,13 +232,35 @@ public IActionResult AddToCart(int ProductId, int Quantity)
 
     // Redirect to the Cart view
     return RedirectToAction("Cart");
-}
+        }
 
 
         public IActionResult Cart()
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
             return View(cart);
+        }
+
+        public IActionResult UpdateCartIcon()
+        {
+            // Retrieve the cart from session
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+
+            // Calculate total quantity
+            int totalQuantity = cart.Sum(item => item.Quantity);
+
+            // Store the total quantity in session storage
+            HttpContext.Session.SetInt32("TotalQuantity", totalQuantity);
+
+            // Return the total quantity
+            return Json(totalQuantity);
+        }
+
+        public int GetTotalQuantityInCart()
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            int totalQuantity = cart.Sum(item => item.Quantity);
+            return totalQuantity;
         }
 
 
