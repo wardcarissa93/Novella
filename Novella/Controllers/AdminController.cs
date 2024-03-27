@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using Novella.EfModels;
 using Novella.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Novella.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;

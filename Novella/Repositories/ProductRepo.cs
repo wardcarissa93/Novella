@@ -209,6 +209,7 @@ namespace Novella.Repositories
             {
                 product.ProductName = productVM.ProductName;
                 product.QuantityAvailable = productVM.QuantityAvailable;
+                product.Price = productVM.Price;  
                 _db.SaveChanges();
                 return true;
             }

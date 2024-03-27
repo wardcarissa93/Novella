@@ -8,8 +8,7 @@ using System.Diagnostics;
 
 namespace Novella.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private readonly ApplicationDbContext _db;

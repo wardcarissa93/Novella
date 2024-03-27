@@ -1047,6 +1047,13 @@ img {
 }
 
 
+.product-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:5px;
+}
+
 @media screen and (min-height: 1024px) {
     .nav-link{
         margin-left: 50px;
