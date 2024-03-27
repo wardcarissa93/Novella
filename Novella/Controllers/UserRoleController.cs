@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Novella.EfModels;
 
 namespace Novella.Controllers
 {
@@ -26,7 +27,7 @@ namespace Novella.Controllers
 
         public ActionResult Index()
         {
-            UserRepo userRepo = new UserRepo(_context);
+            UserRepo userRepo = new UserRepo( _context);
             var users = userRepo.GetAllUsers();
 
             return View(users);

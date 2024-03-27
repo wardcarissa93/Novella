@@ -30,7 +30,6 @@
 
     .user-detail input {
         border: none;
-        border-bottom: 1px solid grey;
         outline: none;
         color: deepskyblue;
     }
@@ -71,7 +70,6 @@
 
 .user-billing-info input {
     border: none;
-    border-bottom: 1px solid grey;
     outline: none;
     color: deepskyblue;
 }
@@ -109,6 +107,14 @@
 
 .user-billing-info input::placeholder {
     color: deepskyblue;
+}
+.user-detail input {
+    height: 30px;
+    border-bottom: 1px solid grey;
+}
+.user-billing-info input {
+    height:30px;
+    border-bottom: 1px solid grey;
 }
 .save-div svg, .save-div p
 {

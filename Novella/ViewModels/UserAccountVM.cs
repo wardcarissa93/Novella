@@ -11,7 +11,7 @@ namespace Novella.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Role {  get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string PayPalAccount {  get; set; }
         
         //add foreign key later

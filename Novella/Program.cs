@@ -11,6 +11,7 @@ using Novella.Data.Services;
 using Novella.EfModels;
 using Novella.Services;
 using Novella.Models;
+using Novella.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddControllersWithViews(); // For MVC applications
 
 // Add Razor Pages services
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<OtherUserRepo>();
 
 var app = builder.Build();
 
