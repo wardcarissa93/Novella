@@ -291,7 +291,7 @@ public partial class NovellaContext : DbContext
             entity.ToTable("Rating");
 
             entity.Property(e => e.PkRatingId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("pkRatingId");
             entity.Property(e => e.DateRated)
                 .HasColumnType("datetime")

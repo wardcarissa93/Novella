@@ -102,7 +102,7 @@ namespace Novella.Areas.Identity.Pages.Account.Manage
                 ViewData["FirstName"] = specificUser.FirstName;
                 ViewData["LastName"] = specificUser.LastName;
                 ViewData["PhoneNumber"] = specificUser.PhoneNumber;
-                ViewData["Email"] = specificUser.UsertId;
+                ViewData["Email"] = specificUser.UserId;
             }
             if(userEmail == null) { Console.WriteLine("null"); }else { Console.WriteLine("not null"); }
             return Page();

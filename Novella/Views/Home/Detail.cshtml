@@ -5,31 +5,31 @@
 }
 
 <main id="detail-main">
-  
- @*    <div class="filter-container">
-        <p class="filter-label">Filter by:</p>
-        <div class="select-container">
-            <select class="label-sm" id="productColor">
-                <option value="#">Color</option>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-            </select>
-        </div>
-        <div class="select-container">
-            <select id="productMaterial">
-                <option value="#">Material</option>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-            </select>
-        </div>
-        <div class="select-container">
-            <select class="label-sm" id="productPrice">
-                <option value="#">Price</option>
-                <option value="low"> < $100</option>
-                <option value="medium"> < $300</option>
-                <option value="high">Premium</option>
-            </select>
-        </div>
+
+    @*    <div class="filter-container">
+    <p class="filter-label">Filter by:</p>
+    <div class="select-container">
+    <select class="label-sm" id="productColor">
+    <option value="#">Color</option>
+    <option value="silver">Silver</option>
+    <option value="gold">Gold</option>
+    </select>
+    </div>
+    <div class="select-container">
+    <select id="productMaterial">
+    <option value="#">Material</option>
+    <option value="silver">Silver</option>
+    <option value="gold">Gold</option>
+    </select>
+    </div>
+    <div class="select-container">
+    <select class="label-sm" id="productPrice">
+    <option value="#">Price</option>
+    <option value="low"> < $100</option>
+    <option value="medium"> < $300</option>
+    <option value="high">Premium</option>
+    </select>
+    </div>
     </div> *@
     <div id="continue-shopping">
         <a href="@Url.Action("Index", "Home")">
@@ -111,6 +111,7 @@
             <div id="submit-rating">
                 <h3>Submit Your Rating</h3>
                 <form method="post" action="@Url.Action("SubmitRating", "Home")">
+                    <input type="hidden" name="ProductId" value="@Model.ProductId" />
                     <div class="form-group">
                         <label for="rating">Rating (1.0 - 5.0):</label>
                         <input type="number" step="0.1" min="1.0" max="5.0" name="rating" id="rating" required />

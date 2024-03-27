@@ -26,7 +26,7 @@ namespace Novella.Controllers
 
         public ActionResult Index()
         {
-            UserRepo userRepo = new UserRepo(_context);
+            UserRepo userRepo = new UserRepo(_context, _userManager);
             var users = userRepo.GetAllUsers();
 
             return View(users);
