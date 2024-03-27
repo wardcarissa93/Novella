@@ -102,6 +102,49 @@ footer{
 .content-container{
     min-height:60vh;
 }
+
+/* Cart */
+#empty-cart {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 2rem;
+}
+
+#cart-with-products {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.total-price-display {
+    font-weight: bold;
+}
+
+/* Checkout */
+
+.number-circle {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid black;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+}
+
+.number {
+    line-height: 1.5rem;
+}
+
+.cart-step {
+    display: flex;
+}
+
 /*footer*/
 #logo-footer {
     width: 50px;
