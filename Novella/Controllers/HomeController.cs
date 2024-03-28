@@ -34,6 +34,22 @@ namespace Novella.Controllers
         public IActionResult Index()
         {
             var top3Products = _productRepo.GetTop3ProductsWithHighestRatings();
+
+            // Fetch images for the products
+            foreach (var product in top3Products)
+            {
+                // Convert the string ProductId to an integer
+                if (int.TryParse(product.ProductId, out int productId))
+                {
+                    // If conversion is successful, get the image URL
+                    product.ImageUrl = GetImageUrl(productId);
+                }
+                else
+                {
+                    Console.WriteLine("Error fetching image");
+                }
+            }
+
             return View(top3Products);
         }
 
@@ -85,7 +101,10 @@ namespace Novella.Controllers
             if (success)
             {
                 // Rating submitted successfully
-                return RedirectToAction("Detail", new { productId });
+                // Fetch the image URL using the GetImage method
+                var imageUrl = GetImageUrl(productId);
+
+                return RedirectToAction("Detail", new { productId, imageUrl });
             }
             else
             {
@@ -144,6 +163,21 @@ namespace Novella.Controllers
 
                 var defaultImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "404_img.jpeg");
                 return File(defaultImagePath, "image/jpeg");
+            }
+        }
+
+        public string GetImageUrl(int productId)
+        {
+            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
+            if (image != null)
+            {
+                // Assuming you have a property in ImageStore table to store the image URL
+                return Url.Action("GetImage", "Home", new { productId = productId });
+            }
+            else
+            {
+                // Return the URL for the default image
+                return Url.Content("~/Images/404_img.jpeg"); // Adjust this URL based on your project structure
             }
         }
 
