@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Novella.Migrations
+namespace Novella.Migrations.Novella
 {
     /// <inheritdoc />
-    public partial class initalCreate : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,8 @@ namespace Novella.Migrations
                 name: "Address",
                 columns: table => new
                 {
-                    pkAddressId = table.Column<int>(type: "int", nullable: false),
+                    pkAddressId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     addressLineOne = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     addressLineTwo = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     city = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
@@ -112,7 +113,8 @@ namespace Novella.Migrations
                 name: "Order",
                 columns: table => new
                 {
-                    pkOrderId = table.Column<int>(type: "int", nullable: false),
+                    pkOrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     fkUserId = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     fkOrderStatusId = table.Column<int>(type: "int", nullable: false),
                     fkShippingAddressId = table.Column<int>(type: "int", nullable: false),
@@ -162,18 +164,20 @@ namespace Novella.Migrations
                         name: "FK__ImageStor__fkPro__09746778",
                         column: x => x.fkProductId,
                         principalTable: "Product",
-                        principalColumn: "pkProductId");
+                        principalColumn: "pkProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Rating",
                 columns: table => new
                 {
-                    pkRatingId = table.Column<int>(type: "int", nullable: false),
+                    pkRatingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     fkProductId = table.Column<int>(type: "int", nullable: false),
                     fkUserId = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     review = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: true),
-                    rating = table.Column<decimal>(type: "decimal(2,1)", nullable: false),
+                    ratingValue = table.Column<decimal>(type: "decimal(2,1)", nullable: false),
                     dateRated = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
@@ -219,7 +223,8 @@ namespace Novella.Migrations
                 name: "ProductOrder",
                 columns: table => new
                 {
-                    pkProductOrderId = table.Column<int>(type: "int", nullable: false),
+                    pkProductOrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     fkOrderId = table.Column<int>(type: "int", nullable: false),
                     fkProductId = table.Column<int>(type: "int", nullable: false),
                     quantityInOrder = table.Column<int>(type: "int", nullable: false)
