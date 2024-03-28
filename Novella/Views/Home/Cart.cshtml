@@ -1,52 +1,191 @@
-﻿@model List<CartItem>
+﻿@model List<Novella.Models.CartItem>
 
-<h2>Shopping Cart</h2>
+<div class="page-path-cart" id="current-path"></div>
 
-@if (Model.Count == 0)
-{
-    <div id="empty-cart">
-        <p>Your cart is empty.</p>
-        <p>Click on one of the categories above to begin shopping.</p>
+
+<div id="continue-shopping">
+    <a href="@Url.Action("Index", "Home")">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+        </svg> CONTINUE SHOPPING
+    </a>
+</div>
+
+<div class="cart-container">
+    
+    <div class="shopping-bag">
+        <h2 class="myBag">My Bag (@Model.Count Items)</h2><br/>
+        @if (Model.Count == 0)
+        {
+            <div id="empty-cart">
+                <p>Your cart is empty.</p>
+                <p>Click on one of the categories above to begin shopping.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="item">
+                    <img src="@Url.Action("GetImage", "Home", new { productId = item.ProductId })" alt="@item.ProductName" />
+                    <div class="item-details">
+                        <div class="item-info">
+
+                            <div class="name">@item.ProductName</div>
+                            <div class="description">@item.ProductDescription</div>
+
+
+
+                            <div class="size">Size   :   @item.Size</div>
+                            <div class="Color">Color   :   @item.Color</div>
+
+                            <div class="edit-delete">
+                                <button type="button" onclick="editItem('@item.ProductId')" class="edit">
+                                    <img class ="editIcon" src="~/images/icons/pencil2.png" alt="Edit">
+                                    Edit
+                                </button>
+                                <button type="button" onclick="removeItem('@item.ProductId')" class="remove">
+                                    <img class="removeIcon" src="~/images/icons/trashcan.jpeg" alt="Remove" >
+                                    Remove
+                                </button>
+                            </div>
+
+                        </div>
+                        <div class="item-price">
+                            <div class="price">C$ @item.Price.ToString("F2")</div>
+                            <div class="quantity">
+                                <button type="button" class="change-quantity" onclick="updateQuantity('@item.ProductId', -1)">-</button>
+                                @item.Quantity
+                                <button type="button" class="change-quantity" onclick="updateQuantity('@item.ProductId', 1)">+</button>
+                            </div>
+                        </div>
+
+                    </div><br />
+                    
+                </div>
+            }
+        }
     </div>
-}
-else
-{
-    var totalPrice = Model.Sum(item => item.Price * item.Quantity);
-    <div id="cart-with-products">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total for Item</th>
-                </tr>
-            </thead> 
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.ProductName</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td>@(item.Price * item.Quantity)</td>
-                    </tr>
-                }
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td class="total-price-display">Total Price:</td>
-                    <td>
-                        <p class="total-price-display">@totalPrice</p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <form asp-controller="Home" asp-action="CheckOut">
-                <button type="submit" class="custom-button">Proceed to Checkout</button>
-            </form>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        
+        @{
+            decimal subtotal = Model.Sum(item => item.Price * item.Quantity);
+            decimal gst = subtotal * 0.05m;
+            decimal pst = subtotal * 0.06m;
+            decimal total = subtotal + gst + pst;
+        }
+        <div class="subtotal">Subtotal: <span>C$ @subtotal.ToString("F2")</span></div>
+        <div class="shipping">US & Int. Shipping: <span>Free</span></div>
+        <div class="tax">GST: 5% <span>C$ @gst.ToString("F2")</span></div>
+        <div class="tax">PST: 6% <span>C$ @pst.ToString("F2")</span></div>
+        <div class="promo-code-container">
+            <button class="promo-code-toggle">Promo Code <span>&#9660;</span></button>
+            <div class="promo-code-content" style="display: none;">
+                <input type="text" id="promoCodeInput" placeholder="Enter code" class="promo-input" />
+                <button type="button" class="btn-apply">Apply</button>
+            </div>
         </div>
-    </div>
 
-}
+        <div class="total">Total: <span>C$ @total.ToString("F2")</span></div>
+        <button class="checkout-btn" onclick="location.href='@Url.Action("CheckOut", "Home")'">Checkout</button>
+    </div>
+</div>
+
+<script>
+    document.querySelector('.promo-code-toggle').addEventListener('click', function () {
+        var content = this.nextElementSibling;
+        if (content.style.display === "none") {
+            content.style.display = "block";
+        } else {
+            content.style.display = "none";
+        }
+    });
+</script>
+
+<script>
+    function updateQuantity(productId, change) {
+        $.ajax({
+            url: '/Home/UpdateQuantity',
+            type: 'POST',
+            data: JSON.stringify({ productId: productId, change: change }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response.success) {
+                    $('#totalPrice').text(`$${response.totalPrice.toFixed(2)}`);
+                    window.location.reload(); // Reload the page to reflect the changes
+                } else {
+                    console.error("Failed to update quantity:", response.message);
+                    alert("Failed to update quantity. Please try again.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+                alert("An error occurred while updating the quantity. Please try again.");
+            }
+        });
+    }
+
+    document.querySelectorAll('.change-quantity').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.getAttribute('data-product-id');
+            const change = this.getAttribute('data-change');
+            updateQuantity(productId, parseInt(change));
+        });
+    });
+
+    function updateSummary() {
+        $.ajax({
+            url: '/Home/GetCartSummary',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response) {
+                    document.querySelector('.subtotal span').textContent = `C$ ${response.subtotal.toFixed(2)}`;
+                    document.querySelector('.total span').textContent = `C$ ${response.total.toFixed(2)}`;
+                    document.querySelector('.tax span').textContent = `C$ ${response.tax.toFixed(2)}`;
+                    document.querySelector('.myBag').textContent = `My Bag (${response.count} Items)`;
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+</script>
+
+
+<script>
+        function updatePagePath() {
+            var currentUrl = location.pathname; // Get the current URL
+            var segments = currentUrl.split('/'); // Split the URL into segments
+            var pagePath = document.getElementById("current-path");
+
+            // Remove empty segments and the last segment (current page)
+            var pageSegments = segments.filter(segment => segment !== "");
+
+            // Clear the page path element
+            pagePath.innerHTML = "";
+
+            // Iterate over each segment and create links
+            for (var i = 0; i < pageSegments.length; i++) {
+                var link = document.createElement("a");
+                link.href = "/" + pageSegments.slice(0, i + 1).join("/");
+                link.textContent = pageSegments[i];
+                link.classList.add("page-segment");
+
+                // Add a slash between segments (except for the last one)
+                if (i < pageSegments.length - 1) {
+                    pagePath.appendChild(link);
+                    pagePath.appendChild(document.createTextNode("/"));
+                } else {
+                    pagePath.appendChild(link);
+                }
+            }
+        }
+
+    window.onload = function () {
+        updatePagePath(); // Update page path on page load
+    };
+</script>

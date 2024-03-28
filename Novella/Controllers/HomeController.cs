@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Novella.EfModels;
 using System.Diagnostics;
 using Novella.Models;
 using Novella.Repositories;
 using System.Security.Claims;
-using Novella.Services;
-using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 
 
 namespace Novella.Controllers
@@ -30,6 +28,9 @@ namespace Novella.Controllers
             _db = db;
             _webHostEnvironment = webHostEnvironment;
         }
+
+
+        
 
         public IActionResult Index()
         {
@@ -189,31 +190,34 @@ namespace Novella.Controllers
 
 
         [HttpPost]
-        public IActionResult AddToCart(int ProductId, int Quantity)
+        public IActionResult AddToCart(int productId, int quantity, string size, string color)
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
 
             // Find the product by ProductId
-            var product = _productRepo.GetProductById(ProductId.ToString());
+            var product = _productRepo.GetProductById(productId.ToString());
 
             if (product != null)
             {
                 // Check if the product already exists in the cart
-                var cartItem = cart.Find(c => c.ProductId == ProductId.ToString());
+                var cartItem = cart.Find(c => c.ProductId == productId.ToString());
                 if (cartItem != null)
                 {
                     // If exists, just update the quantity
-                    cartItem.Quantity += Quantity;
+                    cartItem.Quantity += quantity;
                 }
                 else
                 {
                     // Add new item to the cart
                     cart.Add(new CartItem
                     {
-                        ProductId = ProductId.ToString(),
+                        ProductId = productId.ToString(),
                         ProductName = product.ProductName,
+                        ProductDescription = product.ProductDescription,
                         Price = product.Price,
-                        Quantity = Quantity
+                        Quantity = quantity,
+                        Size = size,
+                        Color = color
                     });
                 }
 
@@ -253,6 +257,53 @@ namespace Novella.Controllers
             int totalQuantity = cart.Sum(item => item.Quantity);
             return totalQuantity;
         }
+
+
+        [HttpPost]
+        public JsonResult UpdateQuantity(int productId, int change)
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var item = cart.FirstOrDefault(c => c.ProductId == productId.ToString());
+            if (item != null)
+            {
+                item.Quantity += change;
+                if (item.Quantity <= 0)
+                {
+                    cart.Remove(item);
+                }
+                else
+                {
+                    // Optionally, add logic here to update the item price based on the new quantity
+                    // For example, if you have quantity discounts
+                }
+
+                HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+                // Optionally, calculate and return the updated cart summary to update the UI
+                var subtotal = cart.Sum(c => c.Price * c.Quantity);
+                var tax = subtotal * 0.05m; // Assuming a fixed tax rate of 5%
+                var total = subtotal + tax;
+
+                return Json(new { success = true, subtotal = subtotal, tax = tax, total = total, count = cart.Count });
+            }
+
+            return Json(new { success = false, message = "Item not found in cart." });
+        }
+
+        [HttpGet]
+        public JsonResult GetCartSummary()
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var subtotal = cart.Sum(c => c.Price * c.Quantity);
+            var tax = subtotal * 0.05m; // Assuming a fixed tax rate of 5%
+            var total = subtotal + tax;
+
+            return Json(new { subtotal = subtotal, tax = tax, total = total, count = cart.Count });
+        }
+
+
+
+
 
     }
 }
