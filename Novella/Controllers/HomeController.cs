@@ -7,7 +7,6 @@ using Novella.Repositories;
 using System.Security.Claims;
 using Novella.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 
 
 namespace Novella.Controllers
@@ -19,24 +18,17 @@ namespace Novella.Controllers
         private readonly NovellaContext _db;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly UserRepo _userRepo;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
                               IConfiguration configuration,
-                              ProductRepo productRepo, 
-                              IWebHostEnvironment webHostEnvironment,
-                              UserManager<IdentityUser> userManager,
-                              UserRepo userRepo)
+                              ProductRepo productRepo, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _productRepo = productRepo;
             _configuration = configuration;
             _db = db;
             _webHostEnvironment = webHostEnvironment;
-            _userManager = userManager;
-            _userRepo = userRepo;
         }
 
         public IActionResult Index()
@@ -62,7 +54,7 @@ namespace Novella.Controllers
             ViewBag.Price = product.Price;
             ViewBag.ProductId = productId;
             ViewBag.ProductDescription = product.ProductDescription;
-            ViewBag.Rating = _productRepo.GetAverageRating(productId);
+            ViewBag.Rating = product.Rating;
             ViewBag.ImageUrl = imageUrl;
             // Pagination
             int pageSize = 1;
@@ -79,7 +71,7 @@ namespace Novella.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitRating(int productId, decimal rating, string review)
+        public IActionResult SubmitRating(int productId, decimal rating, string review)
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
@@ -88,26 +80,18 @@ namespace Novella.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var success = _productRepo.SubmitRating(userId, productId, rating, review);
 
-            // Retrieve the UserName using UserRepo and UserManager
-            var userName = await _userRepo.GetUserNameByUserIdAsync(userId);
-
-            if (userName != null)
+            if (success)
             {
-                var success = _productRepo.SubmitRating(userName, productId, rating, review);
-
-                if (success)
-                {
-                    // Rating submitted successfully
-                    // Fetch the image URL using the GetImage method
-                    var imageUrl = GetImageUrl(productId);
-
-                    return RedirectToAction("Detail", new { productId, imageUrl });
-                }
+                // Rating submitted successfully
+                return RedirectToAction("Detail", new { productId });
             }
-
-            // Handle rating submission failure
-            return RedirectToAction("Error", "Home");
+            else
+            {
+                // Handle rating submission failure
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         public IActionResult Pendant(string productName, decimal price, string description)
@@ -163,22 +147,6 @@ namespace Novella.Controllers
             }
         }
 
-        public string GetImageUrl(int productId)
-        {
-            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-            if (image != null)
-            {
-                // Assuming you have a property in ImageStore table to store the image URL
-                return Url.Action("GetImage", "Home", new { productId = productId });
-            }
-            else
-            {
-                // Return the URL for the default image
-                return Url.Content("~/Images/404_img.jpeg"); // Adjust this URL based on your project structure
-            }
-        }
-
-
         public IActionResult Search(string query)
         {
             var searchResults = _productRepo.SearchProducts(query, productId =>
@@ -186,12 +154,6 @@ namespace Novella.Controllers
 
             return View("Search", searchResults);
         }
-
-
-
-
-
-
 
         public IActionResult CheckOut()
         {
@@ -202,7 +164,7 @@ namespace Novella.Controllers
             {
                 TotalPrice = totalPrice
             };
-
+            ViewBag.Cart = cart;
             ViewBag.PayPalClientID = _configuration["PayPal:ClientID"];
             return View(model);
         }
@@ -229,18 +191,16 @@ namespace Novella.Controllers
         [HttpPost]
         public IActionResult AddToCart(int ProductId, int Quantity)
         {
-            // Your logic to handle adding the product to the cart goes here
-            // Assuming you're using Session to store the cart
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
-    
+
             // Find the product by ProductId
-            var product = _productRepo.GetProductById(ProductId.ToString()); // Adjust based on your method's requirements
-    
-            if(product != null)
+            var product = _productRepo.GetProductById(ProductId.ToString());
+
+            if (product != null)
             {
                 // Check if the product already exists in the cart
                 var cartItem = cart.Find(c => c.ProductId == ProductId.ToString());
-                if(cartItem != null)
+                if (cartItem != null)
                 {
                     // If exists, just update the quantity
                     cartItem.Quantity += Quantity;
@@ -248,15 +208,15 @@ namespace Novella.Controllers
                 else
                 {
                     // Add new item to the cart
-                    cart.Add(new CartItem 
-                    { 
-                        ProductId = ProductId.ToString(), 
-                        ProductName = product.ProductName, 
-                        Price = product.Price, 
-                        Quantity = Quantity 
+                    cart.Add(new CartItem
+                    {
+                        ProductId = ProductId.ToString(),
+                        ProductName = product.ProductName,
+                        Price = product.Price,
+                        Quantity = Quantity
                     });
                 }
-        
+
                 // Save the updated cart back to the session
                 HttpContext.Session.SetObjectAsJson("Cart", cart);
             }
@@ -293,5 +253,6 @@ namespace Novella.Controllers
             int totalQuantity = cart.Sum(item => item.Quantity);
             return totalQuantity;
         }
+
     }
 }

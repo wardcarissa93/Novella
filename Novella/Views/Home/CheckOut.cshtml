@@ -10,13 +10,51 @@
     <div class="cart-step">
         <div class="number-circle"><p class="number">1</p></div><h4>Shipping Address</h4>
     </div>
+    <!-- Shipping Address Form Group -->
     <div class="form-group">
-        <label>Shipping Address:</label>
-        <input type="text" class="form-control" placeholder="Enter shipping address" />
+        <label>Address Line 1:</label>
+        <input type="text" class="form-control" placeholder="Enter address line 1" name="ShippingAddressLineOne" required />
     </div>
     <div class="form-group">
-        <label>Billing Address:</label>
-        <input type="text" class="form-control" placeholder="Enter billing address" />
+        <label>Address Line 2:</label>
+        <input type="text" class="form-control" placeholder="Enter address line 2" name="ShippingAddressLineTwo" />
+    </div>
+    <div class="form-group">
+        <label>City:</label>
+        <input type="text" class="form-control" placeholder="Enter city" name="ShippingCity" required />
+    </div>
+    <div class="form-group">
+        <label>Province:</label>
+        <input type="text" class="form-control" placeholder="Enter province" name="ShippingProvince" required />
+    </div>
+    <div class="form-group">
+        <label>Postal Code:</label>
+        <input type="text" class="form-control" placeholder="Enter postal code" name="ShippingPostalCode" required />
+    </div>
+
+    <div class="cart-step">
+        <div class="number-circle"><p class="number">2</p></div><h4>Billing Address</h4>
+    </div>
+    <!-- Billing Address Form Group -->
+    <div class="form-group">
+        <label>Address Line 1:</label>
+        <input type="text" class="form-control" placeholder="Enter address line 1" name="BillingAddressLineOne" required />
+    </div>
+    <div class="form-group">
+        <label>Address Line 2:</label>
+        <input type="text" class="form-control" placeholder="Enter address line 2" name="BillingAddressLineTwo" />
+    </div>
+    <div class="form-group">
+        <label>City:</label>
+        <input type="text" class="form-control" placeholder="Enter city" name="BillingCity" required />
+    </div>
+    <div class="form-group">
+        <label>Province:</label>
+        <input type="text" class="form-control" placeholder="Enter province" name="BillingProvince" required />
+    </div>
+    <div class="form-group">
+        <label>Postal Code:</label>
+        <input type="text" class="form-control" placeholder="Enter postal code" name="BillingPostalCode" required />
     </div>
 
     <h3>Total Price: $@Model.TotalPrice</h3>
@@ -40,8 +78,59 @@
             },
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                    // Implement additional actions on successful transaction
+                    // access ViewBag.Cart and serialize it for sending
+                    var cartItems = @Html.Raw(Json.Serialize(ViewBag.Cart));
+                    // Create shipping address object
+                    var shippingAddress = {
+                        AddressLine1: $('input[name="ShippingAddressLineOne"]').val(),
+                        AddressLine2: $('input[name="ShippingAddressLineTwo"]').val(),
+                        City: $('input[name="ShippingCity"]').val(),
+                        Province: $('input[name="ShippingProvince"]').val(),
+                        PostalCode: $('input[name="ShippingPostalCode"]').val()
+                    };
+
+                    // Create billing address object
+                    var billingAddress = {
+                        AddressLine1: $('input[name="BillingAddressLineOne"]').val(),
+                        AddressLine2: $('input[name="BillingAddressLineTwo"]').val(),
+                        City: $('input[name="BillingCity"]').val(),
+                        Province: $('input[name="BillingProvince"]').val(),
+                        PostalCode: $('input[name="BillingPostalCode"]').val()
+                    };
+                    // Bundle the PayPal transaction ID and cart items together
+                    var orderData = {
+                        paypalTransactionId: details.id,
+                        cartItems: cartItems,
+                        shippingAddress: shippingAddress,
+                        billingAddress: billingAddress,
+                    };
+
+                    // AJAX call to server to save the order
+                    $.ajax({
+                        url: '/Order/SaveOrder',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(orderData),
+                        success: function (response) {
+                             if (response.success) {
+                                console.log("Success:", response);
+                                localStorage.setItem('ajaxSuccessResponse', JSON.stringify(response));
+
+                                // Redirect to the confirmation page using the URL provided by the server
+                                window.location.href = response.redirectUrl;
+                            } else {
+                                 console.error("Operation was not successful:", response.message);
+                                localStorage.setItem('ajaxOperationFailed', JSON.stringify(response));
+                                alert("We encountered a problem processing your request. Please try again later.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("AJAX Error:", status, error);
+                            console.error("Response Text:", xhr.responseText);
+                            localStorage.setItem('ajaxErrorResponse', JSON.stringify({ status: xhr.status, error: error, responseText: xhr.responseText }));
+                            alert("Error: " + error + ". Please try again later.");
+                        }
+                    });
                 });
             }
         }).render('#paypal-button-container');

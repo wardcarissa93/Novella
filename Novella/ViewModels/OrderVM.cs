@@ -1,26 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Novella.EfModels;
+using Novella.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Novella.ViewModels
 {
     public class OrderVM
     {
-        [Key]
-        public int OrderId { get; set; }
-
-        public DateTime DateOrdered { get; set; }
-
-        [ForeignKey("UserAccount")]
-        public string? UserId { get; set; }
-
-        [ForeignKey("OrderStatus")]
-        public int OrderStatusId { get; set; }
-
-        //add foreign key
-        public int ShippingAddressId { get; set; }
-
-        //add foreign key
-        public int BillingAddressId { get; set; }
-
+        public string PaypalTransactionId { get; set; }
+        public List<CartItem> CartItems { get; set; } = new List<CartItem>();
+        public AddressVM ShippingAddress { get; set; }
+        public AddressVM BillingAddress { get; set; }
     }
 }
