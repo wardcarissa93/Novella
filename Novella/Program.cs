@@ -64,6 +64,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<ProductRepo>();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<OtherUserRepo>();
+builder.Services.AddScoped<OrderRepo>();
+builder.Services.AddScoped<AddressRepo>();
+builder.Services.AddScoped<ProductOrderRepo>();
 
 var app = builder.Build();
 

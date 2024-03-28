@@ -37,9 +37,9 @@ public partial class NovellaContext : DbContext
 
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=tcp:freeazuresqlservercarissa.database.windows.net,1433;Initial Catalog=Novella;Persist Security Info=False;User ID=CarissaWard;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+    //        => optionsBuilder.UseSqlServer("Server=tcp:freeazuresqlservercarissa.database.windows.net,1433;Initial Catalog=Novella;Persist Security Info=False;User ID=CarissaWard;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,8 +50,9 @@ public partial class NovellaContext : DbContext
             entity.ToTable("Address");
 
             entity.Property(e => e.PkAddressId)
-                .ValueGeneratedNever()
-                .HasColumnName("pkAddressId");
+                  .ValueGeneratedOnAdd()
+                  .HasColumnName("pkAddressId");
+
             entity.Property(e => e.AddressLineOne)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -146,8 +147,8 @@ public partial class NovellaContext : DbContext
             entity.ToTable("Order");
 
             entity.Property(e => e.PkOrderId)
-                .ValueGeneratedNever()
-                .HasColumnName("pkOrderId");
+                  .ValueGeneratedOnAdd()
+                  .HasColumnName("pkOrderId");
             entity.Property(e => e.DateOrdered)
                 .HasColumnType("datetime")
                 .HasColumnName("dateOrdered");
@@ -267,7 +268,7 @@ public partial class NovellaContext : DbContext
             entity.ToTable("ProductOrder");
 
             entity.Property(e => e.PkProductOrderId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("pkProductOrderId");
             entity.Property(e => e.FkOrderId).HasColumnName("fkOrderId");
             entity.Property(e => e.FkProductId).HasColumnName("fkProductId");
