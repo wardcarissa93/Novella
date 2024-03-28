@@ -23,7 +23,10 @@
                 {
                     <div class="bestseller-item">
                         <a href="@Url.Action("Detail", "Home", new {productId = item.ProductId, productName =  item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl})">
-                            <img src="@item.ImageUrl" alt="@item.ProductName" />
+                            <div class="bs-img-container">
+                                <img class="bs-img" src="@item.ImageUrl" alt="@item.ProductName" />
+                            </div>
+                            
                             <p class="card-title">@item.ProductName</p>
                         </a>
                         <div class="rating-container">

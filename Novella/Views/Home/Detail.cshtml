@@ -5,32 +5,6 @@
 }
 
 <main id="detail-main">
-
-    @*    <div class="filter-container">
-    <p class="filter-label">Filter by:</p>
-    <div class="select-container">
-    <select class="label-sm" id="productColor">
-    <option value="#">Color</option>
-    <option value="silver">Silver</option>
-    <option value="gold">Gold</option>
-    </select>
-    </div>
-    <div class="select-container">
-    <select id="productMaterial">
-    <option value="#">Material</option>
-    <option value="silver">Silver</option>
-    <option value="gold">Gold</option>
-    </select>
-    </div>
-    <div class="select-container">
-    <select class="label-sm" id="productPrice">
-    <option value="#">Price</option>
-    <option value="low"> < $100</option>
-    <option value="medium"> < $300</option>
-    <option value="high">Premium</option>
-    </select>
-    </div>
-    </div> *@
     <div id="continue-shopping">
         <a href="@Url.Action("Index", "Home")">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
@@ -39,18 +13,17 @@
         </a>
     </div>
     <div class="detail-container">
-        <img id="detail-img" src="@ViewBag.ImageUrl" />
+        <div id="detail-img-container">
+            <img id="detail-img"  src="@ViewBag.ImageUrl" style="border-radius: 5px;"/>
+        </div>
+       
         <div id="detail-text">
             <p id="detail-title">@Model.ProductName</p>
             <p id="detail-subtitle">@Model.ProductDescription</p>
             <div class="detail-line"></div>
             <div id="detail-qty">
                 <span>Quantity</span>
-                <div class="qty-container">
-                    <span id="minus">-</span>
-                    <span id="productQty">1</span>
-                    <span id="plus">+</span>
-                </div>
+              
             </div>
 
             <form id="addToCartForm" asp-controller="Home" asp-action="AddToCart" method="post">
@@ -119,11 +92,11 @@
                         <label for="rating">Rating (1.0 - 5.0):</label>
                         <input type="number" step="0.1" min="1.0" max="5.0" name="rating" id="rating" required />
                     </div>
-                    <div class="form-group">
+                    <div id="review-group" class="form-group">
                         <label for="review">Review (optional):</label>
                         <textarea name="review" id="review" rows="4" cols="50"></textarea>
                     </div>
-                    <button type="submit">Submit</button>
+                    <button id="submit-review" type="submit">Submit</button>
                 </form>
             </div>
 
@@ -134,8 +107,8 @@
                     @foreach (var review in ViewBag.Reviews)
                     {
                         <li>
-                            <p><strong>@review.FirstName @review.LastName</strong> - @review.DateRated.ToString("MMMM dd, yyyy")</p>
-                            <p>@review.Review</p>
+                            <p class="review-p"><strong>@review.FirstName @review.LastName</strong> - @review.DateRated.ToString("MMMM dd, yyyy")</p>
+                            <p class="review-p">@review.Review</p>
                         </li>
                     }
                 </ul>
@@ -143,7 +116,7 @@
                 <!-- Pagination -->
                 @if (ViewBag.PageCount > 1)
                 {
-                    <nav aria-label="Page Navigation">
+                    <nav id="nav-review" aria-label="Page Navigation">
                         <ul class="pagination">
                             @for (int i = 1; i <= ViewBag.PageCount; i++)
                             {

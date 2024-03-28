@@ -42,8 +42,25 @@ namespace Novella.Controllers
         public IActionResult Index()
         {
             var top3Products = _productRepo.GetTop3ProductsWithHighestRatings();
+
+            // Fetch images for the products
+            foreach (var product in top3Products)
+            {
+                // Convert the string ProductId to an integer
+                if (int.TryParse(product.ProductId, out int productId))
+                {
+                    // If conversion is successful, get the image URL
+                    product.ImageUrl = GetImageUrl(productId);
+                }
+                else
+                {
+                    Console.WriteLine("Error fetching image");
+                }
+            }
+
             return View(top3Products);
         }
+
 
         public IActionResult Detail(int productId, string imageUrl, int page = 1)
         {
