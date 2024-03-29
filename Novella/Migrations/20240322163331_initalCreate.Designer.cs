@@ -9,11 +9,11 @@ using Novella.EfModels;
 
 #nullable disable
 
-namespace Novella.Migrations.Novella
+namespace Novella.Migrations
 {
     [DbContext(typeof(NovellaContext))]
-    [Migration("20240328215603_initialCreate")]
-    partial class initialCreate
+    [Migration("20240322163331_initalCreate")]
+    partial class initalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,11 +28,8 @@ namespace Novella.Migrations.Novella
             modelBuilder.Entity("Novella.EfModels.Address", b =>
                 {
                     b.Property<int>("PkAddressId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkAddressId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PkAddressId"));
 
                     b.Property<string>("AddressLineOne")
                         .IsRequired()
@@ -166,11 +163,8 @@ namespace Novella.Migrations.Novella
             modelBuilder.Entity("Novella.EfModels.Order", b =>
                 {
                     b.Property<int>("PkOrderId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkOrderId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PkOrderId"));
 
                     b.Property<DateTime>("DateOrdered")
                         .HasColumnType("datetime")
@@ -322,11 +316,8 @@ namespace Novella.Migrations.Novella
             modelBuilder.Entity("Novella.EfModels.ProductOrder", b =>
                 {
                     b.Property<int>("PkProductOrderId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkProductOrderId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PkProductOrderId"));
 
                     b.Property<int>("FkOrderId")
                         .HasColumnType("int")
@@ -353,11 +344,8 @@ namespace Novella.Migrations.Novella
             modelBuilder.Entity("Novella.EfModels.Rating", b =>
                 {
                     b.Property<int>("PkRatingId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("pkRatingId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PkRatingId"));
 
                     b.Property<DateTime>("DateRated")
                         .HasColumnType("datetime")
@@ -376,7 +364,7 @@ namespace Novella.Migrations.Novella
 
                     b.Property<decimal>("RatingValue")
                         .HasColumnType("decimal(2, 1)")
-                        .HasColumnName("ratingValue");
+                        .HasColumnName("rating");
 
                     b.Property<string>("Review")
                         .HasMaxLength(255)
@@ -458,7 +446,6 @@ namespace Novella.Migrations.Novella
                     b.HasOne("Novella.EfModels.Product", "FkProduct")
                         .WithMany("ImageStores")
                         .HasForeignKey("FkProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK__ImageStor__fkPro__09746778");
 

@@ -29,10 +29,14 @@ namespace Novella.ViewModels
       
         public List<RatingVM>? Reviews { get; set; }
 
+
+
         [ForeignKey("Category Id")]
         public int CategoryId { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
+
+
 
         // Support for multiple new image file uploads
         [Display(Name = "Upload Images")]
