@@ -10,20 +10,17 @@
             @foreach (var item in Model)
             {
                 <div class="search-product-card">
-                  
+
                     <div class="card-image-container">
                         <img src="@item.ImageUrl" alt="@item.ProductName"></img>
                     </div>
-                  
-                        <p class="search-card-title">@item.ProductName</p>
-                        <p class="search-card-description">@item.Description</p>
-                        <p class="search-card-price">$@item.Price</p>
-                                
+
+                    <p class="search-card-title">@item.ProductName</p>
+                    <p class="search-card-description">@item.Description</p>
+                    <p class="search-card-price">$@item.Price</p>
+
                 </div>
             }
         </div>
     </div>
 </main>
-
-
-

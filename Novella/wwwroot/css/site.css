@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 html {
     font-size: 14px;
@@ -23,7 +22,6 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
 }
 
 a {
@@ -124,17 +122,12 @@ a .navbar-brand {
 
 #current-path {
     font-size: 16px;
+    font-weight: bold;
     margin-bottom: 20px;
-    font-family: "Montserrat", sans-serif;
-    padding:20px
 }
 
 
 /* Cart */
-
-.page-path-cart{
-    color: grey;
-}
 #empty-cart {
     width: 100%;
     height: 50vh;
@@ -153,300 +146,7 @@ a .navbar-brand {
 
 .total-price-display {
     font-weight: bold;
-
 }
-
-.cart-container {
-    display: flex;
-    margin: auto auto;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: "Montserrat", sans-serif;
-}
-
-.shopping-bag {
-    width: 70%;
-    padding: 3rem;
-    border-right: 2px solid #f0f0f0;
-    background-color: white;
-}
-
-.item {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Increased shadow size and opacity for a darker appearance */
-    padding: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #f0f0f0;
-    background: white;
-    border-radius: 20px;
-}
-
-    .item img {
-        width: 200px;
-        height: auto;
-        object-fit: cover;
-        border-radius: 10px;
-    }
-
-.item-details {
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    padding-left: 20px; /* to ensure it doesn't touch the image */
-}
-
-    .item-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-    
-    }
-
-    .name {
-        font-size: 1.8rem;
-        padding-bottom: 20px;
-        font-weight: 500;
-        font-family: "Montserrat", sans-serif;
-    }
-
-    .description {
-        font-family: "Montserrat", sans-serif;
-        padding-bottom: 20px;
-        font-weight: 450;
-        font-size: 14px;
-    }
-
-    .size {
-        font-family: "Montserrat", sans-serif;
-        padding-bottom: 10px;
-        font-size: 14px;
-        font-weight: 550;
-    }
-
-    .Color {
-        font-family: "Montserrat", sans-serif;
-        padding-bottom: 10px;
-        font-size: 14px;
-        font-weight: 550;
-    }
-
-    .item-info .name .description {
-        font-size: 1.2rem;
-        color: #333;
-        padding-left: 20px;
-    }
-
-    .item-info .quantity {
-        display: flex;
-        align-items: center;
-    }
-
-        .item-info .quantity button {
-            background-color: #f0f0f0;
-            border: none;
-            padding: 5px 10px;
-            margin: 0 10px;
-            cursor: pointer;
-        }
-
-    .item-info .edit,
-    .item-info .remove {
-        text-decoration: underline;
-        color: #258cfb;
-        cursor: pointer;
-    }
-
-.item-price {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-between;
-}
-
-    .item-price .price {
-        padding-top: 10px;
-        font-size: 1.1rem;
-        font-weight: 550;
-        font-family: "Montserrat", sans-serif;
-    }
-
-
-
-
-    .item-details .quantity {
-        display: flex;
-        align-items: center;
-        font-family: "Montserrat", sans-serif;
-        padding-bottom: 10px;
-    }
-
-        .item-details .quantity button {
-            background-color: #f0f0f0;
-            border: none;
-            padding: 5px 10px;
-            margin: 0 10px;
-            cursor: pointer;
-        }
-
-    .item-details .edit,
-    .item-details .remove {
-        text-decoration: underline;
-        color: #258cfb;
-        margin-left: 20px;
-        cursor: pointer;
-    }
-
-
-
-.edit-delete .edit, .edit-delete .remove {
-    text-decoration: none; /* Removes the underline */
-    color: black; /* Sets the text color to black */
-    font-family: "Montserrat", sans-serif;
-    font-weight: 550;
-}
-
-
-
-.edit-delete {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 10px; /* Add some space between the quantity and the edit/delete links */
-    justify-content: space-between;
-    padding-right: 3rem;
-    text-decoration: none; /* Removes the underline */
-}
-
-.editIcon{
-    max-width: 30px; /* Adjust the max-width as necessary */
-    max-height: 30px; /* Adjust the max-height as necessary */
-    margin-right: 5px;
-    text-decoration: none; /* Removes the underline */
-}
-
-.removeIcon{
-    max-width: 25px; /* Adjust the max-width as necessary */
-    max-height: 25px; /* Adjust the max-height as necessary */
-    margin-right: 5px;
-    text-decoration: none; /* Removes the underline */
-}
-
-.edit-delete button {
-    display: flex;
-    align-items: center;
-    padding: 10px 10px; /* Adjust padding as necessary */
-    margin-bottom: 10px; /* Adds space between the buttons */
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    text-decoration: none; /* Removes the underline */
-}
-
-.edit-delete a, .edit-delete button {
-    text-decoration: none; /* Removes the underline */
-    color: black; /* Sets the text color to black */
-}
-
-
-
-.summary {
-    width: 30%;
-    padding: 20px;
-    background: #f9f9f9;
-    font-family: "Montserrat", sans-serif;
-}
-
-    .summary h2 {
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .summary .subtotal,
-    .summary .shipping,
-    .summary .tax,
-    .summary .total {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        padding:10px;
-    }
-
-        .summary .subtotal span,
-        .summary .shipping span,
-        .summary .tax span,
-        .summary .total span {
-            color: #555;
-        }
-
-    .summary .total {
-        border-top: 1px solid #adadad;
-        padding: 10px;
-        font-size: 1.2rem;
-        color: #333;
-        margin-top: 20px;
-        font-weight: bold;
-    }
-
-    .summary .checkout-btn {
-        display: block;
-        width: 100%;
-        background-color: rgba(98, 174, 233, 1); 
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        margin-top: 30px;
-        cursor: pointer;
-        text-transform: uppercase;
-    }
-
-        .summary .checkout-btn:hover {
-            background-color: #1a6fb0;
-        }
-
-
-.promo-code-toggle {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    padding: 10px;
-    text-align: left;
-    width: 100%;
-    font-size: 16px;
-}
-
-    .promo-code-toggle span {
-        float: right;
-    }
-
-.promo-input, .btn-apply {
-    margin-top: 10px;
-}
-
-.promo-input {
-    padding: 10px;
-    width: calc(100% - 84px);
-    display: inline-block;
-}
-
-.btn-apply {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-}
-
-    .btn-apply:hover {
-        background-color: #0056b3;
-    }
-
 
 /* Checkout */
 
@@ -1492,10 +1192,6 @@ img {
 .container-fluid {
     display: flex;
     flex-direction: column;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
 }
 
 .product-actions-row {
