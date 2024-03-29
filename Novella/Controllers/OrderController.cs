@@ -6,6 +6,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Novella.EfModels;
+using Newtonsoft.Json;
+using Novella.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Novella.Controllers
 {
@@ -16,14 +19,18 @@ namespace Novella.Controllers
         private readonly ProductOrderRepo _productOrderRepo;
         private readonly ILogger<OrderController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly NovellaContext _context;
 
-        public OrderController(OrderRepo orderRepo, ProductOrderRepo productOrderRepo, AddressRepo addressRepo, ILogger<OrderController> logger, UserManager<IdentityUser> userManager)
+
+
+        public OrderController(OrderRepo orderRepo, ProductOrderRepo productOrderRepo, AddressRepo addressRepo, ILogger<OrderController> logger, UserManager<IdentityUser> userManager, NovellaContext context)
         {
             _orderRepo = orderRepo;
             _addressRepo = addressRepo;
             _logger = logger;
             _userManager = userManager;
             _productOrderRepo = productOrderRepo;
+            _context = context;
         }
 
         [HttpPost]
@@ -92,8 +99,40 @@ namespace Novella.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
-            ViewBag.OrderId = id;
-            return View();
+            var order = _context.Orders.Include(o => o.FkShippingAddress).Include(o => o.FkBillingAddress).FirstOrDefault(o => o.PkOrderId == id);
+            var orderStatus = _context.OrderStatuses.Find(order?.FkOrderStatusId);
+
+
+            // Retrieve the cart from the session
+            var cart = HttpContext.Session.GetString("Cart");
+            var cartItems = string.IsNullOrEmpty(cart) ? new List<CartItem>() : JsonConvert.DeserializeObject<List<CartItem>>(cart);
+
+            // Ensure to clear the cart session after retrieving it if required
+            // HttpContext.Session.Remove("Cart");
+
+            var formattedShippingAddress = FormatAddress(order.FkShippingAddress);
+            var formattedBillingAddress = FormatAddress(order.FkBillingAddress);
+
+            var viewModel = new OrderConfirmationViewModel
+            {
+                OrderId = id,
+                PaypalTransactionId = order.PaypalTransactionId,
+                OrderStatus = _context.OrderStatuses.Find(order.FkOrderStatusId)?.StatusName ?? "Unknown",
+                CartItems = JsonConvert.DeserializeObject<List<CartItem>>(HttpContext.Session.GetString("Cart") ?? "[]"),
+                PaymentMethod = "PayPal", // Example, adjust accordingly
+                ShippingAddress = formattedShippingAddress,
+                BillingAddress = formattedBillingAddress,
+                EstimatedDelivery = DateTime.Now.AddDays(5).ToString("dd MMM yyyy") // Example, adjust accordingly
+            };
+
+            return View(viewModel);
+        }
+        private string FormatAddress(Address address)
+        {
+            // This method formats the address details into a single string for display.
+            // Adjust according to your Address model's properties.
+            var userAddress = $"{address.AddressLineOne}, {address.AddressLineTwo}, {address.City}, {address.Province}, {address.PostalCode}";
+            return userAddress;
         }
     }
 }
