@@ -26,23 +26,12 @@
 
             </div>
 
-            <form asp-action="AddToCart" method="post">
+            <form id="addToCartForm" asp-controller="Home" asp-action="AddToCart" method="post">
                 <input type="hidden" name="ProductId" value="@Model.ProductId" />
-                <label for="size">Size:</label>
-                <select id="size" name="Size">
-                    <option value="S">Small</option>
-                    <option value="M">Medium</option>
-                    <option value="L">Large</option>
-                </select>
-                <label for="color">Color:</label>
-                <select id="color" name="Color">
-                    <option value="Red">Red</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Green">Green</option>
-                </select>
-                <label for="quantity">Quantity:</label>
-                <input id="quantity" type="number" name="Quantity" min="1" max="@Model.QuantityAvailable" value="1" />
-                <button type="submit">Add to Bag</button>
+                <!-- Display the current quantity -->
+                <input id="quantityInput" type="number" name="Quantity" value="0" min="0" max="100" />
+                <!-- Button to add the product to cart -->
+                <button id="addToCartButton" type="submit">Add to Bag</button>
             </form>
             <div id="detail-rating">
                 <span>Average Rating</span>
