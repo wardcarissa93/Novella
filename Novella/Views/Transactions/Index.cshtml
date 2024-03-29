@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Novella.EfModels.Order>
+
+<h2>Orders</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>SKU</th> <!-- For displaying PaypalTransactionId -->
+            <th>Status</th> <!-- For displaying OrderStatus details -->
+            <th>Date Ordered</th>
+            <th>Shipping Address</th>
+            <th>Billing Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.PkOrderId</td>
+                <td>@order.FkUser.PkUserId</td>
+                <td>@order.FkUser.FirstName @order.FkUser.LastName</td>
+                <td>@order.FkUser.Role</td>
+                <td>@order.PaypalTransactionId</td> <!-- Displaying PayPal Transaction ID as SKU -->
+                <td>@order.FkOrderStatus.StatusName - @order.FkOrderStatus.StatusDescription</td> <!-- Displaying Status Name and Description -->
+                <td>@order.DateOrdered.ToShortDateString()</td>
+                <td>@order.FkShippingAddress.AddressLineOne, @order.FkShippingAddress.City</td>
+                <td>@order.FkBillingAddress.AddressLineOne, @order.FkBillingAddress.City</td>
+                <td>
+                    <!-- Add links for Edit, Details, Delete here -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -67,6 +67,8 @@ builder.Services.AddScoped<OtherUserRepo>();
 builder.Services.AddScoped<OrderRepo>();
 builder.Services.AddScoped<AddressRepo>();
 builder.Services.AddScoped<ProductOrderRepo>();
+builder.Services.AddScoped<TransactionRepo>();
+
 
 var app = builder.Build();
 
