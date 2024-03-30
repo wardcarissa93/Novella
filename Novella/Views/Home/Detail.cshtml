@@ -26,23 +26,29 @@
 
             </div>
 
-            <form asp-action="AddToCart" method="post">
+            <form asp-action="AddToCart" method="post" id="quantity-form-container">
                 <input type="hidden" name="ProductId" value="@Model.ProductId" />
-                <label for="size">Size:</label>
-                <select id="size" name="Size">
-                    <option value="S">Small</option>
-                    <option value="M">Medium</option>
-                    <option value="L">Large</option>
-                </select>
-                <label for="color">Color:</label>
-                <select id="color" name="Color">
-                    <option value="Red">Red</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Green">Green</option>
-                </select>
-                <label for="quantity">Quantity:</label>
-                <input id="quantity" type="number" name="Quantity" min="1" max="@Model.QuantityAvailable" value="1" />
-                <button type="submit">Add to Bag</button>
+                <div id="size-color-container">
+                    <label for="size">Size:</label>
+                    <select id="size" name="Size">
+                        <option value="S">Small</option>
+                        <option value="M">Medium</option>
+                        <option value="L">Large</option>
+                    </select>
+                    <label for="color">Color:</label>
+                    <select id="color" name="Color">
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                    </select>
+                    
+                </div>
+                <div id="add-container">
+                    <label for="quantity"></label>
+                    <input id="quantity" type="number" name="Quantity" min="1" max="@Model.QuantityAvailable" value="1" />
+                    <button id="addToCartButton" type="submit">Add to Bag</button>
+                </div>
+             
             </form>
             <div id="detail-rating">
                 <span>Average Rating</span>
