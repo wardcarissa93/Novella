@@ -35,7 +35,7 @@
                 <td>
                     <a style="font-size:12px; margin-top: 15px; width: 70px;" class="btn btn-primary" href="@Url.Action("Edit", new { id = order.OrderId })">Edit</a>
                     <form method="post" action="@Url.Action("Delete", new { id = order.OrderId })" style="display:inline">
-                        <button style="font-size:12px; width: 70px;" type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
+                        <button style="font-size:12px; width: 70px; margin-top: 15px;" type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
                     </form>
                 </td>
             </tr>
