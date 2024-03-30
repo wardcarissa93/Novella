@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Novella.EfModels.Order>
+﻿@model IEnumerable<Novella.ViewModels.OrderViewModel> 
 
 <h2>Orders</h2>
 
@@ -9,11 +9,12 @@
             <th>Email</th>
             <th>Name</th>
             <th>Role</th>
-            <th>SKU</th> <!-- For displaying PaypalTransactionId -->
-            <th>Status</th> <!-- For displaying OrderStatus details -->
+            <th>SKU</th>
+            <th>Status</th>
             <th>Date Ordered</th>
             <th>Shipping Address</th>
             <th>Billing Address</th>
+            <th>Total Amount Purchased</th> 
             <th>Actions</th>
         </tr>
     </thead>
@@ -21,17 +22,21 @@
         @foreach (var order in Model)
         {
             <tr>
-                <td>@order.PkOrderId</td>
-                <td>@order.FkUser.PkUserId</td>
-                <td>@order.FkUser.FirstName @order.FkUser.LastName</td>
-                <td>@order.FkUser.Role</td>
-                <td>@order.PaypalTransactionId</td> <!-- Displaying PayPal Transaction ID as SKU -->
-                <td>@order.FkOrderStatus.StatusName - @order.FkOrderStatus.StatusDescription</td> <!-- Displaying Status Name and Description -->
-                <td>@order.DateOrdered.ToShortDateString()</td>
-                <td>@order.FkShippingAddress.AddressLineOne, @order.FkShippingAddress.City</td>
-                <td>@order.FkBillingAddress.AddressLineOne, @order.FkBillingAddress.City</td>
+                <td>@order.OrderId</td>
+                <td>@order.Email</td> 
+                <td>@order.Name</td> 
+                <td>@order.Role</td>
+                <td>@order.SKU</td> 
+                <td>@order.Status</td> 
+                <td>@order.DateOrdered</td> 
+                <td>@order.ShippingAddress</td> 
+                <td>@order.BillingAddress</td> 
+                <td>@order.TotalPrice.ToString("C")</td> 
                 <td>
-                    <!-- Add links for Edit, Details, Delete here -->
+                    <a class="btn btn-primary" href="@Url.Action("Edit", new { id = order.OrderId })">Edit</a>
+                    <form method="post" action="@Url.Action("Delete", new { id = order.OrderId })" style="display:inline">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
+                    </form>
                 </td>
             </tr>
         }

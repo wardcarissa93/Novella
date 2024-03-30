@@ -1,0 +1,55 @@
+﻿@model Novella.EfModels.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h1>Edit Order</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="PkOrderId" />
+
+    <div class="form-group">
+        <label asp-for="FkUser.FirstName" class="control-label">First Name</label>
+        <input asp-for="FkUser.FirstName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkUser.LastName" class="control-label">Last Name</label>
+        <input asp-for="FkUser.LastName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkUser.Role" class="control-label">Role</label>
+        <input asp-for="FkUser.Role" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkOrderStatus.StatusName" class="control-label">Status Name</label>
+        <input asp-for="FkOrderStatus.StatusName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkOrderStatus.StatusDescription" class="control-label">Status Description</label>
+        <input asp-for="FkOrderStatus.StatusDescription" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOrdered" class="control-label">Date Ordered</label>
+        <input asp-for="DateOrdered" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkShippingAddress.AddressLineOne" class="control-label">Shipping Address Line 1</label>
+        <input asp-for="FkShippingAddress.AddressLineOne" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FkShippingAddress.City" class="control-label">Shipping City</label>
+        <input asp-for="FkShippingAddress.City" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a href="@Url.Action("Index")">Back to List</a>

@@ -12,7 +12,11 @@
         public List<CartItem> CartItems { get; set; }
         public decimal GetTotalPrice() => CartItems.Sum(item => item.Price * item.Quantity);
         public string PaymentMethod { get; set; }
-      
+        public string FkUserId { get; set; }
+
+        public string DateOrdered { get; set; }
+        public string TotalPrice { get; set; }
+
         public string ShippingAddress { get; set; }
         public string BillingAddress { get; set; }
 
