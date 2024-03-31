@@ -995,14 +995,26 @@ a .navbar-brand {
         #quantityInput {
             font-size: 20px;
         }
+    #add-container {
+       justify-content: left;
+
+    }
+    #addToCartButton{
+        margin-left: 100px;
+    }
+    #size-color-container{
+        padding-left: 5px;
+    }
 }
 
 @media screen and (min-width: 1440px) {
     #detail-img {
-        max-width: 500px;
+        max-width: 650px;
         max-height: 1200px;
         margin-right: 100px;
     }
+
+   
 
     
 }
