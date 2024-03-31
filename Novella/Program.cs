@@ -68,6 +68,7 @@ builder.Services.AddScoped<OrderRepo>();
 builder.Services.AddScoped<AddressRepo>();
 builder.Services.AddScoped<ProductOrderRepo>();
 builder.Services.AddScoped<TransactionRepo>();
+builder.Services.AddScoped<ImageRepo>();
 
 
 var app = builder.Build();

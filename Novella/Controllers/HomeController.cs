@@ -17,11 +17,12 @@ namespace Novella.Controllers
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserRepo _userRepo;
+        private readonly ImageRepo _imageRepo;
 
         public HomeController(ILogger<HomeController> logger,
                               NovellaContext db,
                               IConfiguration configuration,
-                              ProductRepo productRepo, IWebHostEnvironment webHostEnvironment, UserRepo userRepo)
+                              ProductRepo productRepo, IWebHostEnvironment webHostEnvironment, UserRepo userRepo, ImageRepo imageRepo)
                                 
         {
             _logger = logger;
@@ -30,10 +31,9 @@ namespace Novella.Controllers
             _db = db;
             _webHostEnvironment = webHostEnvironment;
             _userRepo = userRepo;
+            _imageRepo = imageRepo;
         }
 
-
-        
 
         public IActionResult Index()
         {
@@ -46,7 +46,7 @@ namespace Novella.Controllers
                 if (int.TryParse(product.ProductId, out int productId))
                 {
                     // If conversion is successful, get the image URL
-                    product.ImageUrl = GetImageUrl(productId);
+                    product.ImageUrl = _imageRepo.GetImageUrl(productId);
                 }
                 else
                 {
@@ -90,32 +90,6 @@ namespace Novella.Controllers
             return View(product);
         }
 
-        //[HttpPost]
-        //public IActionResult SubmitRating(int productId, decimal rating, string review)
-        //{
-        //    if (!HttpContext.User.Identity.IsAuthenticated)
-        //    {
-        //        // Redirect unauthenticated users to the login page
-        //        return Redirect("/Identity/Account/Login");
-        //    }
-
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var success = _productRepo.SubmitRating(userId, productId, rating, review);
-
-        //    if (success)
-        //    {
-        //        // Rating submitted successfully
-        //        // Fetch the image URL using the GetImage method
-        //        var imageUrl = GetImageUrl(productId);
-
-        //        return RedirectToAction("Detail", new { productId, imageUrl });
-        //    }
-        //    else
-        //    {
-        //        // Handle rating submission failure
-        //        return RedirectToAction("Error", "Home");
-        //    }
-        //}
 
         [HttpPost]
         public async Task<IActionResult> SubmitRating(int productId, decimal rating, string review)
@@ -139,7 +113,7 @@ namespace Novella.Controllers
                 {
                     // Rating submitted successfully
                     // Fetch the image URL using the GetImage method
-                    var imageUrl = GetImageUrl(productId);
+                    var imageUrl = _imageRepo.GetImageUrl(productId);
 
                     return RedirectToAction("Detail", new { productId, imageUrl });
                 }
@@ -163,6 +137,7 @@ namespace Novella.Controllers
             {
                 //generates URL for retrieving product image throught Url.Action and sets it tothe ImageUrl property of the product
                 product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
+
             }
 
             //passes list of products with the image url property added
@@ -205,20 +180,20 @@ namespace Novella.Controllers
             }
         }
 
-        public string GetImageUrl(int productId)
-        {
-            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-            if (image != null)
-            {
-                // Assuming you have a property in ImageStore table to store the image URL
-                return Url.Action("GetImage", "Home", new { productId = productId });
-            }
-            else
-            {
-                // Return the URL for the default image
-                return Url.Content("~/Images/404_img.jpg"); 
-            }
-        }
+        //public string GetImageUrl(int productId)
+        //{
+        //    var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
+        //    if (image != null)
+        //    {
+              
+        //        return Url.Action("GetImage", "Home", new { productId = productId });
+        //    }
+        //    else
+        //    {
+        //        // Return the URL for the default image
+        //        return Url.Content("~/Images/404_img.jpg"); 
+        //    }
+        //}
 
         public IActionResult Search(string query)
         {
