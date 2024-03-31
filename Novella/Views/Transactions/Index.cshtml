@@ -2,26 +2,26 @@
 
 <h2>Orders</h2>
 
-<table>
+<table id="trans-table">
     <thead>
-        <tr>
-            <th>Order ID</th>
+        <tr class="trans-title-flex">
+            <th>ID</th>
             <th>Email</th>
             <th>Name</th>
             <th>Role</th>
             <th>SKU</th>
             <th>Status</th>
-            <th>Date Ordered</th>
+            <th>Date</th>
             <th>Shipping Address</th>
             <th>Billing Address</th>
-            <th>Total Amount Purchased</th> 
+            <th>Total</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in Model)
         {
-            <tr>
+            <tr class="trans-content-flex">
                 <td>@order.OrderId</td>
                 <td>@order.Email</td> 
                 <td>@order.Name</td> 
@@ -33,9 +33,9 @@
                 <td>@order.BillingAddress</td> 
                 <td>@order.TotalPrice.ToString("C")</td> 
                 <td>
-                    <a class="btn btn-primary" href="@Url.Action("Edit", new { id = order.OrderId })">Edit</a>
+                    <a style="font-size:12px; margin-top: 15px; width: 70px;" class="btn btn-primary" href="@Url.Action("Edit", new { id = order.OrderId })">Edit</a>
                     <form method="post" action="@Url.Action("Delete", new { id = order.OrderId })" style="display:inline">
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
+                        <button style="font-size:12px; width: 70px; margin-top: 15px;" type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
                     </form>
                 </td>
             </tr>

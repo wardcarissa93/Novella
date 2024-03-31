@@ -39,7 +39,7 @@ footer {
 
 /*nav*/
 #nav-logo {
-    width: 50px;
+    width: 40px;
     height: auto;
     margin: 0px 20px;
 }
@@ -68,10 +68,11 @@ a .navbar-brand {
 }
 
 .nav-link {
-    margin: 20px;
+    margin: 16px;
     color: rgba(98, 174, 233, 1);
     font-weight: bold;
     text-align: center;
+    font-size: 13px;
 }
 
 
@@ -617,8 +618,12 @@ a .navbar-brand {
     padding: 20px 10px;
     color: rgba(98, 174, 233, 1);
 }
+.nav-link {
+    font-size: 14px;
+}
 
 @media screen and (min-width: 768px) {
+  
     .bestseller-container {
         display: flex;
         flex-wrap: wrap;
@@ -692,6 +697,8 @@ a .navbar-brand {
 
     .nav-link {
         margin-left: 50px;
+        font-size: 18px;
+       
     }
 
     #nav-right-container {
@@ -717,6 +724,9 @@ a .navbar-brand {
     .rating-description {
         font-size: 20px;
     }
+    .nav-link{
+        font-size: 22px;
+    }
 }
 
 .home-slider {
@@ -737,6 +747,7 @@ a .navbar-brand {
     color: rgba(98, 174, 233, 1);
 }
 
+
 /*product detail*/
 #plus, #minus {
     color: rgba(98, 174, 233, 1);
@@ -747,7 +758,7 @@ a .navbar-brand {
 
 #continue-shopping {
     font-size: 14px;
-    margin: 10px;
+
     font-weight: bold;
 }
 
@@ -882,6 +893,18 @@ a .navbar-brand {
     margin-top: 20px;
 }
 
+#size-color-container, #add-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-top:20px;
+}
+
+#detail-rating{
+    margin-top: 20px;
+}
+
+
 @media screen and (min-width: 768px) {
     #detail-subtitle {
         font-size: 20px;
@@ -934,10 +957,11 @@ a .navbar-brand {
 
     #continue-shopping {
         font-size: 16px;
+        margin-bottom: 20px;
     }
 
     .nav-link, #search-input, .cart-icon-container {
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 
@@ -950,6 +974,7 @@ a .navbar-brand {
         width: 100%;
         max-height: 500px;
         margin-right: 50px;
+        margin-top: 20px;
     }
 
     #detail-main {
@@ -959,23 +984,39 @@ a .navbar-brand {
     #continue-shopping {
         margin-bottom: 30px;
         margin-left: 0px;
+        margin-top: 10px;
     }
 
-    #quantityInput {
-        font-size: 20px;
+        #continue-shopping > a {
+            padding: 12px;
+          
+        }
+
+        #quantityInput {
+            font-size: 20px;
+        }
+    #add-container {
+       justify-content: left;
+
+    }
+    #addToCartButton{
+        margin-left: 100px;
+    }
+    #size-color-container{
+        padding-left: 5px;
     }
 }
 
 @media screen and (min-width: 1440px) {
     #detail-img {
-        max-width: 900px;
+        max-width: 650px;
         max-height: 1200px;
         margin-right: 100px;
     }
 
-    #continue-shopping {
-        padding-left: 85px;
-    }
+   
+
+    
 }
 
 /*pendant - product card*/
@@ -1487,11 +1528,15 @@ img {
     align-items: center;
 }
 
+    #sub-nav-1{
+        justify-content: center;
+    }
 
-.partial-flex {
-    display: flex;
-    flex-direction: row;
-}
+
+    .partial-flex {
+        display: flex;
+        flex-direction: row;
+    }
 
 .container-fluid {
     display: flex;
@@ -1508,3 +1553,58 @@ img {
     justify-content: center;
     gap: 5px;
 }
+
+
+/*transactions*/
+.trans-title-flex{
+ display: none;
+}
+
+.trans-content-flex{
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px black;
+    padding: 15px;
+}
+
+#trans-table{
+    border: solid 1px black;
+    width: 100%
+}
+
+@media screen and (min-width: 1024px) {
+    .trans-title-flex {
+        display: table-row;
+        font-size: 12px;
+    }
+
+    #trans-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        #trans-table th, #trans-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #trans-table th {
+            background-color: #f2f2f2;
+            width: 10%; /* Adjust the width of the headers */
+        }
+
+    .trans-content-flex:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .trans-content-flex {
+        display: table-row;
+        font-size: 12px;
+        border-bottom: none;
+        padding: 0px;
+    }
+}
+
+   
+  
