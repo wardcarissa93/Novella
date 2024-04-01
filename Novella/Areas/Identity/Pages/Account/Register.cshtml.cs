@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Novella.Data.Services;
 using Novella.EfModels;
+using Novella.Repositories;
 using static Novella.Services.ReCAPTCHA;
 
 namespace Novella.Areas.Identity.Pages.Account
@@ -36,6 +37,7 @@ namespace Novella.Areas.Identity.Pages.Account
         private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly NovellaContext _db;
+        private readonly OtherUserRepo _userRepo;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -45,7 +47,8 @@ namespace Novella.Areas.Identity.Pages.Account
             IEmailSender emailSender,
             IConfiguration configuration,
             IEmailService emailService,
-            NovellaContext db
+            NovellaContext db,
+            OtherUserRepo userRepo
             )
         {
             _userManager = userManager;
@@ -57,6 +60,7 @@ namespace Novella.Areas.Identity.Pages.Account
             _configuration = configuration;
             _emailService = emailService;
             _db = db;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -142,29 +146,9 @@ namespace Novella.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            string captchaResponse = Request.Form["g-Recaptcha-Response"];
-            string secret = _configuration["Recaptcha:SecretKey"];
-            ReCaptchaValidationResult resultCaptcha = ReCaptchaValidator.IsValid(secret, captchaResponse);
-
-            // Invalidate the form if the captcha is invalid.
-            if (!resultCaptcha.Success)
-            {
-                ViewData["SiteKey"] = _configuration["Recaptcha:SiteKey"];
-                ModelState.AddModelError(string.Empty, "The ReCaptcha is invalid.");
-            }
 
             if (ModelState.IsValid)
             {
-                // Check if the user already exists
-                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError(string.Empty, "An account with this email already exists.");
-                    return Page();
-                }
-
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -172,28 +156,14 @@ namespace Novella.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Assign the role "Customer" to the new user
-                    await _userManager.AddToRoleAsync(user, "Customer");
-
-                    // Check if UserAccount already exists
-                    var existingUserAccount = _db.UserAccounts.FirstOrDefault(u => u.PkUserId == Input.Email);
-                    if (existingUserAccount == null)
+                    await _userRepo.RegisterUserAsync(new OtherUserRepo.RegistrationModel
                     {
-                        // Create a new UserAccount entry
-                        var userAccount = new UserAccount
-                        {
-                            PkUserId = Input.Email,
-                            FirstName = Input.FirstName,
-                            LastName = Input.LastName,
-                            Role = "Customer",
-                            PhoneNumber = Input.PhoneNumber.ToString(),
-                            PaypalAccount = Input.PaypalAccount
-                        };
-
-                        // Add the UserAccount entry to the database
-                        _db.UserAccounts.Add(userAccount);
-                        await _db.SaveChangesAsync();
-                    }
+                        Email = Input.Email,
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        PhoneNumber = Input.PhoneNumber,
+                        PaypalAccount = Input.PaypalAccount
+                    });
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -239,7 +209,6 @@ namespace Novella.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
 
         private IdentityUser CreateUser()
         {
