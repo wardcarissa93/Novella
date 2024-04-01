@@ -28,6 +28,7 @@
                             </div>
 
                             <p class="card-title">@item.ProductName</p>
+                            <p class="bs-review">@(item.Review != null && item.Review.Any() ? "\"" + item.Review[0] + "\"" : "No reviews available")</p>
                         </a>
                         <div class="rating-container">
                             <!-- Simplified for clarity; implement your rating logic as needed -->
