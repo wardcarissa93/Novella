@@ -1,13 +1,7 @@
 ﻿using Novella.Data;
 using Novella.ViewModels;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Novella.Data;
 using Novella.EfModels;
-using Novella.ViewModels;
-using System.Linq;
 using Microsoft.AspNetCore.Identity;
-
 
 namespace Novella.Repositories
 {
@@ -47,6 +41,14 @@ namespace Novella.Repositories
         {
             _db = db;
         }
+        public class RegistrationModel
+        {
+            public string Email { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string PhoneNumber { get; set; }
+            public string PaypalAccount { get; set; }
+        }
         public UserAccountVM GetUserByEmail(string userEmail)
         {
             var user = _db.UserAccounts.FirstOrDefault(u => u.PkUserId == userEmail);
@@ -78,6 +80,29 @@ namespace Novella.Repositories
                 user.LastName = newLastName;
                 user.PhoneNumber = newPhoneNumber;
                 _db.SaveChanges();
+            }
+        }
+
+        public async Task RegisterUserAsync(RegistrationModel model)
+        {
+            // Check if the UserAccount already exists
+            var existingUserAccount = _db.UserAccounts.FirstOrDefault(u => u.PkUserId == model.Email);
+            if (existingUserAccount == null)
+            {
+                // Create a new UserAccount entry
+                var userAccount = new UserAccount
+                {
+                    PkUserId = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Role = "Customer",
+                    PhoneNumber = model.PhoneNumber.ToString(),
+                    PaypalAccount = model.PaypalAccount,
+                };
+
+                // Add the UserAccount entry to the database
+                _db.UserAccounts.Add(userAccount);
+                await _db.SaveChangesAsync();
             }
         }
     }
