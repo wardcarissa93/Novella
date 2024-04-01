@@ -64,17 +64,19 @@ namespace Novella.Controllers
 
             if (product == null)
             {
-                // Handle the null case, e.g., return a not found view or set an error message
+                // Handle the null case
                 return NotFound();
             }
 
+            // Fetch the average rating for the product
+            decimal productRating = _productRepo.GetAverageRating(productId);
 
             // Pass the product details to the view
             ViewBag.ProductName = product.ProductName;
             ViewBag.Price = product.Price;
             ViewBag.ProductId = productId;
             ViewBag.ProductDescription = product.ProductDescription;
-            ViewBag.Rating = product.Rating;
+            ViewBag.Rating = productRating;
             ViewBag.ImageUrl = imageUrl;
             // Pagination
             int pageSize = 1;
@@ -180,21 +182,6 @@ namespace Novella.Controllers
             }
         }
 
-        //public string GetImageUrl(int productId)
-        //{
-        //    var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-        //    if (image != null)
-        //    {
-              
-        //        return Url.Action("GetImage", "Home", new { productId = productId });
-        //    }
-        //    else
-        //    {
-        //        // Return the URL for the default image
-        //        return Url.Content("~/Images/404_img.jpg"); 
-        //    }
-        //}
-
         public IActionResult Search(string query)
         {
             var searchResults = _productRepo.SearchProducts(query, productId =>
@@ -217,15 +204,10 @@ namespace Novella.Controllers
             return View(model);
         }
 
-
-
-
         public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
 
         {
-
             return View(payPalConfirmationModel);
-
         }
 
 
