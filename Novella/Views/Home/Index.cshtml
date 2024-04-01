@@ -71,6 +71,7 @@
                                 <p class="no-rating">No ratings yet</p>
                             }
                         </div>
+                        <p class="bs-review">@(item.Review != null && item.Review.Any() ? "\"" + item.Review[0] + "\"" : "No reviews available")</p>
                     </div>
                     counter++;
                 }

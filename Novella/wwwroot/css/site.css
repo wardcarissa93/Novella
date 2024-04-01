@@ -584,7 +584,8 @@ a .navbar-brand {
 
 .rating-container {
     display: flex;
-    justify-content: left;
+    justify-content: center;
+
 }
 
 .rating-description {
@@ -606,9 +607,9 @@ a .navbar-brand {
 
 
 
-.rating-container {
-    display: flex;
-    justify-content: left;
+
+.card-title{
+    text-align: center;
 }
 
 .rating-icons {
@@ -1711,5 +1712,19 @@ img {
                 }
 
 
+}
+
+.bs-review {
+    font-size: 18px;
+    text-align: center;
+    height: 100px;
+    padding-top: 20px;
+}
+
+@media screen and (min-width: 1024px) {
+    .bs-review {
+        font-size: 20px;
+        padding: 30px 45px;
+    }
 }
   
