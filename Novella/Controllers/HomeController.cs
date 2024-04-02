@@ -126,12 +126,9 @@ namespace Novella.Controllers
         }
 
 
-        public IActionResult Pendant(string productName, decimal price, string description)
+        public IActionResult Pendant()
         {
-            ViewBag.ProductName = productName;
-            ViewBag.Price = price;
-            ViewBag.Description = description;
-
+          
             var products = _productRepo.GetProductsForPendant();
 
             // Fetch images for the products

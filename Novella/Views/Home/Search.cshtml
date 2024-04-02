@@ -9,6 +9,7 @@
         <div class="product-search-container">
             @foreach (var item in Model)
             {
+                 <a href="@Url.Action("Detail", "Home", new { productId = item.ProductId, productName = item.ProductName, price = item.Price, description = item.Description, imageUrl = item.ImageUrl, rating = item.Rating })" class="search-product-card-link">
                 <div class="search-product-card">
                   
                     <div class="card-image-container">
@@ -20,6 +21,7 @@
                         <p class="search-card-price">$@item.Price</p>
                                 
                 </div>
+                </a>
             }
         </div>
     </div>
