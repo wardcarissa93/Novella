@@ -191,6 +191,9 @@ namespace Novella.Controllers
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
             var totalPrice = cart.Sum(item => item.Price * item.Quantity);
+            var gst = (totalPrice * 5) / 100;
+            var pst = (totalPrice * 6) / 100;
+            totalPrice = totalPrice + gst + pst;
 
             var model = new PayPalConfirmationModel
             {

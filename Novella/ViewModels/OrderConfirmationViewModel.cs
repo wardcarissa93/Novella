@@ -11,6 +11,7 @@
         public string OrderStatus { get; set; }
         public List<CartItem> CartItems { get; set; }
         public decimal GetTotalPrice() => CartItems.Sum(item => item.Price * item.Quantity);
+
         public string PaymentMethod { get; set; }
         public string FkUserId { get; set; }
 

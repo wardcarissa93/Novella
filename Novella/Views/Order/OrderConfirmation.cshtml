@@ -17,9 +17,18 @@
 
         <div class="order-summary">
             <h3>Order Summary</h3>
+            @{
+                decimal totalPrice = Model.GetTotalPrice();
+                decimal gst = totalPrice * 0.05M;
+                decimal pst = totalPrice * 0.06M;
+                decimal totalPriceWithTaxes = totalPrice + pst + gst;
+            }
             <ul>
                 <li><strong>Total Items:</strong> @Model.CartItems.Count()</li>
-                <li><strong>Total Price:</strong> C$ @Model.GetTotalPrice().ToString("F2")</li>
+                <li><strong>Price:</strong> C$ @totalPrice.ToString("F2")</li>
+                <li><strong>GST (5%):</strong> C$ @gst.ToString("F2")</li>
+                <li><strong>PST (6%):</strong> C$ @pst.ToString("F2")</li>
+                <li><strong>Total Price with Taxes:</strong> C$ @totalPriceWithTaxes.ToString("F2")</li>
                 <li><strong>Estimated Delivery:</strong> @Model.EstimatedDelivery</li>
             </ul>
         </div>

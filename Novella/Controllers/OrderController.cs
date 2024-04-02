@@ -132,5 +132,7 @@ namespace Novella.Controllers
             var userAddress = $"{address.AddressLineOne}, {address.AddressLineTwo}, {address.City}, {address.Province}, {address.PostalCode}";
             return userAddress;
         }
+
+
     }
 }
