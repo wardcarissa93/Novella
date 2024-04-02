@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Novella.ViewModels.OrderViewModel> 
+﻿@model IEnumerable<Novella.ViewModels.OrderViewModel>
 
 <h2>Orders</h2>
 
@@ -14,26 +14,35 @@
             <th>Date</th>
             <th>Shipping Address</th>
             <th>Billing Address</th>
-            <th>Total</th>
+            <th>Subtotal</th>
+            <th>GST (5%)</th>
+            <th>PST (6%)</th>
+            <th>Total with Taxes</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in Model)
         {
+            decimal gst = order.TotalPrice * 0.05M;
+            decimal pst = order.TotalPrice * 0.06M;
+            decimal totalPriceWithTaxes = order.TotalPrice + gst + pst;
+
             <tr class="trans-content-flex">
                 <td>@order.OrderId</td>
-                <td>@order.Email</td> 
-                <td>@order.Name</td> 
+                <td>@order.Email</td>
+                <td>@order.Name</td>
                 <td>@order.Role</td>
-                <td>@order.SKU</td> 
-                <td>@order.Status</td> 
-                <td>@order.DateOrdered</td> 
-                <td>@order.ShippingAddress</td> 
-                <td>@order.BillingAddress</td> 
-                <td>@order.TotalPrice.ToString("C")</td> 
+                <td>@order.SKU</td>
+                <td>@order.Status</td>
+                <td>@order.DateOrdered</td>
+                <td>@order.ShippingAddress</td>
+                <td>@order.BillingAddress</td>
+                <td>@order.TotalPrice.ToString("C")</td>
+                <td>@gst.ToString("C")</td>
+                <td>@pst.ToString("C")</td>
+                <td>@totalPriceWithTaxes.ToString("C")</td>
                 <td>
-                    <a style="font-size:12px; margin-top: 15px; width: 70px;" class="btn btn-primary" href="@Url.Action("Edit", new { id = order.OrderId })">Edit</a>
                     <form method="post" action="@Url.Action("Delete", new { id = order.OrderId })" style="display:inline">
                         <button style="font-size:12px; width: 70px; margin-top: 15px;" type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</button>
                     </form>

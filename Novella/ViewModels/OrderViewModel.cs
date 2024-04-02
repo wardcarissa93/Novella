@@ -1,4 +1,6 @@
-﻿namespace Novella.ViewModels
+﻿using Novella.Models;
+
+namespace Novella.ViewModels
 {
     public class OrderViewModel
     {
