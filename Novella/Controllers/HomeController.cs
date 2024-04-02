@@ -37,6 +37,7 @@ namespace Novella.Controllers
 
         public IActionResult Index()
         {
+            //Fetch top 3 products
             var top3Products = _productRepo.GetTop3ProductsWithHighestRatings();
 
             // Fetch images for the products
@@ -69,7 +70,7 @@ namespace Novella.Controllers
             }
 
 
-            // Pass the product details to the view
+            //Recieving url from each category and passing the product details to the view
             ViewBag.ProductName = product.ProductName;
             ViewBag.Price = product.Price;
             ViewBag.ProductId = productId;
@@ -124,18 +125,18 @@ namespace Novella.Controllers
         }
 
 
-        public IActionResult Pendant(string productName, decimal price, string description)
+        public IActionResult Pendant()
         {
-            ViewBag.ProductName = productName;
-            ViewBag.Price = price;
-            ViewBag.Description = description;
-
+            //fetch all products for chain 
             var products = _productRepo.GetProductsForPendant();
 
-            // Fetch images for the products
+            //generate image URL for each product in the list
             foreach (var product in products)
             {
-                //generates URL for retrieving product image throught Url.Action and sets it tothe ImageUrl property of the product
+                //the URL points to the GetImage method and passes the productId of the current product as a parameter 
+                //and used to fetch product image later when rendering view
+                //then it assings the generated URL to the ImageUrl property of product which allows view to 
+                //access the URL and display corresponding image
                 product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
 
             }
@@ -154,46 +155,25 @@ namespace Novella.Controllers
             return View(products);
         }
         public IActionResult Chain()
-        {
+        {           
             var products = _productRepo.GetProductsForChain();
-            // Fetch images for the products
+            
             foreach (var product in products)
             {
                 product.ImageUrl = Url.Action("GetImage", "Home", new { productId = product.ProductId });
             }
+            //returns a view with a list of product 
             return View(products);
         }
 
+        //method returns a FileResult-suitable for returning files/images
         public FileResult GetImage(int productId)
         {
-            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-            if (image != null)
-            {
-                return File(image.Image, "image/jpeg");
-            }
-            else
-            {
-                // Return a default image or handle the case where the image is not found
-
-                var defaultImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "404_img.jpg");
-                return File(defaultImagePath, "image/jpeg");
-            }
+            //uses product id param to identify which first image to retrieve (we only have 1 img/product) by matching it with the FkProductId
+            var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);         
+            return File(image.Image, "image/jpeg");                   
         }
 
-        //public string GetImageUrl(int productId)
-        //{
-        //    var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-        //    if (image != null)
-        //    {
-              
-        //        return Url.Action("GetImage", "Home", new { productId = productId });
-        //    }
-        //    else
-        //    {
-        //        // Return the URL for the default image
-        //        return Url.Content("~/Images/404_img.jpg"); 
-        //    }
-        //}
 
         public IActionResult Search(string query)
         {

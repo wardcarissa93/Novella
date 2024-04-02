@@ -19,20 +19,7 @@ namespace Novella.Repositories
             _webHostEnvironment = webHostEnvironment;
         }
 
-        //public FileResult GetImage(int productId)
-        //{
-        //    var image = _db.ImageStores.FirstOrDefault(i => i.FkProductId == productId);
-        //    if (image != null)
-        //    {
-        //        return new FileContentResult(image.Image, "image/jpeg");
-        //    }
-        //    else
-        //    {
-        //        // Return a default image or handle the case where the image is not found
-        //        var defaultImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "404_img.jpg");
-        //        return new FileStreamResult(File.OpenRead(defaultImagePath), "image/jpeg");
-        //    }
-        //}
+       
 
         public string GetImageUrl(int productId)
         {
