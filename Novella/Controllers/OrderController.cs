@@ -86,7 +86,7 @@ namespace Novella.Controllers
                         _productOrderRepo.SaveProductOrder(productOrder);
                     }
                 }
-
+                
                 var redirectUrl = Url.Action("OrderConfirmation", "Order", new { id = orderId });
                 return Json(new { success = true, redirectUrl = redirectUrl });
             }
@@ -107,9 +107,6 @@ namespace Novella.Controllers
             var cart = HttpContext.Session.GetString("Cart");
             var cartItems = string.IsNullOrEmpty(cart) ? new List<CartItem>() : JsonConvert.DeserializeObject<List<CartItem>>(cart);
 
-            // Ensure to clear the cart session after retrieving it if required
-            // HttpContext.Session.Remove("Cart");
-
             var formattedShippingAddress = FormatAddress(order.FkShippingAddress);
             var formattedBillingAddress = FormatAddress(order.FkBillingAddress);
 
@@ -124,7 +121,8 @@ namespace Novella.Controllers
                 BillingAddress = formattedBillingAddress,
                 EstimatedDelivery = DateTime.Now.AddDays(5).ToString("dd MMM yyyy") // Example, adjust accordingly
             };
-
+            // Clear the cart after the view model has been populated
+            HttpContext.Session.SetObjectAsJson("Cart", new List<CartItem>());
             return View(viewModel);
         }
         private string FormatAddress(Address address)
