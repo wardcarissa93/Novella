@@ -6,20 +6,25 @@
 
 .boxes {
     height: 50vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 100px;
+    display:flex;
+    justify-content:center;
 }
-
     .boxes .box {
+        height: 50vh;
         border-radius: 20px;
         box-shadow: 0px 2px 5px grey;
+        grid-column: span 2;
+    }
+    .boxes .user-infos
+    {
+        width:50%;
     }
 
-.user-info {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-}
+
+    .user-info {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+    }
 
 .user-detail {
     margin: 20px;
@@ -50,10 +55,7 @@
         margin-left: 20px;
     }
 
-.save {
-    display: grid;
-    grid-template-rows: 3fr 14fr;
-}
+
 
 .user-billing-info {
     height: 80%;
@@ -110,15 +112,16 @@
 }
 .save-div-btn {
     background-color: #eeeeee;
-    border: 0.1px solid #cccccc;
-    margin-left:20px;
+    border: 0px solid #cccccc;
+    margin-left: 20px;
     border-radius: 4px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: box-shadow 0.3s ease;
+    margin-top:40px;
 }
     .save-div-btn:hover {
-        box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
     }
     .user-detail input {
     height: 30px;
@@ -136,4 +139,58 @@
 }
 .save .save-div {
     margin-right:20px;
+}
+
+.user-detail label
+{
+     margin-top:10px;
+     font-weight:600;
+     font-size:14px;
+}
+
+.save-div-btn-hid {
+    background-color: lightgreen;
+    border: 0px solid #cccccc;
+    margin-left: 20px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    display: none;
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-weight:600;
+    font-size:15px;
+}
+.BTH
+{
+    font-weight:600;
+}
+
+    .save-div-btn-hid:hover {
+        box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
+    }
+@media (max-width: 768px) {
+    .save-div {
+        justify-content:center;
+    }
+    .save-div-btn{
+        display:none;
+    }
+    .save-div-btn-hid{
+        display:block;
+    }
+    .user-info {
+        grid-template-columns: 1fr;
+    }
+    .boxes .box {
+        height: 60vh;
+    }
+    .boxes {
+        height: 70vh;
+    }
+    .boxes .user-infos {
+        width: 70%;
+    }
 }
