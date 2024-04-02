@@ -36,14 +36,10 @@
 
 
 
-                            <div class="size">Size   :   @item.Size</div>
-                            <div class="Color">Color   :   @item.Color</div>
+                            
 
                             <div class="edit-delete">
-                                <button type="button" onclick="editItem('@item.ProductId')" class="edit">
-                                    <img class ="editIcon" src="~/images/icons/pencil2.png" alt="Edit">
-                                    Edit
-                                </button>
+                               
                                 <button type="button" onclick="removeItem('@item.ProductId')" class="remove">
                                     <img class="removeIcon" src="~/images/icons/trashcan.jpeg" alt="Remove" >
                                     Remove
@@ -80,13 +76,7 @@
         <div class="shipping">US & Int. Shipping: <span>Free</span></div>
         <div class="tax">GST: 5% <span>C$ @gst.ToString("F2")</span></div>
         <div class="tax">PST: 6% <span>C$ @pst.ToString("F2")</span></div>
-        <div class="promo-code-container">
-            <button class="promo-code-toggle">Promo Code <span>&#9660;</span></button>
-            <div class="promo-code-content" style="display: none;">
-                <input type="text" id="promoCodeInput" placeholder="Enter code" class="promo-input" />
-                <button type="button" class="btn-apply">Apply</button>
-            </div>
-        </div>
+        
 
         <div class="total">Total: <span>C$ @total.ToString("F2")</span></div>
         <button class="checkout-btn" onclick="location.href='@Url.Action("CheckOut", "Home")'">Checkout</button>
@@ -104,56 +94,6 @@
     });
 </script>
 
-<script>
-    function updateQuantity(productId, change) {
-        $.ajax({
-            url: '/Home/UpdateQuantity',
-            type: 'POST',
-            data: JSON.stringify({ productId: productId, change: change }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response.success) {
-                    $('#totalPrice').text(`$${response.totalPrice.toFixed(2)}`);
-                    window.location.reload(); // Reload the page to reflect the changes
-                } else {
-                    console.error("Failed to update quantity:", response.message);
-                    alert("Failed to update quantity. Please try again.");
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error:", status, error);
-                alert("An error occurred while updating the quantity. Please try again.");
-            }
-        });
-    }
-
-    document.querySelectorAll('.change-quantity').forEach(button => {
-        button.addEventListener('click', function () {
-            const productId = this.getAttribute('data-product-id');
-            const change = this.getAttribute('data-change');
-            updateQuantity(productId, parseInt(change));
-        });
-    });
-
-    function updateSummary() {
-        $.ajax({
-            url: '/Home/GetCartSummary',
-            type: 'GET',
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response) {
-                    document.querySelector('.subtotal span').textContent = `C$ ${response.subtotal.toFixed(2)}`;
-                    document.querySelector('.total span').textContent = `C$ ${response.total.toFixed(2)}`;
-                    document.querySelector('.tax span').textContent = `C$ ${response.tax.toFixed(2)}`;
-                    document.querySelector('.myBag').textContent = `My Bag (${response.count} Items)`;
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error:", status, error);
-            }
-        });
-    }
-</script>
 
 
 <script>
@@ -188,4 +128,92 @@
     window.onload = function () {
         updatePagePath(); // Update page path on page load
     };
+
+
+
 </script>
+
+@section Scripts {
+    <script>
+        // Function to remove an item from the cart
+        function removeItem(productId) {
+            $.ajax({
+                url: '@Url.Action("RemoveItem", "Cart")',
+                type: 'POST',
+                data: { productId: productId },
+                success: function (response) {
+                    window.location.reload(); // Reload the page to reflect the changes
+                },
+                error: function (error) {
+                    console.error("Error removing item:", error);
+                    alert("An error occurred while trying to remove the item. Please try again.");
+                }
+            });
+        }
+
+        function updateQuantity(productId, change) {
+            $.ajax({
+                url: '/Cart/UpdateQuantity',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ ProductId: productId.toString(), Change: change }),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.reload(); // Or any other logic to update the UI
+                    } else {
+                        alert("Failed to update quantity. Please try again.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error updating quantity:", error);
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        }
+
+
+
+
+        document.querySelectorAll('.change-quantity').forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = this.getAttribute('data-product-id');
+                const change = this.getAttribute('data-change');
+                updateQuantity(productId, parseInt(change));
+            });
+        });
+        document.querySelector('.promo-code-toggle').addEventListener('click', function () {
+            var content = this.nextElementSibling;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        });
+
+        window.onload = function () {
+            updatePagePath(); // Update page path on page load
+        };
+
+
+        function updateSummary() {
+            $.ajax({
+                url: '/Home/GetCartSummary',
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response) {
+                        document.querySelector('.subtotal span').textContent = `C$ ${response.subtotal.toFixed(2)}`;
+                        document.querySelector('.total span').textContent = `C$ ${response.total.toFixed(2)}`;
+                        document.querySelector('.tax span').textContent = `C$ ${response.tax.toFixed(2)}`;
+                        document.querySelector('.myBag').textContent = `My Bag (${response.count} Items)`;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
+    </script>
+
+
+}
