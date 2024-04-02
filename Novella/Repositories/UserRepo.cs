@@ -2,6 +2,7 @@
 using Novella.ViewModels;
 using Novella.EfModels;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Novella.Repositories
 {
